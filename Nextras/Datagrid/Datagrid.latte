@@ -1,0 +1,85 @@
+{**
+ * This file is part of the Nextras community extensions of Nette Framework
+ *
+ * Copyright (c) 2012 Jan Skrasek (http://jan.skrasek.com)
+ *
+ * For the full copyright and license information, please view
+ * the file license.txt that was distributed with this source code.
+ *}
+<div class="datagrid" data-grid-name="{$control->getUniqueId()}">
+{snippet rows}
+{includeblock $fieldsTemplate}
+{form form class => 'ajax'}
+<table class="table">
+<thead>
+	<tr>
+	{foreach $columns as $column}
+		<th class="col-{$column->name}">
+			{$column->label}
+			{if $column->canSort()}
+			<span class="sort-pair">
+				<a href="{link sort! orderColumn => $column->name, orderType => 'asc'}" n:class="ajax, $control->orderColumn == $column->name && $control->orderType == 'asc' ? active"><em>&#9650;</em></a>
+				<a href="{link sort! orderColumn => $column->name, orderType => 'desc'}" n:class="ajax, $control->orderColumn == $column->name && $control->orderType == 'desc' ? active"><em>&#9660;</em></a>
+			</span>
+			{/if}
+		</th>
+	{/foreach}
+		<th class="col-actions"></th>
+	</tr>
+	<tr>
+	{formContainer filter}
+	{foreach $columns as $column}
+		<th class="col-{$column->name}">
+			{if isset($_form[$column->name])}
+				{input $column->name}
+			{/if}
+		</th>
+	{/foreach}
+		<th class="col-actions">
+			{input filter}
+		</th>
+	{/formContainer}
+	</tr>
+</thead>
+<tbody>
+{foreach $data as $row}
+	{var $primary = $control->getter($row, $rowPrimaryKey)}
+	{var $editRow = $editRowKey == $primary}
+	<tr n:snippet="rows-$primary" data-grid-primary="{$primary}">
+		{foreach $columns as $column}
+			{var $field = $control->getter($row, $column->name)}
+			{if $editRow && $column->name != $rowPrimaryKey}
+				<td class="col-{$column->name}">{formContainer edit}{input $column->name}{/formContainer}</td>
+			{else}
+				{ifset #col-$column->name}
+					{include #"col-$column->name" row => $row, field => $field}
+				{else}
+					<td class="col-{$column->name}">{$field}</td>
+				{/ifset}
+			{/if}
+		{/foreach}
+		<td class="col-actions">
+			{if $editRow}
+				{formContainer edit}
+					{input $rowPrimaryKey}
+					{input save}
+					{input cancel}
+				{/formContainer}
+			{else}
+				{ifset #col-actions}
+					{include #col-actions row => $row}
+				{else}
+					<a href="{link edit! $primary}" class="ajax editLink">Edit</a>
+				{/ifset}
+			{/if}
+		</td>
+	</tr>
+{/foreach}
+{if isset($echoSnippets)}
+	{?unset($_dynSnippets)}
+{/if}
+</tbody>
+</table>
+{/form}
+{/snippet}
+</div>
