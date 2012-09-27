@@ -17,12 +17,12 @@ $.nette.ext('datagrid', {
 	load: function() {
 		$('.datagrid input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
 			if (e.which == 13) {
-				$(this).parents('tr').find(':submit').click();
+				$(this).parents('tr').find('input[name=filter\\[filter\\]]').click();
 				e.preventDefault();
 			}
 		});
 		$('.datagrid thead select').off('change.datagrid').on('change.datagrid', function(e) {
-			$(this).parents('tr').find(':submit').click();
+			$(this).parents('tr').find('input[name=filter\\[filter\\]]').click();
 		});
 	},
 	before: function(settings) {
