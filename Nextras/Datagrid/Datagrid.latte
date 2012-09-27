@@ -37,6 +37,7 @@
 	{/foreach}
 		<th class="col-actions">
 			{input filter}
+			{if !empty($control->filter)}{input cancel}{/if}
 		</th>
 	{/formContainer}
 	</tr>

@@ -180,10 +180,7 @@ class Datagrid extends UI\Control
 
 	public function render()
 	{
-		if (!empty($this->filter)) {
-			$this['form']['filter']->setDefaults($this->filter);
-		}
-
+		$this['form']['filter']->setDefaults($this->filter);
 		$this->template->data = $this->getData();
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
@@ -273,7 +270,7 @@ class Datagrid extends UI\Control
 	public function handleSort()
 	{
 		if ($this->presenter->isAjax()) {
-			$this->template->echoSnippets = true;
+			$this->template->echoSnippets = TRUE;
 			$this->invalidateControl('rows');
 		} else {
 			$this->redirect('this');
@@ -302,8 +299,12 @@ class Datagrid extends UI\Control
 
 		if ($this->filterFormFactory) {
 			$form['filter'] = $this->filterFormFactory->invoke();
-			if (!isset($form['filter']['filter']))
+			if (!isset($form['filter']['filter'])) {
 				$form['filter']->addSubmit('filter', 'Filter');
+			}
+			if (!isset($form['filter']['cancel'])) {
+				$form['filter']->addSubmit('cancel', 'Cancel');
+			}
 		}
 
 		$form->onSuccess[] = $this->processForm;
@@ -324,14 +325,19 @@ class Datagrid extends UI\Control
 			$this->invalidateRow($form['edit'][$this->rowPrimaryKey]->getValue());
 		}
 
-		if (isset($form['filter']['filter']) && $form['filter']['filter']->isSubmittedBy()) {
-			$values = $form['filter']->getValues(true);
+		if ($form['filter']['filter']->isSubmittedBy()) {
+			$values = $form['filter']->getValues(TRUE);
 			unset($values['filter']);
 			$values = array_filter($values, function($val) {
 				return strlen($val) > 0;
 			});
 			$this->filter = $this->filterDataSource = $values;
-			$this->template->echoSnippets = true;
+			$this->template->echoSnippets = TRUE;
+			$this->invalidateControl('rows');
+		} elseif ($form['filter']['cancel']->isSubmittedBy()) {
+			$this->filter = $this->filterDataSource = array();
+			$form['filter']->setValues(array(), TRUE);
+			$this->template->echoSnippets = TRUE;
 			$this->invalidateControl('rows');
 		}
 	}
