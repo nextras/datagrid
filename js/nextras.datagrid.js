@@ -25,7 +25,7 @@ $.nette.ext('datagrid', {
 			$(this).parents('tr').find('input[name=filter\\[filter\\]]').click();
 		});
 	},
-	before: function(settings) {
+	before: function(xhr, settings) {
 		this.grid = settings.nette.el.parents('.datagrid');
 	},
 	success: function() {
