@@ -185,7 +185,9 @@ class Datagrid extends UI\Control
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
-		$this->template->fieldsTemplate = $this->fieldsTemplate;
+		if($this->fieldsTemplate && is_file($this->fieldsTemplate)) {
+			$this->template->fieldsTemplate = $this->fieldsTemplate;
+		}
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 		$this->template->render();
 	}

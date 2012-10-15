@@ -8,7 +8,9 @@
  *}
 <div class="datagrid" data-grid-name="{$control->getUniqueId()}">
 {snippet rows}
-{includeblock $fieldsTemplate}
+{ifset $fieldsTemplate}
+	{includeblock $fieldsTemplate}
+{/ifset}
 {form form class => 'ajax'}
 <table class="table">
 <thead>
