@@ -181,7 +181,10 @@ class Datagrid extends UI\Control
 
 	public function render()
 	{
-		$this['form']['filter']->setDefaults($this->filter);
+		if ($this->filterFormFactory) {
+			$this['form']['filter']->setDefaults($this->filter);
+		}
+
 		$this->template->data = $this->getData();
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
@@ -324,6 +327,10 @@ class Datagrid extends UI\Control
 			}
 
 			$this->invalidateRow($form['edit'][$this->rowPrimaryKey]->getValue());
+		}
+
+		if (!isset($form['filter'])) {
+			return;
 		}
 
 		if ($form['filter']['filter']->isSubmittedBy()) {

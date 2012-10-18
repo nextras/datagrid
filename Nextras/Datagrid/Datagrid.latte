@@ -12,6 +12,12 @@
 	{includeblock $cellsTemplate}
 {/if}
 {form form class => 'ajax'}
+
+{var $hasActionsColumn = FALSE}
+{ifset #col-actions}{var $hasActionsColumn = TRUE}{/ifset}
+{ifset $_form['filter']}{var $hasActionsColumn = TRUE}{var $hasFilter = TRUE}{else}{var $hasFilter = FALSE}{/ifset}
+{if $control->getEditFormFactory()}{var $hasActionsColumn = TRUE}{var $hasEdit = TRUE}{else}{var $hasEdit = FALSE}{/if}
+
 <table class="table">
 <thead>
 	<tr>
@@ -29,7 +35,7 @@
 		<th class="col-actions"></th>
 	</tr>
 	<tr>
-	{formContainer filter}
+	{?if ($hasFilter):}{formContainer filter}{?endif;}
 	{foreach $columns as $column}
 		<th class="col-{$column->name}">
 			{if isset($_form[$column->name])}
@@ -37,11 +43,15 @@
 			{/if}
 		</th>
 	{/foreach}
+	{if $hasActionsColumn}
 		<th class="col-actions">
-			{input filter}
-			{if !empty($control->filter)}{input cancel}{/if}
+			{if $hasFilter}
+				{input filter}
+				{if !empty($control->filter)}{input cancel}{/if}
+			{/if}
 		</th>
-	{/formContainer}
+	{/if}
+	{?if ($hasFilter):}{/formContainer}{?endif;}
 	</tr>
 </thead>
 <tbody>
@@ -61,6 +71,7 @@
 				{/ifset}
 			{/if}
 		{/foreach}
+		{if $hasActionsColumn}
 		<td class="col-actions">
 			{if $editRow}
 				{formContainer edit}
@@ -71,11 +82,12 @@
 			{else}
 				{ifset #col-actions}
 					{include #col-actions row => $row}
-				{else}
+				{elseif $hasEdit}
 					<a href="{link edit! $primary}" class="ajax editLink">Edit</a>
 				{/ifset}
 			{/if}
 		</td>
+		{/if}
 	</tr>
 {/foreach}
 {if isset($echoSnippets)}
