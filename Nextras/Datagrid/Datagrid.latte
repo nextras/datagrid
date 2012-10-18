@@ -50,14 +50,14 @@
 	{var $editRow = $editRowKey == $primary}
 	<tr n:snippet="rows-$primary" data-grid-primary="{$primary}">
 		{foreach $columns as $column}
-			{var $field = $control->getter($row, $column->name)}
+			{var $cell = $control->getter($row, $column->name)}
 			{if $editRow && $column->name != $rowPrimaryKey && isset($_form['edit'][$column->name])}
 				<td class="col-{$column->name}">{formContainer edit}{input $column->name}{/formContainer}</td>
 			{else}
 				{ifset #col-$column->name}
-					{include #"col-$column->name" row => $row, field => $field}
+					{include #"col-$column->name" row => $row, cell => $cell}
 				{else}
-					<td class="col-{$column->name}">{$field}</td>
+					<td class="col-{$column->name}">{$cell}</td>
 				{/ifset}
 			{/if}
 		{/foreach}
