@@ -8,7 +8,9 @@
  *}
 <div class="datagrid" data-grid-name="{$control->getUniqueId()}">
 {snippet rows}
-{includeblock $fieldsTemplate}
+{if $cellsTemplate}
+	{includeblock $cellsTemplate}
+{/if}
 {form form class => 'ajax'}
 <table class="table">
 <thead>

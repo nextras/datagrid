@@ -59,7 +59,7 @@ class Datagrid extends UI\Control
 	protected $data;
 
 	/** @var string */
-	protected $fieldsTemplate;
+	protected $cellsTemplate;
 
 
 
@@ -161,15 +161,15 @@ class Datagrid extends UI\Control
 
 
 
-	public function setFieldsTemplate($path)
+	public function setCellsTemplate($path)
 	{
-		$this->fieldsTemplate = $path;
+		$this->cellsTemplate = $path;
 	}
 
 
-	public function getFieldsTemplate()
+	public function getCellsTemplate()
 	{
-		return $this->fieldsTemplate;
+		return $this->cellsTemplate;
 	}
 
 
@@ -185,7 +185,7 @@ class Datagrid extends UI\Control
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
-		$this->template->fieldsTemplate = $this->fieldsTemplate;
+		$this->template->cellsTemplate = file_exists($this->cellsTemplate) ? $this->cellsTemplate : NULL;
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 		$this->template->render();
 	}
