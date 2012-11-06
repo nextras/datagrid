@@ -34,8 +34,10 @@
 	{/foreach}
 		<th class="col-actions">{ifset #head-col-actions}{include #head-col-actions}{/ifset}</th>
 	</tr>
+
+	{?if ($hasFilter):}
 	<tr>
-	{?if ($hasFilter):}{formContainer filter}{?endif;}
+	{formContainer filter}
 	{foreach $columns as $column}
 		<th class="col-{$column->name}">
 			{if isset($_form[$column->name])}
@@ -51,8 +53,9 @@
 			{/if}
 		</th>
 	{/if}
-	{?if ($hasFilter):}{/formContainer}{?endif;}
+	{/formContainer}
 	</tr>
+	{?endif;}
 </thead>
 <tbody>
 {foreach $data as $row}
