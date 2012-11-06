@@ -32,7 +32,7 @@
 			{/if}
 		</th>
 	{/foreach}
-		<th class="col-actions"></th>
+		<th class="col-actions">{ifset #head-col-actions}{include #head-col-actions}{/ifset}</th>
 	</tr>
 	<tr>
 	{?if ($hasFilter):}{formContainer filter}{?endif;}
