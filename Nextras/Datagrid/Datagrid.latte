@@ -24,7 +24,7 @@
 <table>
 {/ifset}
 <thead>
-	<tr>
+	<tr class="columns">
 	{foreach $columns as $column}
 		<th class="col-{$column->name}">
 			{$column->label}
@@ -40,7 +40,7 @@
 	</tr>
 
 	{if $hasFilter}
-	<tr>
+	<tr class="filters">
 	{formContainer filter}
 		{foreach $columns as $column}
 		<th class="col-{$column->name}">
