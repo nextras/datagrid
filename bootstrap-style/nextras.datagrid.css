@@ -1,0 +1,51 @@
+.datagrid .btn-small {
+  line-height: 15px;
+}
+.datagrid td,
+.datagrid th {
+  border-color: #CACACA;
+}
+.datagrid .cols-actions {
+  text-align: center;
+}
+.datagrid thead {
+  background-color: #f3f3f3;
+  background-image: -moz-linear-gradient(top, #fafafa, #e9e9e9);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #fafafa, #e9e9e9);
+  background-image: -o-linear-gradient(top, #fafafa, #e9e9e9);
+  background-image: linear-gradient(to bottom, #fafafa, #e9e9e9);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffe9e9e9', GradientType=0);
+}
+.datagrid thead .filters th {
+  border-top: 1px solid #E5E5E5;
+}
+.datagrid tbody td {
+  vertical-align: middle;
+}
+.datagrid .select,
+.datagrid textarea,
+.datagrid input[type="text"],
+.datagrid input[type="password"],
+.datagrid input[type="datetime"],
+.datagrid input[type="datetime-local"],
+.datagrid input[type="date"],
+.datagrid input[type="month"],
+.datagrid input[type="time"],
+.datagrid input[type="week"],
+.datagrid input[type="number"],
+.datagrid input[type="email"],
+.datagrid input[type="url"],
+.datagrid input[type="search"],
+.datagrid input[type="tel"],
+.datagrid input[type="color"],
+.datagrid .uneditable-input {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: auto;
+  width: 100%;
+  padding: 3px 3px;
+  margin-bottom: 0;
+}
