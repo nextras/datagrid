@@ -24,7 +24,7 @@
 .datagrid tbody td {
   vertical-align: middle;
 }
-.datagrid .select,
+.datagrid select,
 .datagrid textarea,
 .datagrid input[type="text"],
 .datagrid input[type="password"],
@@ -48,4 +48,7 @@
   width: 100%;
   padding: 3px 3px;
   margin-bottom: 0;
+}
+.datagrid select {
+  padding: 2px 3px;
 }
