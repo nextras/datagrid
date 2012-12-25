@@ -242,7 +242,8 @@ class Datagrid extends UI\Control
 	protected function getData($key = NULL)
 	{
 		if (!$this->data) {
-			$this->data = $this->dataSourceCallback->invokeArgs(array($this->filterDataSource, array($this->orderColumn, strtoupper($this->orderType))));
+			$order = $this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL;
+			$this->data = $this->dataSourceCallback->invokeArgs(array($this->filterDataSource, $order));
 		}
 
 		if ($key === NULL) {
