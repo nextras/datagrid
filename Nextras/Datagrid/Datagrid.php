@@ -189,7 +189,18 @@ class Datagrid extends UI\Control
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
-		$this->template->cellsTemplate = file_exists($this->cellsTemplate) ? $this->cellsTemplate : NULL;
+
+		if ($this->cellsTemplate instanceof Nette\Templating\IFileTemplate) {
+			$this->template->cellsTemplate = $this->cellsTemplate->getFile();
+		} elseif ($this->cellsTemplate !== NULL) {
+			if (!file_exists($this->cellsTemplate)) {
+				throw new \IOException("Cells template '{$this->cellsTemplate}' does not exists.");
+			}
+			$this->template->cellsTemplate = $this->cellsTemplate;
+		} else {
+			$this->template->cellsTemplate = NULL;
+		}
+
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 		$this->template->render();
 	}
