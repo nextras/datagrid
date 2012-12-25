@@ -97,7 +97,7 @@
 				{ifset #col-actions}
 					{include #col-actions row => $row, primary => $primary}
 				{elseif $hasEdit}
-					<a href="{link edit! $primary}" class="ajax editLink">Edit</a>
+					<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>Edit</a>
 				{/ifset}
 			{/if}
 		</td>

@@ -44,7 +44,7 @@ $.nette.ext('datagrid', {
 			return;
 		}
 
-		grid.find('.editLink').each(function() {
+		grid.find('a[data-datagrid-edit]').each(function() {
 			var href = $(this).data('grid-href');
 			if (!href) {
 				$(this).data('grid-href', href = $(this).attr('href'));
