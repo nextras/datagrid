@@ -243,7 +243,7 @@ class Datagrid extends UI\Control
 	{
 		if (!$this->data) {
 			$order = $this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL;
-			$this->data = $this->dataSourceCallback->invokeArgs(array($this->filterDataSource, $order));
+			$this->data = $this->dataSourceCallback->invokeArgs(array($this->filter, $order));
 		}
 
 		if ($key === NULL) {
