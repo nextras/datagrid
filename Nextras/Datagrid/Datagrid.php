@@ -316,7 +316,9 @@ class Datagrid extends UI\Control
 			if (!isset($form['edit'][$this->rowPrimaryKey]))
 				$form['edit']->addHidden($this->rowPrimaryKey);
 
-			$form['edit'][$this->rowPrimaryKey]->setOption('rendered', TRUE);
+			$form['edit'][$this->rowPrimaryKey]
+				->setDefaultValue($this->editRowKey)
+				->setOption('rendered', TRUE);
 		}
 
 		if ($this->filterFormFactory) {
