@@ -38,21 +38,17 @@
 	{if $hasFilter}
 	<tr>
 	{formContainer filter}
-	{foreach $columns as $column}
+		{foreach $columns as $column}
 		<th class="col-{$column->name}">
 			{if isset($_form[$column->name])}
 				{input $column->name}
 			{/if}
 		</th>
-	{/foreach}
-	{if $hasActionsColumn}
+		{/foreach}
 		<th class="col-actions">
-			{if $hasFilter}
 				{input filter}
 				{if !empty($control->filter)}{input cancel}{/if}
-			{/if}
 		</th>
-	{/if}
 	{/formContainer}
 	</tr>
 	{/if}
