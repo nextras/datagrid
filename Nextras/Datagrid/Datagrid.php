@@ -327,6 +327,9 @@ class Datagrid extends UI\Control
 			}
 
 			$this->invalidateRow($form['edit'][$this->rowPrimaryKey]->getValue());
+			if (!$this->presenter->isAjax()) {
+				$this->redirect('this');
+			}
 		}
 
 		if (!isset($form['filter'])) {
