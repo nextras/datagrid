@@ -19,6 +19,12 @@ use Nette\Application\UI;
 class Datagrid extends UI\Control
 {
 
+	/** @var string */
+	const ORDER_ASC = 'asc';
+
+	/** @var string */
+	const ORDER_DESC = 'desc';
+
 	/** @persistent */
 	public $filter = array();
 
@@ -26,7 +32,7 @@ class Datagrid extends UI\Control
 	public $orderColumn;
 
 	/** @persistent */
-	public $orderType = 'asc';
+	public $orderType = self::ORDER_ASC;
 
 	/** @var array */
 	protected $filterDataSource = array();
@@ -73,7 +79,7 @@ class Datagrid extends UI\Control
 		if (!$this->rowPrimaryKey) {
 			$this->rowPrimaryKey = $name;
 		}
-		return $this->columns[] = new Column($name, $label ?: ucfirst($name));
+		return $this->columns[] = new Column($name, $label ?: ucfirst($name), $this);
 	}
 
 

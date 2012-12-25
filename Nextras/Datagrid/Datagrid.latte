@@ -27,12 +27,15 @@
 	<tr class="columns">
 	{foreach $columns as $column}
 		<th class="col-{$column->name}">
-			{$column->label}
 			{if $column->canSort()}
-			<span class="sort-pair">
-				<a href="{link sort! orderColumn => $column->name, orderType => 'asc'}" n:class="ajax, $control->orderColumn == $column->name && $control->orderType == 'asc' ? active"><em>&#9650;</em></a>
-				<a href="{link sort! orderColumn => $column->name, orderType => 'desc'}" n:class="ajax, $control->orderColumn == $column->name && $control->orderType == 'desc' ? active"><em>&#9660;</em></a>
-			</span>
+				<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
+				{if $column->isAsc()}
+					<span class="sort-symbol"><em>&#9650;</em></span>
+				{elseif $column->isDesc()}
+					<span class="sort-symbol"><em>&#9660;</em></span>
+				{/if}
+			{else}
+				{$column->label}
 			{/if}
 		</th>
 	{/foreach}

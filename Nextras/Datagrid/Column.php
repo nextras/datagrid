@@ -27,11 +27,16 @@ class Column extends Nette\Object
 	/** @var string */
 	protected $sort = FALSE;
 
+	/** @var Datagrid */
+	protected $grid;
 
-	public function __construct($name, $label)
+
+
+	public function __construct($name, $label, Datagrid $grid)
 	{
 		$this->name = $name;
 		$this->label = $label;
+		$this->grid = $grid;
 	}
 
 
@@ -47,6 +52,33 @@ class Column extends Nette\Object
 	public function canSort()
 	{
 		return $this->sort;
+	}
+
+
+
+	public function getNewState()
+	{
+		if ($this->isAsc()) {
+			return Datagrid::ORDER_DESC;
+		} elseif ($this->isDesc()) {
+			return NULL;
+		} else {
+			return Datagrid::ORDER_ASC;
+		}
+	}
+
+
+
+	public function isAsc()
+	{
+		return $this->grid->orderColumn === $this->name && $this->grid->orderType === Datagrid::ORDER_ASC;
+	}
+
+
+
+	public function isDesc()
+	{
+		return $this->grid->orderColumn === $this->name && $this->grid->orderType === Datagrid::ORDER_DESC;
 	}
 
 }
