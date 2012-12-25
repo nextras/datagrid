@@ -8,15 +8,25 @@
 .datagrid .cols-actions {
   text-align: center;
 }
-.datagrid thead {
-  background-color: #f3f3f3;
-  background-image: -moz-linear-gradient(top, #fafafa, #e9e9e9);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#e9e9e9));
-  background-image: -webkit-linear-gradient(top, #fafafa, #e9e9e9);
-  background-image: -o-linear-gradient(top, #fafafa, #e9e9e9);
-  background-image: linear-gradient(to bottom, #fafafa, #e9e9e9);
+.datagrid thead .columns {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #fafafa, #f2f2f2);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#f2f2f2));
+  background-image: -webkit-linear-gradient(top, #fafafa, #f2f2f2);
+  background-image: -o-linear-gradient(top, #fafafa, #f2f2f2);
+  background-image: linear-gradient(to bottom, #fafafa, #f2f2f2);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffe9e9e9', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#fff2f2f2', GradientType=0);
+}
+.datagrid thead .filters {
+  background-color: #eeeeee;
+  background-image: -moz-linear-gradient(top, #f2f2f2, #e9e9e9);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f2f2f2), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #f2f2f2, #e9e9e9);
+  background-image: -o-linear-gradient(top, #f2f2f2, #e9e9e9);
+  background-image: linear-gradient(to bottom, #f2f2f2, #e9e9e9);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffe9e9e9', GradientType=0);
 }
 .datagrid thead .filters th {
   border-top: 1px solid #E5E5E5;
@@ -49,6 +59,6 @@
   padding: 3px 3px;
   margin-bottom: 0;
 }
-.datagrid select {
+.datagrid :-moz-any(select) {
   padding: 2px 3px;
 }

@@ -10,9 +10,14 @@
 		text-align: center;
 	}
 	thead {
-		#gradient .vertical(#FAFAFA, #E9E9E9);
-		.filters th {
-			border-top: 1px solid #E5E5E5;
+		.columns {
+			#gradient .vertical(#FAFAFA, #F2F2F2);
+		}
+		.filters {
+			#gradient .vertical(#F2F2F2, #E9E9E9);
+			th {
+				border-top: 1px solid #E5E5E5;
+			}
 		}
 	}
 	tbody {
@@ -44,7 +49,7 @@
 		padding: 3px 3px;
 		margin-bottom: 0;
 	}
-	select {
+	:-moz-any(select) {
 		padding: 2px 3px;
 	}
 }
