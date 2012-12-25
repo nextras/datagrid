@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="description" content="Nextras Datagrid examples">
+	<title>{block title|striptags}Nextras Datagrid examples{/block}</title>
+
+	<link rel="stylesheet" href="{$basePath}/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{$basePath}/../../bootstrap-style/nextras.datagrid.css">
+
+	<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+	<script src="{$basePath}/js/nette.ajax.js"></script>
+	<script src="{$basePath}/../../js/nextras.datagrid.js"></script>
+	<script>
+		$(function() {
+			$.nette.init();
+		});
+	</script>
+</head>
+<body>
+<script> document.body.className+=' js' </script>
+<div class="container">
+<div class="row">
+	<div class="span12">
+		<h2>Nextras\Datagrid demo</h2>
+	</div>
+	<div class="span12" n:snippet="flashes">
+		<div n:foreach="$flashes as $flash" class="alert alert-info">{$flash->message}</div>
+	</div>
+</div>
+<div class="row">
+	<div class="span12">
+		{include #content}
+	</div>
+</div>
+</div>
+</body>
+</html>
