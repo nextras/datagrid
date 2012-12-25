@@ -105,7 +105,11 @@
 	{?unset($_dynSnippets)}
 {/if}
 </tbody>
+{ifset #table-close-tag}
+{include #table-close-tag}
+{else}
 </table>
+{/ifset}
 {/form}
 {/snippet}
 </div>
