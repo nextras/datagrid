@@ -23,12 +23,12 @@ $.nette.ext('datagrid', {
 		});
 		$('.datagrid thead select').off('change.datagrid').on('change.datagrid', function(e) {
 			$(this).parents('tr').find('input[name=filter\\[filter\\]]').click();
+			e.preventDefault();
 		});
-		$('.datagrid tbody td:not(.col-actions)').click(function(e) {
+		$('.datagrid tbody td:not(.col-actions)').off('click.datagrid').on('click.datagrid', function(e) {
 			if (e.ctrlKey) {
 				$(this).parents('tr').find('a[data-datagrid-edit]').click();
 				e.preventDefault();
-				return false;
 			}
 		});
 	},
