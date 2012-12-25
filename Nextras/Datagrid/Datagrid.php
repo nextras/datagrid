@@ -345,29 +345,28 @@ class Datagrid extends UI\Control
 			}
 
 			$this->invalidateRow($form['edit'][$this->rowPrimaryKey]->getValue());
-			if (!$this->presenter->isAjax()) {
-				$this->redirect('this');
+		}
+
+		if (isset($form['filter'])) {
+			if ($form['filter']['filter']->isSubmittedBy()) {
+				$values = $form['filter']->getValues(TRUE);
+				unset($values['filter']);
+				$values = array_filter($values, function($val) {
+					return strlen($val) > 0;
+				});
+				$this->filter = $this->filterDataSource = $values;
+				$this->template->echoSnippets = TRUE;
+				$this->invalidateControl('rows');
+			} elseif ($form['filter']['cancel']->isSubmittedBy()) {
+				$this->filter = $this->filterDataSource = array();
+				$form['filter']->setValues(array(), TRUE);
+				$this->template->echoSnippets = TRUE;
+				$this->invalidateControl('rows');
 			}
 		}
 
-		if (!isset($form['filter'])) {
-			return;
-		}
-
-		if ($form['filter']['filter']->isSubmittedBy()) {
-			$values = $form['filter']->getValues(TRUE);
-			unset($values['filter']);
-			$values = array_filter($values, function($val) {
-				return strlen($val) > 0;
-			});
-			$this->filter = $this->filterDataSource = $values;
-			$this->template->echoSnippets = TRUE;
-			$this->invalidateControl('rows');
-		} elseif ($form['filter']['cancel']->isSubmittedBy()) {
-			$this->filter = $this->filterDataSource = array();
-			$form['filter']->setValues(array(), TRUE);
-			$this->template->echoSnippets = TRUE;
-			$this->invalidateControl('rows');
+		if (!$this->presenter->isAjax()) {
+			$this->redirect('this');
 		}
 	}
 
