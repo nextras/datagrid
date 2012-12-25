@@ -80,7 +80,7 @@
 				{/formContainer}
 			{else}
 				{ifset #col-actions}
-					{include #col-actions row => $row}
+					{include #col-actions row => $row, primary => $primary}
 				{elseif $hasEdit}
 					<a href="{link edit! $primary}" class="ajax editLink">Edit</a>
 				{/ifset}
