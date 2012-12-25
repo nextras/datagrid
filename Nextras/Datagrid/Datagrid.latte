@@ -35,7 +35,7 @@
 		<th class="col-actions">{ifset #head-col-actions}{include #head-col-actions}{/ifset}</th>
 	</tr>
 
-	{?if ($hasFilter):}
+	{if $hasFilter}
 	<tr>
 	{formContainer filter}
 	{foreach $columns as $column}
@@ -55,7 +55,7 @@
 	{/if}
 	{/formContainer}
 	</tr>
-	{?endif;}
+	{/if}
 </thead>
 <tbody>
 {foreach $data as $row}
