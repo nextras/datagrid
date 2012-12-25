@@ -18,7 +18,11 @@
 {ifset $_form['filter']}{var $hasActionsColumn = TRUE}{var $hasFilter = TRUE}{else}{var $hasFilter = FALSE}{/ifset}
 {if $control->getEditFormFactory()}{var $hasActionsColumn = TRUE}{var $hasEdit = TRUE}{else}{var $hasEdit = FALSE}{/if}
 
-<table class="table">
+{ifset #table-open-tag}
+{include #table-open-tag}
+{else}
+<table>
+{/ifset}
 <thead>
 	<tr>
 	{foreach $columns as $column}
