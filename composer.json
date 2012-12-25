@@ -2,7 +2,7 @@
 	"name": "nextras/datagrid",
 	"type": "library",
 	"description": "Datagrid component for Nette Framework.",
-	"keywords": ["nette", "datagrid"],
+	"keywords": ["nextras", "nette", "datagrid"],
 	"license": ["MIT"],
 	"authors": [
 		{
