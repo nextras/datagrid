@@ -43,7 +43,7 @@ class Datagrid extends UI\Control
 	/** @var mixed */
 	protected $editFormFactory;
 
-	/** @var mixed */	
+	/** @var mixed */
 	protected $editFormCallback;
 
 	/** @var Nette\Callback */
@@ -52,7 +52,7 @@ class Datagrid extends UI\Control
 	/** @var mixed */
 	protected $editRowKey;
 
-	/** @var string */	
+	/** @var string */
 	protected $rowPrimaryKey;
 
 	/** @var mixed */
