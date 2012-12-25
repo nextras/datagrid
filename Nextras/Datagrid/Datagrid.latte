@@ -79,8 +79,12 @@
 			{if $editRow}
 				{formContainer edit}
 					{input $rowPrimaryKey}
-					{input save}
-					{input cancel}
+					{ifset #edit-actions}
+						{include #edit-actions _form => $_form, form => $form}
+					{else}
+						{input save}
+						{input cancel}
+					{/ifset}
 				{/formContainer}
 			{else}
 				{ifset #col-actions}
