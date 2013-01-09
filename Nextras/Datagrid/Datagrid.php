@@ -265,11 +265,19 @@ class Datagrid extends UI\Control
 	 * @internal
 	 * @ignore
 	 */
-	public function getter($row, $column)
+	public function getter($row, $column, $need = TRUE)
 	{
 		if ($this->columnGetterCallback) {
 			return $this->columnGetterCallback->invokeArgs(array($row, $column));
 		} else {
+			if (!isset($row->$column)) {
+				if ($need) {
+					throw new \InvalidArgumentException("Result row does not have '{$column}' column.");
+				} else {
+					return NULL;
+				}
+			}
+
 			return $row->$column;
 		}
 	}
