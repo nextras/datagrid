@@ -65,7 +65,7 @@ class Datagrid extends UI\Control
 	protected $data;
 
 	/** @var array */
-	protected $cellsTemplates;
+	protected $cellsTemplates = array();
 
 
 
