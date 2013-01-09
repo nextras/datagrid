@@ -31,6 +31,7 @@ final class DemoPresenter extends Nette\Application\UI\Presenter
 		$grid->addColumn('surname')->enableSort();
 		$grid->addColumn('gender')->enableSort();
 		$grid->addColumn('birthday')->enableSort();
+		$grid->addColumn('virtual-gender', "Virtual gender");
 
 		$grid->setDataSourceCallback($this->getDataLight);
 
@@ -54,7 +55,8 @@ final class DemoPresenter extends Nette\Application\UI\Presenter
 
 		$grid->setEditFormCallback($this->saveData);
 
-		$grid->setCellsTemplate(APP_DIR . '/../../bootstrap-style/@datagrid.latte');
+		$grid->addCellsTemplate(APP_DIR . '/../../bootstrap-style/@datagrid.latte');
+		$grid->addCellsTemplate(__DIR__ . '/../templates/Demo/@light_cells.latte');
 		return $grid;
 	}
 
