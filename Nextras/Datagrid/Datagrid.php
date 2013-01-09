@@ -202,7 +202,7 @@ class Datagrid extends UI\Control
 				$cellsTemplate = $cellsTemplate->getFile();
 			}
 			if (!file_exists($cellsTemplate)) {
-				throw new \IOException("Cells template '{$cellsTemplate}' does not exist.");
+				throw new \RuntimeException("Cells template '{$cellsTemplate}' does not exist.");
 			}
 		}
 		$this->template->cellsTemplates = $this->cellsTemplates;
