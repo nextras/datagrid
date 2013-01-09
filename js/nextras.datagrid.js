@@ -43,8 +43,9 @@ $.nette.ext('datagrid', {
 	load: function(grid) {
 		var idToClose = [];
 		var paramName = grid.attr('data-grid-name');
-		grid.find('tr:has(input[name=edit\\[cancel\\]])').each(function() {
-			idToClose.push($(this).attr('data-grid-primary'));
+		grid.find('tr:has(input[name=edit\\[cancel\\]])').each(function(i, el) {
+			$(el).find('input').get(0).focus();
+			idToClose.push($(el).attr('data-grid-primary'));
 		});
 
 		if (idToClose.length == 0) {
