@@ -8,9 +8,9 @@
  *}
 <div class="datagrid" data-grid-name="{$control->getUniqueId()}">
 {snippet rows}
-{if $cellsTemplate}
+{foreach $cellsTemplates as $cellsTemplate}
 	{includeblock $cellsTemplate}
-{/if}
+{/foreach}
 {form form class => 'ajax'}
 
 {var $hasActionsColumn = FALSE}

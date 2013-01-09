@@ -64,8 +64,8 @@ class Datagrid extends UI\Control
 	/** @var mixed */
 	protected $data;
 
-	/** @var string */
-	protected $cellsTemplate;
+	/** @var array */
+	protected $cellsTemplates;
 
 
 
@@ -168,15 +168,16 @@ class Datagrid extends UI\Control
 
 
 
-	public function setCellsTemplate($path)
+	public function addCellsTemplate($path)
 	{
-		$this->cellsTemplate = $path;
+		$this->cellsTemplates[] = $path;
 	}
+
 
 
 	public function getCellsTemplate()
 	{
-		return $this->cellsTemplate;
+		return $this->cellsTemplates;
 	}
 
 
@@ -196,17 +197,15 @@ class Datagrid extends UI\Control
 		$this->template->editRowKey = $this->editRowKey;
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
 
-		if ($this->cellsTemplate instanceof Nette\Templating\IFileTemplate) {
-			$this->template->cellsTemplate = $this->cellsTemplate->getFile();
-		} elseif ($this->cellsTemplate !== NULL) {
-			if (!file_exists($this->cellsTemplate)) {
-				throw new \IOException("Cells template '{$this->cellsTemplate}' does not exists.");
+		foreach ($this->cellsTemplates as &$cellsTemplate) {
+			if ($cellsTemplate instanceof Nette\Templating\IFileTemplate) {
+				$cellsTemplate = $cellsTemplate->getFile();
 			}
-			$this->template->cellsTemplate = $this->cellsTemplate;
-		} else {
-			$this->template->cellsTemplate = NULL;
+			if (!file_exists($cellsTemplate)) {
+				throw new \IOException("Cells template '{$cellsTemplate}' does not exist.");
+			}
 		}
-
+		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 		$this->template->render();
 	}
