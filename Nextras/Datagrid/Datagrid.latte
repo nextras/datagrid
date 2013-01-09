@@ -75,7 +75,7 @@
 				<td class="col-{$column->name}">{formContainer edit}{input $column->name}{/formContainer}</td>
 			{else}
 				{ifset #col-$column->name}
-					{include #"col-$column->name" row => $row, cell => $cell}
+					{include #"col-{$column->name}" row => $row, cell => $cell}
 				{else}
 					<td class="col-{$column->name}">{$cell}</td>
 				{/ifset}
