@@ -3,10 +3,9 @@
 /**
  * This file is part of the Nextras community extensions of Nette Framework
  *
- * Copyright (c) 2012 Jan Skrasek (http://jan.skrasek.com)
- *
  * @license    MIT
  * @link       https://github.com/nextras
+ * @author     Jan Skrasek
  */
 
 namespace Nextras\Datagrid;
