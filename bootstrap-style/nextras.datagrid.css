@@ -9,7 +9,7 @@
   text-align: center;
 }
 .datagrid thead .columns {
-  background-color: #f7f7f7;
+  background-color: #f2f2f2;
   background-image: -moz-linear-gradient(top, #fafafa, #f2f2f2);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#f2f2f2));
   background-image: -webkit-linear-gradient(top, #fafafa, #f2f2f2);
@@ -19,7 +19,7 @@
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#fff2f2f2', GradientType=0);
 }
 .datagrid thead .filters {
-  background-color: #eeeeee;
+  background-color: #e9e9e9;
   background-image: -moz-linear-gradient(top, #f2f2f2, #e9e9e9);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f2f2f2), to(#e9e9e9));
   background-image: -webkit-linear-gradient(top, #f2f2f2, #e9e9e9);
