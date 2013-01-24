@@ -2,6 +2,9 @@
 
 Easy to use datagrid with powerfull API.
 
+## Demo
+See demos: http://nextras.skrasek.com/www/datagrid.default/default
+
 ## Installation
 
 The best way to install is using [Composer](http://getcomposer.org/):
