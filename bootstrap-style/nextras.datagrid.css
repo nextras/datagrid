@@ -54,11 +54,28 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  height: auto;
   width: 100%;
+  height: 25px;
   padding: 3px 3px;
   margin-bottom: 0;
 }
 .datagrid :-moz-any(select) {
   padding: 2px 3px;
+}
+.datagrid .input-append,
+.datagrid .input-prepend {
+  margin-bottom: 0;
+}
+.datagrid .input-append select,
+.datagrid .input-prepend select,
+.datagrid .input-append textarea,
+.datagrid .input-prepend textarea,
+.datagrid .input-append input,
+.datagrid .input-prepend input {
+  width: auto;
+}
+.datagrid .input-append .add-on,
+.datagrid .input-prepend .add-on {
+  padding: 1px 3px 2px;
+  margin-bottom: 0;
 }

@@ -44,12 +44,23 @@
 	input[type="color"],
 	.uneditable-input {
 		.box-sizing(border-box);
-		height: auto;
 		width: 100%;
+		height: 25px;
 		padding: 3px 3px;
 		margin-bottom: 0;
 	}
 	:-moz-any(select) {
 		padding: 2px 3px;
+	}
+	.input-append, .input-prepend {
+		margin-bottom: 0;
+
+		select, textarea, input {
+			width: auto;
+		}
+		.add-on {
+			padding: 1px 3px 2px;
+			margin-bottom: 0;
+		}
 	}
 }
