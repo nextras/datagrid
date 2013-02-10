@@ -1,18 +1,16 @@
 {define table-open-tag}
-<table class="table table-bordered table-condensed table-striped">
+	<table class="table table-bordered table-condensed table-striped">
 {/define}
 
 {define filter-actions}
-{input filter class => "btn btn-primary btn-small"}
-
-{if $showCancel}
-	{input cancel class => "btn btn-small"}
-{/if}
+	{input filter class => "btn btn-primary btn-small"}
+	{if $showCancel}
+		{input cancel class => "btn btn-small"}
+	{/if}
 {/define}
 
 {define edit-actions}
 	{input save class => "btn btn-primary btn-small"}
-
 	{input cancel class => "btn btn-small"}
 {/define}
 
