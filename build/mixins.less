@@ -54,15 +54,10 @@
 
 // Placeholder text
 .placeholder(@color: @input-color-placeholder) {
-  &:-moz-placeholder {
-    color: @color;
-  }
-  &:-ms-input-placeholder {
-    color: @color;
-  }
-  &::-webkit-input-placeholder {
-    color: @color;
-  }
+  &:-moz-placeholder            { color: @color; } // Firefox 4-18
+  &::-moz-placeholder           { color: @color; } // Firefox 19+
+  &:-ms-input-placeholder       { color: @color; } // Internet Explorer 10+
+  &::-webkit-input-placeholder  { color: @color; } // Safari and Chrome
 }
 
 // Text overflow
@@ -231,9 +226,9 @@
 // Default value is `visible`, but can be changed to `hidden
 // See git pull https://github.com/dannykeane/bootstrap.git backface-visibility for examples
 .backface-visibility(@visibility){
-  -webkit-backface-visibility: @visibility;
-     -moz-backface-visibility: @visibility;
-          backface-visibility: @visibility;
+	-webkit-backface-visibility: @visibility;
+	   -moz-backface-visibility: @visibility;
+	        backface-visibility: @visibility;
 }
 
 // Background clipping
@@ -335,6 +330,17 @@
     background-image: -o-linear-gradient(@deg, @startColor, @endColor); // Opera 11.10
     background-image: linear-gradient(@deg, @startColor, @endColor); // Standard, IE10
   }
+  .horizontal-three-colors(@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
+    background-color: mix(@midColor, @endColor, 80%);
+    background-image: -webkit-gradient(left, linear, 0 0, 0 100%, from(@startColor), color-stop(@colorStop, @midColor), to(@endColor));
+    background-image: -webkit-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+    background-image: -moz-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+    background-image: -o-linear-gradient(left, @startColor, @midColor @colorStop, @endColor);
+    background-image: linear-gradient(to right, @startColor, @midColor @colorStop, @endColor);
+    background-repeat: no-repeat;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down, gets no color-stop at all for proper fallback
+  }
+
   .vertical-three-colors(@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
     background-color: mix(@midColor, @endColor, 80%);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), color-stop(@colorStop, @midColor), to(@endColor));
@@ -377,36 +383,38 @@
 // Dividers (basically an hr) within dropdowns and nav lists
 .nav-divider(@top: #e5e5e5, @bottom: #fff) {
   height: 1px;
-  margin: ((@line-height-base / 2) - 1) 1px; // 8px 1px
+  margin: ((@line-height-base / 2) - 1) 0;
   overflow: hidden;
   background-color: @top;
   border-bottom: 1px solid @bottom;
 }
 
-// Button backgrounds
-// ------------------
-.buttonBackground(@background-start, @background-end, @text-color: #fff, @text-shadow: 0 -1px 0 rgba(0,0,0,.25)) {
-  color: @text-color;
-  text-shadow: @text-shadow;
-  #gradient > .vertical(@background-start, @background-end);
-  border-color: darken(@background-end, 7.5%);
+// Button psuedo states
+// -------------------------
+// Easily pump out default styles, as well as :hover, :focus, :active,
+// and disabled options for all buttons
+.btn-pseudo-states(@background, @border) {
+  background-color: @background;
+  border-color: @border;
 
   &:hover,
-  &:active,
-  &.active {
-    color: @text-color;
-    background-color: @background-end;
-    background-position: 0 -15px;
+  &:focus,
+  &:active {
+    background-color: darken(@background, 5%);
+        border-color: darken(@border, 10%);
   }
-  &:active,
-  &.active,
-  &[disabled],
+
   &.disabled,
+  &[disabled],
   fieldset[disabled] & {
-    background-image: none;
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: @background;
+          border-color: @border
+    }
   }
 }
-
 
 // Navbar vertical align
 // -------------------------
@@ -459,17 +467,17 @@
 
   .core(@grid-column-width, @grid-gutter-width) {
 
-    .spanX(@index) when (@index > 0) {
-      (~".span@{index}") { .span(@index); }
+    .spanX (@index) when (@index > 0) {
+      .span@{index} { .span(@index); }
       .spanX(@index - 1);
     }
     .spanX(0) {}
 
-    .offsetX(@index) when (@index > 0) {
-      (~".offset@{index}") { .offset(@index); }
+    .offsetX (@index) when (@index > 0) {
+      .offset@{index} { .offset(@index); }
       .offsetX(@index - 1);
     }
-    .offsetX(0) {}
+    .offsetX (0) {}
 
     // Base styles
     .offset(@columns) {
@@ -484,5 +492,4 @@
     .offsetX(@grid-columns);
 
   }
-
 }
