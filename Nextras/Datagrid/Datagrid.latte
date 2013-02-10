@@ -49,6 +49,8 @@
 			{if isset($_form[$column->name])}
 				{ifset #col-filter-{$column->name}}
 					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
+				{elseif isset($_l->blocks["col-filter"])}
+					{include #col-filter form => $_form, _form => $_form, column => $column}
 				{else}
 					{input $column->name}
 				{/ifset}
