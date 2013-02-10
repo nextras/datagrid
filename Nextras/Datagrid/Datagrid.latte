@@ -13,7 +13,7 @@
 {form form class => 'ajax'}
 
 {var $hasActionsColumn = FALSE}
-{ifset #col-actions}{var $hasActionsColumn = TRUE}{/ifset}
+{ifset #row-actions}{var $hasActionsColumn = TRUE}{/ifset}
 {ifset $_form['filter']}{var $hasActionsColumn = TRUE}{var $hasFilter = TRUE}{else}{var $hasFilter = FALSE}{/ifset}
 {if $control->getEditFormFactory()}{var $hasActionsColumn = TRUE}{var $hasEdit = TRUE}{else}{var $hasEdit = FALSE}{/if}
 
@@ -58,8 +58,8 @@
 		</th>
 		{/foreach}
 		<th class="col-actions">
-			{ifset #filter-actions}
-				{include #filter-actions showCancel => !empty($control->filter), _form => $_form, form => $form}
+			{ifset #global-filter-actions}
+				{include #global-filter-actions showCancel => !empty($control->filter), _form => $_form, form => $form}
 			{else}
 				{input filter}
 				{if !empty($control->filter)}{input cancel}{/if}
@@ -91,16 +91,16 @@
 			{if $editRow}
 				{formContainer edit}
 					{input $rowPrimaryKey}
-					{ifset #edit-actions}
-						{include #edit-actions _form => $_form, form => $form}
+					{ifset #row-edit-actions}
+						{include #row-edit-actions _form => $_form, form => $form}
 					{else}
 						{input save}
 						{input cancel}
 					{/ifset}
 				{/formContainer}
 			{else}
-				{ifset #col-actions}
-					{include #col-actions row => $row, primary => $primary}
+				{ifset #row-actions}
+					{include #row-actions row => $row, primary => $primary}
 				{elseif $hasEdit}
 					<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>Edit</a>
 				{/ifset}
