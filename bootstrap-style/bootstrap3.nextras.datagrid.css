@@ -1,0 +1,22 @@
+.datagrid td,
+.datagrid th {
+  border-color: #CACACA;
+}
+.datagrid .cols-actions {
+  text-align: center;
+}
+.datagrid thead .columns {
+  background: #EEE;
+}
+.datagrid thead .filters {
+  background: #EEE;
+}
+.datagrid thead .filters th {
+  border-top: 1px solid #E5E5E5;
+}
+.datagrid tbody td {
+  vertical-align: middle;
+}
+.datagrid select {
+  height: auto;
+}

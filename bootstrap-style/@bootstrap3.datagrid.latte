@@ -1,0 +1,23 @@
+{define table-open-tag}
+	<table class="table table-bordered table-condensed table-striped">
+{/define}
+
+{define global-filter-actions}
+	{input filter class => "btn btn-primary btn-small"}
+	{if $showCancel}
+		{input cancel class => "btn btn-small"}
+	{/if}
+{/define}
+
+{define col-filter}
+	{input $column->name class => "input-small"}
+{/define}
+
+{define row-edit-actions}
+	{input save class => "btn btn-primary btn-small"}
+	{input cancel class => "btn btn-small"}
+{/define}
+
+{define row-actions}
+	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-small btn-primary">Edit</a>
+{/define}
