@@ -47,7 +47,11 @@
 		{foreach $columns as $column}
 		<th class="col-{$column->name}">
 			{if isset($_form[$column->name])}
-				{input $column->name}
+				{ifset #col-filter-{$column->name}}
+					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
+				{else}
+					{input $column->name}
+				{/ifset}
 			{/if}
 		</th>
 		{/foreach}
