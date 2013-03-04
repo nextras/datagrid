@@ -14,6 +14,7 @@
 
 {var $hasActionsColumn = FALSE}
 {ifset #row-actions}{var $hasActionsColumn = TRUE}{/ifset}
+{ifset #global-actions}{var $hasActionsColumn = TRUE}{/ifset}
 {ifset $_form['filter']}{var $hasActionsColumn = TRUE}{var $hasFilter = TRUE}{else}{var $hasFilter = FALSE}{/ifset}
 {if $control->getEditFormFactory()}{var $hasActionsColumn = TRUE}{var $hasEdit = TRUE}{else}{var $hasEdit = FALSE}{/if}
 
@@ -38,7 +39,9 @@
 			{/if}
 		</th>
 	{/foreach}
+	{if $hasActionsColumn}
 		<th class="col-actions">{ifset #global-actions}{include #global-actions}{/ifset}</th>
+	{/if}
 	</tr>
 
 	{if $hasFilter}
