@@ -18,6 +18,12 @@
 	{input cancel class => "btn btn-small"}
 {/define}
 
-{define row-actions}
+{if $control->getEditFormFactory()}
+	{var $rowActions = 'row-actions'}
+{else}
+	{var $rowActions = 'row-actions-do_not_render'}
+{/if}
+
+{define $rowActions}
 	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-small btn-primary">Edit</a>
 {/define}
