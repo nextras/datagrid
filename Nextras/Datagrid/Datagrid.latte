@@ -116,6 +116,39 @@
 	{?unset($_dynSnippets)}
 {/if}
 </tbody>
+<tfoot>
+{if isset($paginator)}
+<tr>
+	<th colspan="{=count($columns) + ($hasActionsColumn ? 1 : 0)}">
+	{ifset #pagination}
+		{include #pagination}
+	{else}
+		<div class="paginator">
+			{if $paginator->isFirst()}
+				<span class="button">« First</span>
+				<span class="button">« Previous</span>
+			{else}
+				<a href="{link paginate!, 'page' => 1}" class="ajax">« First</a>
+				<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« Previous</a>
+			{/if}
+
+			<span class="counts">
+				<span class="current-page">{$paginator->page}</span> / <span class="total-pages">{$paginator->pageCount}</span>
+			</span>
+
+			{if $paginator->isLast()}
+				<span class="button">Next »</span>
+				<span class="button">Last »</span>
+			{else}
+				<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">Next »</a>
+				<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">Last »</a>
+			{/if}
+		</div>
+	{/ifset}
+	</th>
+</tr>
+{/if}
+</tfoot>
 {ifset #table-close-tag}
 {include #table-close-tag}
 {else}

@@ -12,6 +12,7 @@ namespace Nextras\Datagrid;
 
 use Nette;
 use Nette\Application\UI;
+use Nette\Utils\Paginator;
 
 
 
@@ -33,6 +34,9 @@ class Datagrid extends UI\Control
 	/** @persistent */
 	public $orderType = self::ORDER_ASC;
 
+	/** @persistent */
+	public $page;
+
 	/** @var array */
 	protected $filterDataSource = array();
 
@@ -53,6 +57,12 @@ class Datagrid extends UI\Control
 
 	/** @var Nette\Callback */
 	protected $filterFormFactory;
+
+	/** @var Nette\Utils\Paginator */
+	protected $paginator;
+
+	/** @var Nette\Callback */
+	protected $paginatorItemsCountCallback;
 
 	/** @var mixed */
 	protected $editRowKey;
@@ -167,6 +177,24 @@ class Datagrid extends UI\Control
 
 
 
+	public function setPagination($itemsPerPage, $itemsCountCallback = NULL)
+	{
+		if ($itemsPerPage === FALSE) {
+			$this->paginator = NULL;
+			$this->paginatorItemsCountCallback = NULL;
+		} else {
+			if ($itemsCountCallback === NULL) {
+				throw new \InvalidArgumentException('Items count callback must be set.');
+			}
+
+			$this->paginator = new Paginator();
+			$this->paginator->itemsPerPage = $itemsPerPage;
+			$this->paginatorItemsCountCallback = new Nette\Callback($itemsCountCallback);
+		}
+	}
+
+
+
 	public function addCellsTemplate($path)
 	{
 		$this->cellsTemplates[] = $path;
@@ -204,6 +232,17 @@ class Datagrid extends UI\Control
 				throw new \RuntimeException("Cells template '{$cellsTemplate}' does not exist.");
 			}
 		}
+
+		if ($this->paginator) {
+			$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
+				$this->filter,
+				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
+			));
+
+			$this->paginator->setItemCount($itemsCount);
+			$this->template->paginator = $this->paginator;
+		}
+
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 		$this->template->render();
@@ -240,8 +279,11 @@ class Datagrid extends UI\Control
 	protected function getData($key = NULL)
 	{
 		if (!$this->data) {
-			$order = $this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL;
-			$this->data = $this->dataSourceCallback->invokeArgs(array($this->filter, $order));
+			$this->data = $this->dataSourceCallback->invokeArgs(array(
+				$this->filter,
+				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
+				$this->paginator,
+			));
 		}
 
 		if ($key === NULL) {
@@ -378,5 +420,26 @@ class Datagrid extends UI\Control
 		}
 	}
 
-}
 
+
+	public function loadState(array $params)
+	{
+		parent::loadState($params);
+		if ($this->paginator) {
+			$this->paginator->page = $this->page;
+		}
+	}
+
+
+
+	public function handlePaginate()
+	{
+		if ($this->presenter->isAjax()) {
+			$this->template->echoSnippets = TRUE;
+			$this->invalidateControl('rows');
+		} else {
+			$this->redirect('this');
+		}
+	}
+
+}

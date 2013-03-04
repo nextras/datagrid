@@ -34,6 +34,20 @@
 .datagrid tbody td {
   vertical-align: middle;
 }
+.datagrid tfoot {
+  background: #EEE;
+}
+.datagrid tfoot th {
+  text-align: center;
+}
+.datagrid tfoot .pagination {
+  margin: 5px;
+}
+.datagrid tfoot .pagination > .active a,
+.datagrid tfoot .pagination > .active:hover a {
+  background: #FFF;
+  color: #333;
+}
 .datagrid select,
 .datagrid textarea,
 .datagrid input[type="text"],

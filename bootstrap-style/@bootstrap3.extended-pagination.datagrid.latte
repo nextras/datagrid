@@ -1,0 +1,40 @@
+{define pagination}
+<?php
+	$page = $paginator->getPage();
+	if ($paginator->pageCount < 2) {
+		$steps = array($page);
+	} else {
+		$arr = range(max($paginator->firstPage, $page - 3), min($paginator->lastPage, $page + 3));
+		$count = 4;
+		$quotient = ($paginator->pageCount - 1) / $count;
+		for ($i = 0; $i <= $count; $i++) {
+			$arr[] = round($quotient * $i) + $paginator->firstPage;
+		}
+		sort($arr);
+		$steps = array_values(array_unique($arr));
+	}
+?>
+<ul class="pagination">
+{if $paginator->isFirst()}
+	<li class="disabled"><a>« Previous</a></li>
+{else}
+	<li><a href="{link paginate!, 'page' => $paginator->page - 1}" rel="prev" class="ajax">« Previous</a><li>
+{/if}
+
+{foreach $steps as $step}
+{if $step == $paginator->page}
+	<li class="active"><a href="">{$step}</a></li>
+{else}
+	<li><a href="{link paginate!, 'page' => $step}" class="ajax">{$step}</a></li>
+{/if}
+{if $iterator->nextValue > $step + 1}<li class="disabled"><a>…</a></li>{/if}
+{/foreach}
+
+{if $paginator->isLast()}
+	<li class="disabled"><a >Next »</a></li>
+{else}
+	<li><a href="{link paginate!, 'page' => $paginator->page + 1}" rel="next" class="ajax">Next »</a></li>
+{/if}
+</ul>
+{/define}
+{? $_l->blocks['pagination'] = array_reverse($_l->blocks['pagination'])}
