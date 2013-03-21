@@ -379,7 +379,7 @@ class Datagrid extends UI\Control
 			}
 		}
 
-		$form->onSuccess[] = $this->processForm;
+		$form->onSubmit[] = $this->processForm;
 		return $form;
 	}
 
@@ -388,7 +388,7 @@ class Datagrid extends UI\Control
 	public function processForm(UI\Form $form)
 	{
 		if (isset($form['edit'])) {
-			if ($form['edit']['save']->isSubmittedBy()) {
+			if ($form['edit']['save']->isSubmittedBy() && $form->isValid()) {
 				Nette\Callback::create($this->editFormCallback)->invokeArgs(array(
 					$form['edit']
 				));
