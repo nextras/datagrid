@@ -206,10 +206,15 @@ class Datagrid extends UI\Control
 		$this->translator = $translator;
 	}
 
+	public function getTranslator()
+	{
+		return $this->translator;
+	}
+
 
 	public function translate()
 	{
-		$translator = $this->translator;
+		$translator = $this->getTranslator();
 		$args = func_get_args();
 		return $translator ? call_user_func_array(array($translator, 'translate'), $args) : $args[0];
 	}
@@ -302,7 +307,7 @@ class Datagrid extends UI\Control
 	protected function createTemplate($class = NULL) {
 		$template = parent::createTemplate($class);
 
-		$template->setTranslator($this->translator);
+		$template->setTranslator($this->getTranslator());
 
 		return $template;
 	}
