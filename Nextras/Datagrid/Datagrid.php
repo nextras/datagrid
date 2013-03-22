@@ -299,6 +299,15 @@ class Datagrid extends UI\Control
 	}
 
 
+	protected function createTemplate($class = NULL) {
+		$template = parent::createTemplate($class);
+
+		$template->setTranslator($this->translator);
+
+		return $template;
+	}
+
+
 
 	protected function getData($key = NULL)
 	{
