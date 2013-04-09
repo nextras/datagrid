@@ -404,10 +404,16 @@ class Datagrid extends UI\Control
 				$values = array_filter($values, function($val) {
 					return strlen($val) > 0;
 				});
+				if ($this->paginator) {
+					$this->page = $this->paginator->page = 1;
+				}
 				$this->filter = $this->filterDataSource = $values;
 				$this->template->echoSnippets = TRUE;
 				$this->invalidateControl('rows');
 			} elseif ($form['filter']['cancel']->isSubmittedBy()) {
+				if ($this->paginator) {
+					$this->page = $this->paginator->page = 1;
+				}
 				$this->filter = $this->filterDataSource = array();
 				$form['filter']->setValues(array(), TRUE);
 				$this->template->echoSnippets = TRUE;
