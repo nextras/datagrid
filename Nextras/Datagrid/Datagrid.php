@@ -248,7 +248,7 @@ class Datagrid extends UI\Control
 				$this->filterDataSource[$this->rowPrimaryKey] = array($this->filterDataSource[$this->rowPrimaryKey]);
 
 			$this->filterDataSource[$this->rowPrimaryKey][] = $primaryValue;
-			$this->invalidateControl('rows');
+			parent::invalidateControl('rows');
 			$this->invalidateControl('rows-' . $primaryValue);
 		}
 	}
@@ -280,7 +280,8 @@ class Datagrid extends UI\Control
 	protected function getData($key = NULL)
 	{
 		if (!$this->data) {
-			if (!$key) {
+			$onlyRow = $key && $this->presenter->isAjax();
+			if (!$onlyRow) {
 				$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
 					$this->filter,
 					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
@@ -293,9 +294,9 @@ class Datagrid extends UI\Control
 			}
 
 			$this->data = $this->dataSourceCallback->invokeArgs(array(
-				$this->filter,
+				$this->filterDataSource,
 				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
-				$key ? NULL : $this->paginator,
+				$onlyRow ? NULL : $this->paginator,
 			));
 		}
 
