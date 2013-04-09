@@ -14,8 +14,8 @@ $.nette.ext('datagrid', {
 		});
 	},
 	load: function() {
-		$('.datagrid input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
-			if (e.which == 13) {
+		$('.datagrid thead input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
+			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 				$(this).parents('tr').find('input[name=filter\\[filter\\]]').click();
 				e.preventDefault();
 			}
