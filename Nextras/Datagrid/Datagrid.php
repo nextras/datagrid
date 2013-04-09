@@ -35,7 +35,7 @@ class Datagrid extends UI\Control
 	public $orderType = self::ORDER_ASC;
 
 	/** @persistent */
-	public $page;
+	public $page = 1;
 
 	/** @var array */
 	protected $filterDataSource = array();
@@ -223,6 +223,7 @@ class Datagrid extends UI\Control
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
+		$this->template->paginator = $this->paginator;
 
 		foreach ($this->cellsTemplates as &$cellsTemplate) {
 			if ($cellsTemplate instanceof Nette\Templating\IFileTemplate) {
@@ -231,16 +232,6 @@ class Datagrid extends UI\Control
 			if (!file_exists($cellsTemplate)) {
 				throw new \RuntimeException("Cells template '{$cellsTemplate}' does not exist.");
 			}
-		}
-
-		if ($this->paginator) {
-			$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
-				$this->filter,
-				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
-			));
-
-			$this->paginator->setItemCount($itemsCount);
-			$this->template->paginator = $this->paginator;
 		}
 
 		$this->template->cellsTemplates = $this->cellsTemplates;
@@ -279,10 +270,22 @@ class Datagrid extends UI\Control
 	protected function getData($key = NULL)
 	{
 		if (!$this->data) {
+			if (!$key) {
+				$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
+					$this->filter,
+					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
+				));
+
+				$this->paginator->setItemCount($itemsCount);
+				if ($this->paginator->page !== $this->page) {
+					$this->paginator->page = $this->page = 1;
+				}
+			}
+
 			$this->data = $this->dataSourceCallback->invokeArgs(array(
 				$this->filter,
 				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
-				$this->paginator,
+				$key ? NULL : $this->paginator,
 			));
 		}
 
