@@ -30,6 +30,12 @@ $.nette.ext('datagrid', {
 				e.preventDefault();
 			}
 		});
+		$('.datagrid tbody input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
+			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+				$(this).parents('tr').find('input[name=edit\\[save\\]]').click();
+				e.preventDefault();
+			}
+		});
 	},
 	before: function(xhr, settings) {
 		this.grid = settings.nette.el.parents('.datagrid');
