@@ -255,6 +255,16 @@ class Datagrid extends UI\Control
 
 
 
+	public function invalidateControl($snippet = NULL)
+	{
+		parent::invalidateControl($snippet);
+		if ($snippet === NULL || $snippet === 'rows') {
+			$this->template->echoSnippets = TRUE;
+		}
+	}
+
+
+
 	/*******************************************************************************/
 
 
@@ -343,7 +353,6 @@ class Datagrid extends UI\Control
 	public function handleSort()
 	{
 		if ($this->presenter->isAjax()) {
-			$this->template->echoSnippets = TRUE;
 			$this->invalidateControl('rows');
 		} else {
 			$this->redirect('this');
@@ -411,7 +420,6 @@ class Datagrid extends UI\Control
 					$this->page = $this->paginator->page = 1;
 				}
 				$this->filter = $this->filterDataSource = $values;
-				$this->template->echoSnippets = TRUE;
 				$this->invalidateControl('rows');
 			} elseif ($form['filter']['cancel']->isSubmittedBy()) {
 				if ($this->paginator) {
@@ -419,7 +427,6 @@ class Datagrid extends UI\Control
 				}
 				$this->filter = $this->filterDataSource = array();
 				$form['filter']->setValues(array(), TRUE);
-				$this->template->echoSnippets = TRUE;
 				$this->invalidateControl('rows');
 			}
 		}
@@ -444,7 +451,6 @@ class Datagrid extends UI\Control
 	public function handlePaginate()
 	{
 		if ($this->presenter->isAjax()) {
-			$this->template->echoSnippets = TRUE;
 			$this->invalidateControl('rows');
 		} else {
 			$this->redirect('this');
