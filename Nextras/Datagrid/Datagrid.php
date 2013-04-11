@@ -244,8 +244,9 @@ class Datagrid extends UI\Control
 	public function invalidateRow($primaryValue)
 	{
 		if ($this->presenter->isAjax()) {
-			if (isset($this->filterDataSource[$this->rowPrimaryKey]) && is_string($this->filterDataSource[$this->rowPrimaryKey]))
+			if (isset($this->filterDataSource[$this->rowPrimaryKey]) && is_string($this->filterDataSource[$this->rowPrimaryKey])) {
 				$this->filterDataSource[$this->rowPrimaryKey] = array($this->filterDataSource[$this->rowPrimaryKey]);
+			}
 
 			$this->filterDataSource[$this->rowPrimaryKey][] = $primaryValue;
 			parent::invalidateControl('rows');
@@ -367,7 +368,7 @@ class Datagrid extends UI\Control
 		$form = new UI\Form;
 
 		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST))) {
-			$data = $this->editRowKey ? $this->getData($this->editRowKey) : NULL;
+			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
 			$form['edit'] = Nette\Callback::create($this->editFormFactory)->invokeArgs(array($data));
 
 			if (!isset($form['edit']['save']))
@@ -401,13 +402,23 @@ class Datagrid extends UI\Control
 	public function processForm(UI\Form $form)
 	{
 		if (isset($form['edit'])) {
-			if ($form['edit']['save']->isSubmittedBy() && $form->isValid()) {
-				Nette\Callback::create($this->editFormCallback)->invokeArgs(array(
-					$form['edit']
-				));
+			if ($form['edit']['save']->isSubmittedBy()) {
+				if ($form['edit']->isValid()) {
+					Nette\Callback::create($this->editFormCallback)->invokeArgs(array(
+						$form['edit']
+					));
+				} else {
+					$this->editRowKey = $form['edit'][$this->rowPrimaryKey]->getValue();
+				}
 			}
-
-			$this->invalidateRow($form['edit'][$this->rowPrimaryKey]->getValue());
+			if ($form['edit']['cancel']->isSubmittedBy() || ($form['edit']['save']->isSubmittedBy() && $form['edit']->isValid())) {
+				$editRowKey = $form['edit'][$this->rowPrimaryKey]->getValue();
+				$this->invalidateRow($editRowKey);
+				$this->getData($editRowKey);
+			}
+			if ($this->editRowKey) {
+				$this->invalidateRow($this->editRowKey);
+			}
 		}
 
 		if (isset($form['filter'])) {
