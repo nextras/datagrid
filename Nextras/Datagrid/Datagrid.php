@@ -282,7 +282,7 @@ class Datagrid extends UI\Control
 	{
 		if (!$this->data) {
 			$onlyRow = $key && $this->presenter->isAjax();
-			if (!$onlyRow) {
+			if (!$onlyRow && $this->paginator) {
 				$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
 					$this->filter,
 					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
