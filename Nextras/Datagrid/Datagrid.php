@@ -401,6 +401,7 @@ class Datagrid extends UI\Control
 
 	public function processForm(UI\Form $form)
 	{
+		$allowRedirect = TRUE;
 		if (isset($form['edit'])) {
 			if ($form['edit']['save']->isSubmittedBy()) {
 				if ($form['edit']->isValid()) {
@@ -409,6 +410,7 @@ class Datagrid extends UI\Control
 					));
 				} else {
 					$this->editRowKey = $form['edit'][$this->rowPrimaryKey]->getValue();
+					$allowRedirect = FALSE;
 				}
 			}
 			if ($form['edit']['cancel']->isSubmittedBy() || ($form['edit']['save']->isSubmittedBy() && $form['edit']->isValid())) {
@@ -443,7 +445,7 @@ class Datagrid extends UI\Control
 			}
 		}
 
-		if (!$this->presenter->isAjax()) {
+		if (!$this->presenter->isAjax() && $allowRedirect) {
 			$this->redirect('this');
 		}
 	}
