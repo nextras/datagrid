@@ -14,25 +14,26 @@ $.nette.ext('datagrid', {
 		});
 	},
 	load: function() {
+		var datagrid = this;
 		$('.datagrid thead input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
 			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-				$(this).parents('tr').find('input[name=filter\\[filter\\]]').click();
+				$(this).parents('tr').find('input[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
 			}
 		});
 		$('.datagrid thead select').off('change.datagrid').on('change.datagrid', function(e) {
-			$(this).parents('tr').find('input[name=filter\\[filter\\]]').click();
+			$(this).parents('tr').find('input[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 			e.preventDefault();
 		});
 		$('.datagrid tbody td:not(.col-actions)').off('click.datagrid').on('click.datagrid', function(e) {
 			if (e.ctrlKey) {
-				$(this).parents('tr').find('a[data-datagrid-edit]').click();
+				$(this).parents('tr').find('a[data-datagrid-edit]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
 			}
 		});
 		$('.datagrid tbody input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
 			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-				$(this).parents('tr').find('input[name=edit\\[save\\]]').click();
+				$(this).parents('tr').find('input[name=edit\\[save\\]]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
 			}
 		});
@@ -64,6 +65,13 @@ $.nette.ext('datagrid', {
 			}
 
 			$(this).attr('href', href + '&' + paramName + '-cancelEditPrimaryValue=' + idToClose.join(','));
+		});
+	},
+	createClickEvent: function(item) {
+		var offset = item.offset();
+		return jQuery.Event('click', {
+			pageX: offset.left + item.width(),
+			pageY: offset.top + item.height()
 		});
 	}
 });
