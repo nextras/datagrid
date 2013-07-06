@@ -82,6 +82,7 @@ class Datagrid extends UI\Control
 	 * Adds column
 	 * @param  string
 	 * @param  string
+	 * @return Column
 	 */
 	public function addColumn($name, $label = NULL)
 	{
