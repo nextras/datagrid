@@ -5,6 +5,9 @@
 .datagrid .cols-actions {
   text-align: center;
 }
+.datagrid .btn {
+  margin-right: 3px;
+}
 .datagrid thead .columns {
   background: #EEE;
 }
@@ -14,7 +17,7 @@
 .datagrid thead .filters th {
   border-top: 1px solid #E5E5E5;
 }
-.datagrid tbody td {
+.datagrid tbody > tr > td {
   vertical-align: middle;
 }
 .datagrid tfoot {
