@@ -17,12 +17,12 @@ $.nette.ext('datagrid', {
 		var datagrid = this;
 		$('.datagrid thead input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
 			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-				$(this).parents('tr').find('input[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
+				$(this).parents('tr').find('[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
 			}
 		});
 		$('.datagrid thead select').off('change.datagrid').on('change.datagrid', function(e) {
-			$(this).parents('tr').find('input[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
+			$(this).parents('tr').find('[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 			e.preventDefault();
 		});
 		$('.datagrid tbody td:not(.col-actions)').off('click.datagrid').on('click.datagrid', function(e) {
@@ -33,7 +33,7 @@ $.nette.ext('datagrid', {
 		});
 		$('.datagrid tbody input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
 			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-				$(this).parents('tr').find('input[name=edit\\[save\\]]').trigger(datagrid.createClickEvent($(this)));
+				$(this).parents('tr').find('[name=edit\\[save\\]]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
 			}
 		});
@@ -49,7 +49,7 @@ $.nette.ext('datagrid', {
 	load: function(grid) {
 		var idToClose = [];
 		var paramName = grid.attr('data-grid-name');
-		grid.find('tr:has(input[name=edit\\[cancel\\]])').each(function(i, el) {
+		grid.find('tr:has([name=edit\\[cancel\\]])').each(function(i, el) {
 			$(el).find('input').get(0).focus();
 			idToClose.push($(el).attr('data-grid-primary'));
 		});
