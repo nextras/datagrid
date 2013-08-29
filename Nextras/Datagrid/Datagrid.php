@@ -367,7 +367,7 @@ class Datagrid extends UI\Control
 	{
 		$form = new UI\Form;
 
-		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST))) {
+		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST['edit']))) {
 			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
 			$form['edit'] = Nette\Callback::create($this->editFormFactory)->invokeArgs(array($data));
 
