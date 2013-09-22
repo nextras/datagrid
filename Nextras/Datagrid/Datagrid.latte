@@ -92,7 +92,7 @@
 				{ifset #col-$column->name}
 					{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
 				{else}
-					<td class="col-{$column->name}">{$cell}</td>
+					<td class="col-{$column->name}">{_$cell}</td>
 				{/ifset}
 			{/if}
 		{/foreach}

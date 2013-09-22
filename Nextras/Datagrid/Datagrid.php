@@ -13,7 +13,7 @@ namespace Nextras\Datagrid;
 use Nette;
 use Nette\Application\UI;
 use Nette\Utils\Paginator;
-
+use Nette\Localization\ITranslator;
 
 
 class Datagrid extends UI\Control
@@ -64,6 +64,9 @@ class Datagrid extends UI\Control
 	/** @var Nette\Callback */
 	protected $paginatorItemsCountCallback;
 
+	/** @var Nette\Localization\ITranslator */
+	protected $translator;
+
 	/** @var mixed */
 	protected $editRowKey;
 
@@ -89,7 +92,9 @@ class Datagrid extends UI\Control
 		if (!$this->rowPrimaryKey) {
 			$this->rowPrimaryKey = $name;
 		}
-		return $this->columns[] = new Column($name, $label ?: ucfirst($name), $this);
+
+		$label = $label ? $this->translate($label) : ucfirst($name);
+		return $this->columns[] = new Column($name, $label, $this);
 	}
 
 
@@ -195,6 +200,28 @@ class Datagrid extends UI\Control
 	}
 
 
+	// === L10N ======================================================
+
+	public function setTranslator(ITranslator $translator)
+	{
+		$this->translator = $translator;
+	}
+
+	public function getTranslator()
+	{
+		return $this->translator;
+	}
+
+
+	public function translate()
+	{
+		$translator = $this->getTranslator();
+		$args = func_get_args();
+		return $translator ? call_user_func_array(array($translator, 'translate'), $args) : $args[0];
+	}
+
+	// ===============================================================
+
 
 	public function addCellsTemplate($path)
 	{
@@ -275,6 +302,15 @@ class Datagrid extends UI\Control
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
+	}
+
+
+	protected function createTemplate($class = NULL) {
+		$template = parent::createTemplate($class);
+
+		$template->setTranslator($this->getTranslator());
+
+		return $template;
 	}
 
 
