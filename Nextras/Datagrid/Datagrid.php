@@ -18,7 +18,6 @@ use Nette\Utils\Paginator;
 
 class Datagrid extends UI\Control
 {
-
 	/** @var string */
 	const ORDER_ASC = 'asc';
 
@@ -61,6 +60,9 @@ class Datagrid extends UI\Control
 	/** @var Nette\Utils\Paginator */
 	protected $paginator;
 
+	/** @var Nette\Localization\ITranslator */
+	protected $translator;
+
 	/** @var Nette\Callback */
 	protected $paginatorItemsCountCallback;
 
@@ -89,7 +91,9 @@ class Datagrid extends UI\Control
 		if (!$this->rowPrimaryKey) {
 			$this->rowPrimaryKey = $name;
 		}
-		return $this->columns[] = new Column($name, $label ?: ucfirst($name), $this);
+
+		$label = $label ? $this->translate($label) : ucfirst($name);
+		return $this->columns[] = new Column($name, $label, $this);
 	}
 
 
@@ -206,6 +210,30 @@ class Datagrid extends UI\Control
 	public function getCellsTemplate()
 	{
 		return $this->cellsTemplates;
+	}
+
+
+
+	public function setTranslator(ITranslator $translator)
+	{
+		$this->translator = $translator;
+	}
+
+
+
+	public function getTranslator()
+	{
+		return $this->translator;
+	}
+
+
+
+	public function translate($s, $count = NULL)
+	{
+		$translator = $this->getTranslator();
+		return $translator === NULL || $s == NULL || $s instanceof Html // intentionally ==
+			? $s
+			: $translator->translate((string) $s, $count);
 	}
 
 
@@ -460,6 +488,15 @@ class Datagrid extends UI\Control
 		if ($this->paginator) {
 			$this->paginator->page = $this->page;
 		}
+	}
+
+
+
+	protected function createTemplate($class = NULL)
+	{
+		$template = parent::createTemplate($class);
+		$template->setTranslator($this->getTranslator());
+		return $template;
 	}
 
 
