@@ -13,6 +13,7 @@ namespace Nextras\Datagrid;
 use Nette;
 use Nette\Application\UI;
 use Nette\Utils\Paginator;
+use Nette\Localization\ITranslator;
 
 
 
@@ -495,7 +496,9 @@ class Datagrid extends UI\Control
 	protected function createTemplate($class = NULL)
 	{
 		$template = parent::createTemplate($class);
-		$template->setTranslator($this->getTranslator());
+		if ($translator = $this->getTranslator()) {
+			$template->setTranslator($translator);
+		}
 		return $template;
 	}
 
