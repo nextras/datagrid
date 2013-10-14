@@ -10,8 +10,10 @@
 
 namespace Nextras\Datagrid;
 
-use Nette;
 use Nette\Application\UI;
+use Nette\Callback;
+use Nette\Templating\IFileTemplate;
+use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use Nette\Localization\ITranslator;
 
@@ -43,10 +45,10 @@ class Datagrid extends UI\Control
 	/** @var array */
 	protected $columns = array();
 
-	/** @var Nette\Callback */
+	/** @var Callback */
 	protected $columnGetterCallback;
 
-	/** @var Nette\Callback */
+	/** @var Callback */
 	protected $dataSourceCallback;
 
 	/** @var mixed */
@@ -55,16 +57,16 @@ class Datagrid extends UI\Control
 	/** @var mixed */
 	protected $editFormCallback;
 
-	/** @var Nette\Callback */
+	/** @var Callback */
 	protected $filterFormFactory;
 
-	/** @var Nette\Utils\Paginator */
+	/** @var Paginator */
 	protected $paginator;
 
-	/** @var Nette\Localization\ITranslator */
+	/** @var ITranslator */
 	protected $translator;
 
-	/** @var Nette\Callback */
+	/** @var Callback */
 	protected $paginatorItemsCountCallback;
 
 	/** @var mixed */
@@ -115,7 +117,7 @@ class Datagrid extends UI\Control
 
 	public function setColumnGetterCallback($getterCallback)
 	{
-		$this->columnGetterCallback = new Nette\Callback($getterCallback);
+		$this->columnGetterCallback = new Callback($getterCallback);
 	}
 
 
@@ -129,7 +131,7 @@ class Datagrid extends UI\Control
 
 	public function setDataSourceCallback($dataSourceCallback)
 	{
-		$this->dataSourceCallback = new Nette\Callback($dataSourceCallback);
+		$this->dataSourceCallback = new Callback($dataSourceCallback);
 	}
 
 
@@ -171,7 +173,7 @@ class Datagrid extends UI\Control
 
 	public function setFilterFormFactory($filterFormFactory)
 	{
-		$this->filterFormFactory = new Nette\Callback($filterFormFactory);
+		$this->filterFormFactory = new Callback($filterFormFactory);
 	}
 
 
@@ -195,7 +197,7 @@ class Datagrid extends UI\Control
 
 			$this->paginator = new Paginator();
 			$this->paginator->itemsPerPage = $itemsPerPage;
-			$this->paginatorItemsCountCallback = new Nette\Callback($itemsCountCallback);
+			$this->paginatorItemsCountCallback = new Callback($itemsCountCallback);
 		}
 	}
 
@@ -256,7 +258,7 @@ class Datagrid extends UI\Control
 		$this->template->paginator = $this->paginator;
 
 		foreach ($this->cellsTemplates as &$cellsTemplate) {
-			if ($cellsTemplate instanceof Nette\Templating\IFileTemplate) {
+			if ($cellsTemplate instanceof IFileTemplate) {
 				$cellsTemplate = $cellsTemplate->getFile();
 			}
 			if (!file_exists($cellsTemplate)) {
@@ -399,7 +401,7 @@ class Datagrid extends UI\Control
 
 		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST['edit']))) {
 			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
-			$form['edit'] = Nette\Callback::create($this->editFormFactory)->invokeArgs(array($data));
+			$form['edit'] = Callback::create($this->editFormFactory)->invokeArgs(array($data));
 
 			if (!isset($form['edit']['save']))
 				$form['edit']->addSubmit('save', 'Save');
@@ -436,7 +438,7 @@ class Datagrid extends UI\Control
 		if (isset($form['edit'])) {
 			if ($form['edit']['save']->isSubmittedBy()) {
 				if ($form['edit']->isValid()) {
-					Nette\Callback::create($this->editFormCallback)->invokeArgs(array(
+					Callback::create($this->editFormCallback)->invokeArgs(array(
 						$form['edit']
 					));
 				} else {
