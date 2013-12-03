@@ -1,4 +1,4 @@
-{define pagination}
+{redefine pagination}
 <?php
 	$page = $paginator->getPage();
 	if ($paginator->pageCount < 2) {
@@ -38,5 +38,4 @@
 	{/if}
 	</ul>
 </div>
-{/define}
-{? $_l->blocks['pagination'] = array_reverse($_l->blocks['pagination'])}
+{/redefine}
