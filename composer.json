@@ -13,7 +13,8 @@
 	],
 	"require": {
 		"php": ">=5.3.0",
-		"nette/nette": ">=2.0.0"
+		"nette/nette": ">=2.0.0",
+		"nextras/latte-macros": "dev-master"
 	},
 	"autoload": {
 		"psr-0": { "Nextras\\Datagrid": "" }

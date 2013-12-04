@@ -1,30 +1,24 @@
-{define table-open-tag}
+{redefine table-open-tag}
 	<table class="table table-bordered table-condensed table-striped">
-{/define}
+{/redefine}
 
-{define global-filter-actions}
+{redefine global-filter-actions}
 	{input filter class => "btn btn-primary btn-small"}
 	{if $showCancel}
 		{input cancel class => "btn btn-small"}
 	{/if}
-{/define}
+{/redefine}
 
-{define row-edit-actions}
+{redefine row-actions-edit}
 	{input save class => "btn btn-primary btn-small"}
 	{input cancel class => "btn btn-small"}
-{/define}
+{/redefine}
 
-{if $control->getEditFormFactory()}
-	{var $rowActions = 'row-actions'}
-{else}
-	{var $rowActions = 'row-actions-do_not_render'}
-{/if}
-
-{define $rowActions}
+{redefine row-actions-edit-link}
 	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-small btn-primary">Edit</a>
-{/define}
+{/redefine}
 
-{define pagination}
+{redefine pagination}
 <div class="pagination pagination-centered">
 	<ul>
 	{if $paginator->isFirst()}
@@ -48,4 +42,4 @@
 	{/if}
 	</ul>
 </div>
-{/define}
+{/redefine}
