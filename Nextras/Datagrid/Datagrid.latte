@@ -84,7 +84,7 @@
 {/define}
 
 {define row-actions-edit-link}
-	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>Edit</a>
+	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
 {/define}
 
 {define row-inner}
@@ -138,11 +138,11 @@
 {define pagination}
 	<div class="paginator">
 		{if $paginator->isFirst()}
-			<span class="button">« First</span>
-			<span class="button">« Previous</span>
+			<span class="button">« {$control->translate(First)}</span>
+			<span class="button">« {$control->translate(Previous)}</span>
 		{else}
-			<a href="{link paginate!, 'page' => 1}" class="ajax">« First</a>
-			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« Previous</a>
+			<a href="{link paginate!, 'page' => 1}" class="ajax">« {$control->translate(First)}</a>
+			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« {$control->translate(Previous)}</a>
 		{/if}
 
 		<span class="counts">
@@ -150,11 +150,11 @@
 		</span>
 
 		{if $paginator->isLast()}
-			<span class="button">Next »</span>
-			<span class="button">Last »</span>
+			<span class="button">{$control->translate(Next)} »</span>
+			<span class="button">{$control->translate(Last)} »</span>
 		{else}
-			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">Next »</a>
-			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">Last »</a>
+			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">{$control->translate(Next)} »</a>
+			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{$control->translate(Last)} »</a>
 		{/if}
 	</div>
 {/define}

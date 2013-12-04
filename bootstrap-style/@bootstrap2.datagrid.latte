@@ -15,18 +15,18 @@
 {/redefine}
 
 {redefine row-actions-edit-link}
-	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-small btn-primary">Edit</a>
+	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-small btn-primary">{$control->translate(Edit)}</a>
 {/redefine}
 
 {redefine pagination}
 <div class="pagination pagination-centered">
 	<ul>
 	{if $paginator->isFirst()}
-		<li class="disabled"><a>« First</a></li>
-		<li class="disabled"><a>« Previous</a></li>
+		<li class="disabled"><a>« {$control->translate(First)}</a></li>
+		<li class="disabled"><a>« {$control->translate(Previous)}</a></li>
 	{else}
-		<li><a href="{link paginate!, 'page' => 1}" class="ajax">« First</a></li>
-		<li><a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« Previous</a></li>
+		<li><a href="{link paginate!, 'page' => 1}" class="ajax">« {$control->translate(First)}</a></li>
+		<li><a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« {$control->translate(Previous)}</a></li>
 	{/if}
 
 	<li class="active">
@@ -34,11 +34,11 @@
 	</li>
 
 	{if $paginator->isLast()}
-		<li class="disabled"><a>Next »</a></li>
-		<li class="disabled"><a>Last »</a></li>
+		<li class="disabled"><a>{$control->translate(Next)} »</a></li>
+		<li class="disabled"><a>{$control->translate(Last)} »</a></li>
 	{else}
-		<li><a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">Next »</a></li>
-		<li><a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">Last »</a></li>
+		<li><a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">{$control->translate(Next)} »</a></li>
+		<li><a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{$control->translate(Last)} »</a></li>
 	{/if}
 	</ul>
 </div>
