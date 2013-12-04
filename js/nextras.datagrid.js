@@ -51,7 +51,7 @@ $.nette.ext('datagrid', {
 		var paramName = grid.attr('data-grid-name');
 		grid.find('tr:has([name=edit\\[cancel\\]])').each(function(i, el) {
 			$(el).find('input').get(0).focus();
-			idToClose.push($(el).attr('data-grid-primary'));
+			idToClose.push($(el).find('.grid-primary-value').val());
 		});
 
 		if (idToClose.length == 0) {
