@@ -79,7 +79,7 @@
 
 {define row}
 	<tr n:snippet="rows-$primary" data-grid-primary="{$primary}">
-		{include #row-inner row => $row}
+		{include #row-inner}
 	</tr>
 {/define}
 
@@ -88,6 +88,7 @@
 {/define}
 
 {define row-inner}
+	{var $row = $template->row}
 	{var $_form = $template->form}
 	{var $primary = $control->getter($row, $rowPrimaryKey)}
 	{var $editRow = $editRowKey == $primary}
@@ -180,6 +181,7 @@
 		{var $template->form = $_form}
 		{var $_dynSnippets = new ArrayObject()}
 		{foreach $data as $row}
+			{var $template->row = $row}
 			{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
 		{/foreach}
 		{if isset($echoSnippets)}
