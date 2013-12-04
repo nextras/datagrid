@@ -7,160 +7,197 @@
  *}
 <div class="datagrid" data-grid-name="{$control->getUniqueId()}">
 {snippet rows}
+
+{define table-open-tag}
+	<table>
+{/define}
+{define table-close-tag}
+	</table>
+{/define}
+
+{define global-actions}
+{/define}
+
+{define global-filter-actions}
+	{input filter}
+	{if $showCancel}
+		{input cancel}
+	{/if}
+{/define}
+
+{define row-head-colums}
+	<tr class="columns">
+		{foreach $columns as $column}
+			<th class="col-{$column->name}">
+				{if $column->canSort()}
+					<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
+					{if $column->isAsc()}
+						<span class="sort-symbol"><em>&#9650;</em></span>
+					{elseif $column->isDesc()}
+						<span class="sort-symbol"><em>&#9660;</em></span>
+					{/if}
+				{else}
+					{$column->label}
+				{/if}
+			</th>
+		{/foreach}
+		{if $template->hasActionsColumn}
+			<th class="col-actions">{include #global-actions}</th>
+		{/if}
+	</tr>
+{/define}
+
+{define col-filter}
+	{input $column->name}
+{/define}
+
+{define row-head-filter}
+	<tr class="filters">
+		{formContainer filter}
+		{foreach $columns as $column}
+			<th class="col-{$column->name}">
+				{if isset($_form[$column->name])}
+					{ifset #col-filter-{$column->name}}
+						{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
+					{else}
+						{include #col-filter form => $_form, _form => $_form, column => $column}
+					{/ifset}
+				{/if}
+			</th>
+		{/foreach}
+		<th class="col-actions">
+			{include #global-filter-actions showCancel => !empty($control->filter), _form => $_form, form => $form}
+		</th>
+		{/formContainer}
+	</tr>
+{/define}
+
+{define row-actions-edit}
+	{input save}
+	{input cancel}
+{/define}
+
+{define row}
+	<tr n:snippet="rows-$primary" data-grid-primary="{$primary}">
+		{include #row-inner row => $row}
+	</tr>
+{/define}
+
+{define row-actions-edit-link}
+	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>Edit</a>
+{/define}
+
+{define row-inner}
+	{var $_form = $template->form}
+	{var $primary = $control->getter($row, $rowPrimaryKey)}
+	{var $editRow = $editRowKey == $primary}
+	{foreach $columns as $column}
+		{var $cell = $control->getter($row, $column->name, FALSE)}
+		{if $editRow && $column->name != $rowPrimaryKey && isset($_form['edit'][$column->name])}
+			<td class="col-{$column->name}">
+				{formContainer edit}
+					{input $column->name}
+					{if $_form[$column->name]->hasErrors()}
+						<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
+					{/if}
+				{/formContainer}
+			</td>
+		{else}
+			{ifset #col-$column->name}
+				{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
+			{else}
+				<td class="col-{$column->name}">
+					{ifset #cell-$column->name}
+						{include #"cell-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
+					{else}
+						{$cell}
+					{/ifset}
+				</td>
+			{/ifset}
+		{/if}
+	{/foreach}
+	{if $template->hasActionsColumn}
+	<td class="col-actions">
+		{if $editRow}
+			{formContainer edit}
+				{input $rowPrimaryKey}
+				{include #row-actions-edit _form => $_form, form => $form}
+			{/formContainer}
+		{else}
+			{ifset #row-actions}
+				{include #row-actions row => $row, primary => $primary}
+			{elseif $control->getEditFormFactory()}
+				{include #row-actions-edit-link row => $row, primary => $primary}
+			{/ifset}
+		{/if}
+	</td>
+	{/if}
+{/define}
+
+{define pagination}
+	<div class="paginator">
+		{if $paginator->isFirst()}
+			<span class="button">« First</span>
+			<span class="button">« Previous</span>
+		{else}
+			<a href="{link paginate!, 'page' => 1}" class="ajax">« First</a>
+			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« Previous</a>
+		{/if}
+
+		<span class="counts">
+			<span class="current-page">{$paginator->page}</span> / <span class="total-pages">{$paginator->pageCount}</span>
+		</span>
+
+		{if $paginator->isLast()}
+			<span class="button">Next »</span>
+			<span class="button">Last »</span>
+		{else}
+			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">Next »</a>
+			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">Last »</a>
+		{/if}
+	</div>
+{/define}
+
 {foreach $cellsTemplates as $cellsTemplate}
 	{includeblock $cellsTemplate}
 {/foreach}
+
 {form form class => 'ajax'}
-
-{var $hasActionsColumn = FALSE}
-{ifset #row-actions}{var $hasActionsColumn = TRUE}{/ifset}
-{ifset #global-actions}{var $hasActionsColumn = TRUE}{/ifset}
-{ifset $_form['filter']}{var $hasActionsColumn = TRUE}{var $hasFilter = TRUE}{else}{var $hasFilter = FALSE}{/ifset}
-{if $control->getEditFormFactory()}{var $hasActionsColumn = TRUE}{var $hasEdit = TRUE}{else}{var $hasEdit = FALSE}{/if}
-
-{ifset #table-open-tag}
+{var $template->hasActionsColumn =
+	isset($_l->blocks['row-actions']) ||
+	isset($_l->blocks['global-actions']) ||
+	isset($_form['filter']) ||
+	(bool) $control->getEditFormFactory()
+}
 {include #table-open-tag}
-{else}
-<table>
-{/ifset}
-<thead>
-	<tr class="columns">
-	{foreach $columns as $column}
-		<th class="col-{$column->name}">
-			{if $column->canSort()}
-				<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
-				{if $column->isAsc()}
-					<span class="sort-symbol"><em>&#9650;</em></span>
-				{elseif $column->isDesc()}
-					<span class="sort-symbol"><em>&#9660;</em></span>
-				{/if}
-			{else}
-				{$column->label}
-			{/if}
-		</th>
-	{/foreach}
-	{if $hasActionsColumn}
-		<th class="col-actions">{ifset #global-actions}{include #global-actions}{/ifset}</th>
-	{/if}
-	</tr>
-
-	{if $hasFilter}
-	<tr class="filters">
-	{formContainer filter}
-		{foreach $columns as $column}
-		<th class="col-{$column->name}">
-			{if isset($_form[$column->name])}
-				{ifset #col-filter-{$column->name}}
-					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
-				{elseif isset($_l->blocks["col-filter"])}
-					{include #col-filter form => $_form, _form => $_form, column => $column}
-				{else}
-					{input $column->name}
-				{/ifset}
-			{/if}
-		</th>
+	<thead>
+		{include #row-head-colums}
+		{ifset $_form['filter']}
+			{include #row-head-filter}
+		{/ifset}
+	</thead>
+	<tbody>
+		{var $template->form = $_form}
+		{var $_dynSnippets = new ArrayObject()}
+		{foreach $data as $row}
+			{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
 		{/foreach}
-		<th class="col-actions">
-			{ifset #global-filter-actions}
-				{include #global-filter-actions showCancel => !empty($control->filter), _form => $_form, form => $form}
-			{else}
-				{input filter}
-				{if !empty($control->filter)}{input cancel}{/if}
-			{/ifset}
-		</th>
-	{/formContainer}
-	</tr>
-	{/if}
-</thead>
-<tbody>
-{foreach $data as $row}
-	{var $primary = $control->getter($row, $rowPrimaryKey)}
-	{var $editRow = $editRowKey == $primary}
-	<tr n:snippet="rows-$primary" data-grid-primary="{$primary}">
-		{foreach $columns as $column}
-			{var $cell = $control->getter($row, $column->name, FALSE)}
-			{if $editRow && $column->name != $rowPrimaryKey && isset($_form['edit'][$column->name])}
-				<td class="col-{$column->name}">
-					{formContainer edit}
-						{input $column->name}
-						{if $_form[$column->name]->hasErrors()}
-							<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
-						{/if}
-					{/formContainer}
-				</td>
-			{else}
-				{ifset #col-$column->name}
-					{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
-				{else}
-					<td class="col-{$column->name}">{$control->translate($cell)}</td>
-				{/ifset}
-			{/if}
-		{/foreach}
-		{if $hasActionsColumn}
-		<td class="col-actions">
-			{if $editRow}
-				{formContainer edit}
-					{input $rowPrimaryKey}
-					{ifset #row-edit-actions}
-						{include #row-edit-actions _form => $_form, form => $form}
-					{else}
-						{input save}
-						{input cancel}
-					{/ifset}
-				{/formContainer}
-			{else}
-				{ifset #row-actions}
-					{include #row-actions row => $row, primary => $primary}
-				{elseif $hasEdit}
-					<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>Edit</a>
-				{/ifset}
-			{/if}
-		</td>
+		{if isset($echoSnippets)}
+			{?unset($_dynSnippets)}
+		{else}
+			{var $_dynSnippets = iterator_to_array($_dynSnippets)}
 		{/if}
-	</tr>
-{/foreach}
-{if isset($echoSnippets)}
-	{?unset($_dynSnippets)}
-{/if}
-</tbody>
-<tfoot>
-{if isset($paginator)}
-<tr>
-	<th colspan="{=count($columns) + ($hasActionsColumn ? 1 : 0)}">
-	{ifset #pagination}
-		{include #pagination}
-	{else}
-		<div class="paginator">
-			{if $paginator->isFirst()}
-				<span class="button">« First</span>
-				<span class="button">« Previous</span>
-			{else}
-				<a href="{link paginate!, 'page' => 1}" class="ajax">« First</a>
-				<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« Previous</a>
-			{/if}
-
-			<span class="counts">
-				<span class="current-page">{$paginator->page}</span> / <span class="total-pages">{$paginator->pageCount}</span>
-			</span>
-
-			{if $paginator->isLast()}
-				<span class="button">Next »</span>
-				<span class="button">Last »</span>
-			{else}
-				<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">Next »</a>
-				<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">Last »</a>
-			{/if}
-		</div>
-	{/ifset}
-	</th>
-</tr>
-{/if}
-</tfoot>
-{ifset #table-close-tag}
+	</tbody>
+	<tfoot>
+		{if isset($paginator)}
+		<tr>
+			<th colspan="{=count($columns) + $template->hasActionsColumn}">
+				{include #pagination}
+			</th>
+		</tr>
+		{/if}
+	</tfoot>
 {include #table-close-tag}
-{else}
-</table>
-{/ifset}
 {/form}
 {/snippet}
 </div>

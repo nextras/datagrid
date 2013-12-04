@@ -9,18 +9,12 @@
 	{/if}
 {/redefine}
 
-{redefine row-edit-actions}
+{redefine row-actions-edit}
 	{input save class => "btn btn-primary btn-small"}
 	{input cancel class => "btn btn-small"}
 {/redefine}
 
-{if $control->getEditFormFactory()}
-	{var $rowActions = 'row-actions'}
-{else}
-	{var $rowActions = 'row-actions-do_not_render'}
-{/if}
-
-{redefine $rowActions}
+{redefine row-actions-edit-link}
 	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-small btn-primary">Edit</a>
 {/redefine}
 
