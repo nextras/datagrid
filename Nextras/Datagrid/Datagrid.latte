@@ -15,9 +15,6 @@
 	</table>
 {/define}
 
-{define global-actions}
-{/define}
-
 {define global-filter-actions}
 	{input filter}
 	{if $showCancel}
@@ -42,7 +39,7 @@
 			</th>
 		{/foreach}
 		{if $template->hasActionsColumn}
-			<th class="col-actions">{include #global-actions}</th>
+			<th class="col-actions">{ifset #global-actions}{include #global-actions}{/ifset}</th>
 		{/if}
 	</tr>
 {/define}
