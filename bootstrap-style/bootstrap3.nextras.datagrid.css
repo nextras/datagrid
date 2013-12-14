@@ -2,7 +2,7 @@
 .grid th {
   border-color: #CACACA;
 }
-.grid .grid-cols-actions {
+.grid .grid-col-actions {
   text-align: center;
 }
 .grid .btn {
