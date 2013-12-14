@@ -5,7 +5,7 @@
  * @link       https://github.com/nextras
  * @author     Jan Skrasek
  *}
-<div class="datagrid" data-grid-name="{$control->getUniqueId()}">
+<div class="grid" data-grid-name="{$control->getUniqueId()}">
 {snippet rows}
 
 {define table-open-tag}
@@ -23,15 +23,15 @@
 {/define}
 
 {define row-head-colums}
-	<tr class="columns">
+	<tr class="grid-columns">
 		{foreach $columns as $column}
-			<th class="col-{$column->name}">
+			<th class="grid-col-{$column->name}">
 				{if $column->canSort()}
 					<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
 					{if $column->isAsc()}
-						<span class="sort-symbol"><em>&#9650;</em></span>
+						<span class="grid-sort-symbol"><em>&#9650;</em></span>
 					{elseif $column->isDesc()}
-						<span class="sort-symbol"><em>&#9660;</em></span>
+						<span class="grid-sort-symbol"><em>&#9660;</em></span>
 					{/if}
 				{else}
 					{$column->label}
@@ -39,7 +39,7 @@
 			</th>
 		{/foreach}
 		{if $template->hasActionsColumn}
-			<th class="col-actions">{ifset #global-actions}{include #global-actions}{/ifset}</th>
+			<th class="grid-col-actions">{ifset #global-actions}{include #global-actions}{/ifset}</th>
 		{/if}
 	</tr>
 {/define}
@@ -49,10 +49,10 @@
 {/define}
 
 {define row-head-filter}
-	<tr class="filters">
+	<tr class="grid-filters">
 		{formContainer filter}
 		{foreach $columns as $column}
-			<th class="col-{$column->name}">
+			<th class="grid-col-{$column->name}">
 				{if isset($_form[$column->name])}
 					{ifset #col-filter-{$column->name}}
 						{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
@@ -62,7 +62,7 @@
 				{/if}
 			</th>
 		{/foreach}
-		<th class="col-actions">
+		<th class="grid-col-actions">
 			{include #global-filter-actions showCancel => !empty($control->filter), _form => $_form, form => $form}
 		</th>
 		{/formContainer}
@@ -92,7 +92,7 @@
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
 		{if $editRow && $column->name != $rowPrimaryKey && isset($_form['edit'][$column->name])}
-			<td class="col-{$column->name}">
+			<td class="grid-col-{$column->name}">
 				{formContainer edit}
 					{input $column->name}
 					{if $_form[$column->name]->hasErrors()}
@@ -104,7 +104,7 @@
 			{ifset #col-$column->name}
 				{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
 			{else}
-				<td class="col-{$column->name}">
+				<td class="grid-col-{$column->name}">
 					{ifset #cell-$column->name}
 						{include #"cell-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
 					{else}
@@ -115,7 +115,7 @@
 		{/if}
 	{/foreach}
 	{if $template->hasActionsColumn}
-	<td class="col-actions">
+	<td class="grid-col-actions">
 		{if $editRow}
 			{formContainer edit}
 				{input $rowPrimaryKey class => 'grid-primary-value'}
@@ -133,22 +133,22 @@
 {/define}
 
 {define pagination}
-	<div class="paginator">
+	<div class="grid-paginator">
 		{if $paginator->isFirst()}
-			<span class="button">« {$control->translate(First)}</span>
-			<span class="button">« {$control->translate(Previous)}</span>
+			<span>« {$control->translate(First)}</span>
+			<span>« {$control->translate(Previous)}</span>
 		{else}
 			<a href="{link paginate!, 'page' => 1}" class="ajax">« {$control->translate(First)}</a>
 			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« {$control->translate(Previous)}</a>
 		{/if}
 
-		<span class="counts">
-			<span class="current-page">{$paginator->page}</span> / <span class="total-pages">{$paginator->pageCount}</span>
+		<span>
+			<span>{$paginator->page}</span> / <span>{$paginator->pageCount}</span>
 		</span>
 
 		{if $paginator->isLast()}
-			<span class="button">{$control->translate(Next)} »</span>
-			<span class="button">{$control->translate(Last)} »</span>
+			<span>{$control->translate(Next)} »</span>
+			<span>{$control->translate(Last)} »</span>
 		{else}
 			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">{$control->translate(Next)} »</a>
 			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{$control->translate(Last)} »</a>
