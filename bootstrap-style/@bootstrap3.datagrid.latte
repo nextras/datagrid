@@ -3,23 +3,23 @@
 {/redefine}
 
 {redefine global-filter-actions}
-	{input filter class => "btn btn-primary btn-small"}
+	{input filter class => "btn btn-primary btn-sm"}
 	{if $showCancel}
-		{input cancel class => "btn btn-default btn-small"}
+		{input cancel class => "btn btn-default btn-sm"}
 	{/if}
 {/redefine}
 
 {redefine col-filter}
-	{input $column->name class => "input-small"}
+	{input $column->name class => "input-sm"}
 {/redefine}
 
 {redefine row-actions-edit}
-	{input save class => "btn btn-primary btn-small"}
-	{input cancel class => "btn btn-default btn-small"}
+	{input save class => "btn btn-primary btn-sm"}
+	{input cancel class => "btn btn-default btn-sm"}
 {/redefine}
 
 {redefine row-actions-edit-link}
-	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-small btn-primary">{$control->translate(Edit)}</a>
+	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-primary btn-sm">{$control->translate(Edit)}</a>
 {/redefine}
 
 {redefine pagination}
