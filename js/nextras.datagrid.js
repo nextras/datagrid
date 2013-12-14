@@ -9,29 +9,29 @@
 $.nette.ext('datagrid', {
 	init: function() {
 		var datagrid = this;
-		this.grids = $('.datagrid').each(function() {
+		this.grids = $('.grid').each(function() {
 			datagrid.load($(this));
 		});
 	},
 	load: function() {
 		var datagrid = this;
-		$('.datagrid thead input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
+		$('.grid thead input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
 			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 				$(this).parents('tr').find('[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
 			}
 		});
-		$('.datagrid thead select').off('change.datagrid').on('change.datagrid', function(e) {
+		$('.grid thead select').off('change.datagrid').on('change.datagrid', function(e) {
 			$(this).parents('tr').find('[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 			e.preventDefault();
 		});
-		$('.datagrid tbody td:not(.col-actions)').off('click.datagrid').on('click.datagrid', function(e) {
+		$('.grid tbody td:not(.grid-col-actions)').off('click.datagrid').on('click.datagrid', function(e) {
 			if (e.ctrlKey) {
 				$(this).parents('tr').find('a[data-datagrid-edit]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
 			}
 		});
-		$('.datagrid tbody input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
+		$('.grid tbody input').off('keypress.datagrid').on('keypress.datagrid', function(e) {
 			if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 				$(this).parents('tr').find('[name=edit\\[save\\]]').trigger(datagrid.createClickEvent($(this)));
 				e.preventDefault();
@@ -39,7 +39,7 @@ $.nette.ext('datagrid', {
 		});
 	},
 	before: function(xhr, settings) {
-		this.grid = settings.nette.el.parents('.datagrid');
+		this.grid = settings.nette.el.parents('.grid');
 	},
 	success: function() {
 		this.load(this.grid);
