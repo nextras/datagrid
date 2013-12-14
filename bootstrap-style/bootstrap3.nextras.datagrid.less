@@ -9,13 +9,15 @@
 		margin-right: 3px;
 	}
 	thead {
-		.grid-columns {
-			background: #EEE;
-		}
-		.grid-filters {
+		.grid-columns, .grid-filters {
 			background: #EEE;
 			th {
-				border-top: 1px solid #E5E5E5;
+				border-bottom-width: 1px;
+			}
+		}
+		tr:last-child {
+			th {
+				border-bottom-width: 2px;
 			}
 		}
 	}

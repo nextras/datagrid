@@ -8,14 +8,16 @@
 .grid .btn {
   margin-right: 3px;
 }
-.grid thead .grid-columns {
-  background: #EEE;
-}
+.grid thead .grid-columns,
 .grid thead .grid-filters {
   background: #EEE;
 }
+.grid thead .grid-columns th,
 .grid thead .grid-filters th {
-  border-top: 1px solid #E5E5E5;
+  border-bottom-width: 1px;
+}
+.grid thead tr:last-child th {
+  border-bottom-width: 2px;
 }
 .grid tbody > tr > td {
   vertical-align: middle;
