@@ -461,7 +461,7 @@ class Datagrid extends UI\Control
 				$values = $form['filter']->getValues(TRUE);
 				unset($values['filter']);
 				$values = array_filter($values, function($val) {
-					return strlen($val) > 0;
+					return is_array($val) ? (count($val) > 0) : (strlen($val) > 0);
 				});
 				if ($this->paginator) {
 					$this->page = $this->paginator->page = 1;
