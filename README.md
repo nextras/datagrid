@@ -3,7 +3,7 @@
 Easy to use datagrid with powerfull API.
 
 ## Demo
-See demos: http://nextras.skrasek.com/www/datagrid.default/default
+See demos: http://nextras.cz/datagrid
 
 ## Installation
 
