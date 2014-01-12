@@ -29,9 +29,9 @@
 				{if $column->canSort()}
 					<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
 					{if $column->isAsc()}
-						<span class="grid-sort-symbol"><em>&#9650;</em></span>
+						<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
 					{elseif $column->isDesc()}
-						<span class="grid-sort-symbol"><em>&#9660;</em></span>
+						<span class="grid-sort-symbol grid-sort-symbol-desc"><em>&#9660;</em></span>
 					{/if}
 				{else}
 					{$column->label}
