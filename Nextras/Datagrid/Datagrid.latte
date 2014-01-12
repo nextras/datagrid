@@ -32,6 +32,8 @@
 						<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
 					{elseif $column->isDesc()}
 						<span class="grid-sort-symbol grid-sort-symbol-desc"><em>&#9660;</em></span>
+					{else}
+						<span class="grid-sort-symbol grid-sort-symbol-no"></span>
 					{/if}
 				{else}
 					{$column->label}
