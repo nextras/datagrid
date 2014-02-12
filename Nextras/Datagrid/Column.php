@@ -40,9 +40,17 @@ class Column extends Nette\Object
 
 
 
-	public function enableSort()
+	public function enableSort($default = NULL)
 	{
 		$this->sort = TRUE;
+		if ($default !== NULL) {
+			if ($default !== Datagrid::ORDER_ASC && $default !== Datagrid::ORDER_DESC) {
+				throw new \InvalidArgumentException('Unknown order type.');
+			}
+
+			$this->grid->orderColumn = $this->name;
+			$this->grid->orderType = $default;
+		}
 		return $this;
 	}
 
