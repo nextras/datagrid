@@ -426,7 +426,7 @@ class Datagrid extends UI\Control
 		}
 		
 		if ($this->translator) {
-			$form->setTranslator($translator);
+			$form->setTranslator($this->translator);
 		}
 
 		$form->onSuccess[] = function() {}; // fix for Nette Framework 2.0.x
