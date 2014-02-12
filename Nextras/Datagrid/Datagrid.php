@@ -60,6 +60,9 @@ class Datagrid extends UI\Control
 	/** @var Callback */
 	protected $filterFormFactory;
 
+	/** @var array */
+	protected $filterDefaults;
+
 	/** @var Paginator */
 	protected $paginator;
 
@@ -267,6 +270,7 @@ class Datagrid extends UI\Control
 		}
 
 		$this->template->cellsTemplates = $this->cellsTemplates;
+		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 		$this->template->render();
 	}
@@ -306,6 +310,9 @@ class Datagrid extends UI\Control
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
+		if (!$this->filterDataSource && $this->filterFormFactory) {
+			$this->filterDataSource = $this->filterFormFilter($this['form']['filter']->getValues(TRUE));
+		}
 	}
 
 
@@ -316,7 +323,7 @@ class Datagrid extends UI\Control
 			$onlyRow = $key && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
-					$this->filter,
+					$this->filterDataSource,
 					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
 				));
 
@@ -423,8 +430,14 @@ class Datagrid extends UI\Control
 			if (!isset($form['filter']['cancel'])) {
 				$form['filter']->addSubmit('cancel', 'Cancel');
 			}
+
+			$this->filterDefaults = [];
+			foreach ($form['filter']->controls as $name => $control) {
+				$this->filterDefaults[$name] = $control->getValue();
+			}
+			$this->filterDefaults = $this->filterFormFilter($this->filterDefaults);
 		}
-		
+
 		if ($this->translator) {
 			$form->setTranslator($this->translator);
 		}
@@ -464,15 +477,7 @@ class Datagrid extends UI\Control
 			if ($form['filter']['filter']->isSubmittedBy()) {
 				$values = $form['filter']->getValues(TRUE);
 				unset($values['filter']);
-				$values = array_filter($values, function($val) {
-					if (is_array($val)) {
-						return !empty($val);
-					}
-					if (is_string($val)) {
-						return strlen($val) > 0;
-					}
-					return $val !== null;
-				});
+				$values = $this->filterFormFilter($values);
 				if ($this->paginator) {
 					$this->page = $this->paginator->page = 1;
 				}
@@ -482,8 +487,8 @@ class Datagrid extends UI\Control
 				if ($this->paginator) {
 					$this->page = $this->paginator->page = 1;
 				}
-				$this->filter = $this->filterDataSource = array();
-				$form['filter']->setValues(array(), TRUE);
+				$this->filter = $this->filterDataSource = $this->filterDefaults;
+				$form['filter']->setValues($this->filter, TRUE);
 				$this->invalidateControl('rows');
 			}
 		}
@@ -523,6 +528,20 @@ class Datagrid extends UI\Control
 		} else {
 			$this->redirect('this');
 		}
+	}
+
+
+	private function filterFormFilter($values)
+	{
+		return array_filter($values, function($val) {
+			if (is_array($val)) {
+				return !empty($val);
+			}
+			if (is_string($val)) {
+				return strlen($val) > 0;
+			}
+			return $val !== null;
+		});
 	}
 
 }

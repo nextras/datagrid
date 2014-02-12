@@ -65,7 +65,7 @@
 			</th>
 		{/foreach}
 		<th class="grid-col-actions">
-			{include #global-filter-actions showCancel => !empty($control->filter), _form => $_form, form => $form}
+			{include #global-filter-actions showCancel => $showFilterCancel, _form => $_form, form => $form}
 		</th>
 		{/formContainer}
 	</tr>
