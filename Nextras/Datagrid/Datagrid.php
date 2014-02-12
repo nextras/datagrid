@@ -424,6 +424,10 @@ class Datagrid extends UI\Control
 				$form['filter']->addSubmit('cancel', 'Cancel');
 			}
 		}
+		
+		if ($this->translator) {
+			$form->setTranslator($translator);
+		}
 
 		$form->onSuccess[] = function() {}; // fix for Nette Framework 2.0.x
 		$form->onSubmit[] = $this->processForm;
