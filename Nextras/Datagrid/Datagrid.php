@@ -310,9 +310,6 @@ class Datagrid extends UI\Control
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
-		if (!$this->filterDataSource && $this->filterFormFactory) {
-			$this->filterDataSource = $this->filterFormFilter($this['form']['filter']->getValues(TRUE));
-		}
 	}
 
 
@@ -320,6 +317,10 @@ class Datagrid extends UI\Control
 	protected function getData($key = NULL)
 	{
 		if (!$this->data) {
+			if (!$this->filterDataSource && $this->filterFormFactory) {
+				$this->filterDataSource = $this->filterFormFilter($this['form']['filter']->getValues(TRUE));
+			}
+
 			$onlyRow = $key && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
