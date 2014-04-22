@@ -426,10 +426,10 @@ class Datagrid extends UI\Control
 		if ($this->filterFormFactory) {
 			$form['filter'] = $this->filterFormFactory->invoke();
 			if (!isset($form['filter']['filter'])) {
-				$form['filter']->addSubmit('filter', 'Filter');
+				$form['filter']->addSubmit('filter', $this->translate('Filter'));
 			}
 			if (!isset($form['filter']['cancel'])) {
-				$form['filter']->addSubmit('cancel', 'Cancel');
+				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
 			}
 
 			$this->filterDefaults = [];
