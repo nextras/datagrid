@@ -437,7 +437,7 @@ class Datagrid extends UI\Control
 				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
 			}
 
-			$this->filterDefaults = [];
+			$this->filterDefaults = array();
 			foreach ($form['filter']->controls as $name => $control) {
 				$this->filterDefaults[$name] = $control->getValue();
 			}
