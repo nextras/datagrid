@@ -280,8 +280,13 @@ class Datagrid extends UI\Control
 	public function invalidateRow($primaryValue)
 	{
 		if ($this->presenter->isAjax()) {
-			if (isset($this->filterDataSource[$this->rowPrimaryKey]) && is_string($this->filterDataSource[$this->rowPrimaryKey])) {
-				$this->filterDataSource[$this->rowPrimaryKey] = array($this->filterDataSource[$this->rowPrimaryKey]);
+			if (isset($this->filterDataSource[$this->rowPrimaryKey])) {
+				$this->filterDataSource = array($this->rowPrimaryKey => $this->filterDataSource[$this->rowPrimaryKey]);
+				if (is_string($this->filterDataSource[$this->rowPrimaryKey])) {
+					$this->filterDataSource[$this->rowPrimaryKey] = array($this->filterDataSource[$this->rowPrimaryKey]);
+				}
+			} else {
+				$this->filterDataSource = array();
 			}
 
 			$this->filterDataSource[$this->rowPrimaryKey][] = $primaryValue;
