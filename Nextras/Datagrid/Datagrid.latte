@@ -93,12 +93,16 @@
 	{var $editRow = $editRowKey == $primary && $primary !== NULL}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
-		{if $editRow && $column->name != $rowPrimaryKey && isset($_form['edit'][$column->name])}
+		{if $editRow && $column->name != $rowPrimaryKey && (isset($_form['edit'][$column->name]) || isset($_l->blocks['cell-edit-'.$column->name]))}
 			<td class="grid-col-{$column->name}">
 				{formContainer edit}
-					{input $column->name}
-					{if $_form[$column->name]->hasErrors()}
-						<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
+					{ifset #cell-edit-$column->name}
+						{include #"cell-edit-{$column->name}" form => $_form, _form => $_form, column => $column}
+					{else}
+						{input $column->name}
+						{if $_form[$column->name]->hasErrors()}
+							<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
+						{/if}
 					{/if}
 				{/formContainer}
 			</td>
