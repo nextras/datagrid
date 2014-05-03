@@ -101,7 +101,7 @@
 						{if $_form[$column->name]->hasErrors()}
 							<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
 						{/if}
-					{/if}
+					{/ifset}
 				{/formContainer}
 			</td>
 		{else}
