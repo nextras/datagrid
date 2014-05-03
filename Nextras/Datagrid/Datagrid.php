@@ -410,7 +410,7 @@ class Datagrid extends UI\Control
 
 	public function createComponentForm()
 	{
-		$form = new UI\Form;
+		$form = new UI\Form($this, 'form');
 
 		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST['edit']))) {
 			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
@@ -429,7 +429,11 @@ class Datagrid extends UI\Control
 		}
 
 		if ($this->filterFormFactory) {
-			$form['filter'] = $this->filterFormFactory->invoke();
+			$_filter = $this->filterFormFactory->invoke();
+			if(empty($form['filter'])) {
+				$form['filter'] = $_filter;
+			}
+			
 			if (!isset($form['filter']['filter'])) {
 				$form['filter']->addSubmit('filter', $this->translate('Filter'));
 			}
