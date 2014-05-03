@@ -21,6 +21,10 @@ $.nette.ext('datagrid', {
 				e.preventDefault();
 			}
 		});
+		$('.grid thead input[type=checkbox]').off('change.datagrid').on('change.datagrid', function(e) {
+			$(this).parents('tr').find('[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
+			e.preventDefault();
+		});
 		$('.grid thead select').off('change.datagrid').on('change.datagrid', function(e) {
 			$(this).parents('tr').find('[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 			e.preventDefault();

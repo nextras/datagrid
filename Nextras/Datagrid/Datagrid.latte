@@ -55,12 +55,10 @@
 		{formContainer filter}
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
-				{if isset($_form[$column->name])}
-					{ifset #col-filter-{$column->name}}
-						{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
-					{else}
-						{include #col-filter form => $_form, _form => $_form, column => $column}
-					{/ifset}
+				{if isset($_l->blocks['col-filter-'.$column->name])}
+					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
+				{elseif isset($_form[$column->name])}
+					{include #col-filter form => $_form, _form => $_form, column => $column}
 				{/if}
 			</th>
 		{/foreach}
@@ -93,13 +91,17 @@
 	{var $editRow = $editRowKey == $primary && $primary !== NULL}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
-		{if $editRow && $column->name != $rowPrimaryKey && isset($_form['edit'][$column->name])}
+		{if $editRow && $column->name != $rowPrimaryKey && (isset($_form['edit'][$column->name]) || isset($_l->blocks['cell-edit-'.$column->name]))}
 			<td class="grid-col-{$column->name}">
 				{formContainer edit}
-					{input $column->name}
-					{if $_form[$column->name]->hasErrors()}
-						<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
-					{/if}
+					{ifset #cell-edit-$column->name}
+						{include #"cell-edit-{$column->name}" form => $_form, _form => $_form, column => $column}
+					{else}
+						{input $column->name}
+						{if $_form[$column->name]->hasErrors()}
+							<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
+						{/if}
+					{/ifset}
 				{/formContainer}
 			</td>
 		{else}
