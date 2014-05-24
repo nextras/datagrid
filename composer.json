@@ -12,13 +12,15 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.0",
-		"nette/nette": "~2.0",
-		"nextras/latte-macros": "~1.0.0"
+		"php": "~5.3",
+		"nette/application":      "~2.2",
+		"nette/component-model":  "~2.2",
+		"nette/utils":            "~2.2",
+		"nextras/latte-macros":   "~1.1.0"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.0-dev"
+			"dev-master": "2.1-dev"
 		}
 	},
 	"autoload": {
