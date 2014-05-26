@@ -11,10 +11,10 @@
 namespace Nextras\Datagrid;
 
 use Nette\Application\UI;
-use Nette\Callback;
 use Nette\Templating\IFileTemplate;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
+use Nette\Utils\Callback;
 use Nette\Localization\ITranslator;
 
 
@@ -45,10 +45,10 @@ class Datagrid extends UI\Control
 	/** @var array */
 	protected $columns = array();
 
-	/** @var Callback */
+	/** @var callback */
 	protected $columnGetterCallback;
 
-	/** @var Callback */
+	/** @var callback */
 	protected $dataSourceCallback;
 
 	/** @var mixed */
@@ -57,7 +57,7 @@ class Datagrid extends UI\Control
 	/** @var mixed */
 	protected $editFormCallback;
 
-	/** @var Callback */
+	/** @var callback */
 	protected $filterFormFactory;
 
 	/** @var array */
@@ -69,7 +69,7 @@ class Datagrid extends UI\Control
 	/** @var ITranslator */
 	protected $translator;
 
-	/** @var Callback */
+	/** @var callback */
 	protected $paginatorItemsCountCallback;
 
 	/** @var mixed */
@@ -120,7 +120,8 @@ class Datagrid extends UI\Control
 
 	public function setColumnGetterCallback($getterCallback)
 	{
-		$this->columnGetterCallback = new Callback($getterCallback);
+		Callback::check($getterCallback);
+		$this->columnGetterCallback = $getterCallback;
 	}
 
 
@@ -134,7 +135,8 @@ class Datagrid extends UI\Control
 
 	public function setDataSourceCallback($dataSourceCallback)
 	{
-		$this->dataSourceCallback = new Callback($dataSourceCallback);
+		Callback::check($dataSourceCallback);
+		$this->dataSourceCallback = $dataSourceCallback;
 	}
 
 
@@ -162,6 +164,7 @@ class Datagrid extends UI\Control
 
 	public function setEditFormCallback($editFormCallback)
 	{
+		Callback::check($editFormCallback);
 		$this->editFormCallback = $editFormCallback;
 	}
 
@@ -176,7 +179,8 @@ class Datagrid extends UI\Control
 
 	public function setFilterFormFactory($filterFormFactory)
 	{
-		$this->filterFormFactory = new Callback($filterFormFactory);
+		Callback::check($filterFormFactory);
+		$this->filterFormFactory = $filterFormFactory;
 	}
 
 
@@ -198,9 +202,10 @@ class Datagrid extends UI\Control
 				throw new \InvalidArgumentException('Items count callback must be set.');
 			}
 
+			Callback::check($itemsCountCallback);
 			$this->paginator = new Paginator();
 			$this->paginator->itemsPerPage = $itemsPerPage;
-			$this->paginatorItemsCountCallback = new Callback($itemsCountCallback);
+			$this->paginatorItemsCountCallback = $itemsCountCallback;
 		}
 	}
 
@@ -328,7 +333,7 @@ class Datagrid extends UI\Control
 
 			$onlyRow = $key && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
-				$itemsCount = $this->paginatorItemsCountCallback->invokeArgs(array(
+				$itemsCount = Callback::invokeArgs($this->paginatorItemsCountCallback, array(
 					$this->filterDataSource,
 					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
 				));
@@ -339,7 +344,7 @@ class Datagrid extends UI\Control
 				}
 			}
 
-			$this->data = $this->dataSourceCallback->invokeArgs(array(
+			$this->data = Callback::invokeArgs($this->dataSourceCallback, array(
 				$this->filterDataSource,
 				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
 				$onlyRow ? NULL : $this->paginator,
@@ -368,7 +373,7 @@ class Datagrid extends UI\Control
 	public function getter($row, $column, $need = TRUE)
 	{
 		if ($this->columnGetterCallback) {
-			return $this->columnGetterCallback->invokeArgs(array($row, $column));
+			return Callback::invokeArgs($this->columnGetterCallback, array($row, $column));
 		} else {
 			if (!isset($row->$column)) {
 				if ($need) {
@@ -414,7 +419,7 @@ class Datagrid extends UI\Control
 
 		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST['edit']))) {
 			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
-			$form['edit'] = Callback::create($this->editFormFactory)->invokeArgs(array($data));
+			$form['edit'] = Callback::invokeArgs($this->editFormFactory, array($data));
 
 			if (!isset($form['edit']['save']))
 				$form['edit']->addSubmit('save', 'Save');
@@ -429,7 +434,7 @@ class Datagrid extends UI\Control
 		}
 
 		if ($this->filterFormFactory) {
-			$form['filter'] = $this->filterFormFactory->invoke();
+			$form['filter'] = Callback::invoke($this->filterFormFactory);
 			if (!isset($form['filter']['filter'])) {
 				$form['filter']->addSubmit('filter', $this->translate('Filter'));
 			}
@@ -461,7 +466,7 @@ class Datagrid extends UI\Control
 		if (isset($form['edit'])) {
 			if ($form['edit']['save']->isSubmittedBy()) {
 				if ($form['edit']->isValid()) {
-					Callback::create($this->editFormCallback)->invokeArgs(array(
+					Callback::invokeArgs($this->editFormCallback, array(
 						$form['edit']
 					));
 				} else {
