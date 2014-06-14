@@ -327,10 +327,6 @@ class Datagrid extends UI\Control
 	protected function getData($key = NULL)
 	{
 		if (!$this->data) {
-			if (!$this->filterDataSource && $this->filterFormFactory) {
-				$this->filterDataSource = $this->filterFormFilter($this['form']['filter']->getValues(TRUE));
-			}
-
 			$onlyRow = $key && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = Callback::invokeArgs($this->paginatorItemsCountCallback, array(
@@ -417,22 +413,6 @@ class Datagrid extends UI\Control
 	{
 		$form = new UI\Form;
 
-		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST['edit']))) {
-			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
-			$form['edit'] = Callback::invokeArgs($this->editFormFactory, array($data));
-
-			if (!isset($form['edit']['save']))
-				$form['edit']->addSubmit('save', 'Save');
-			if (!isset($form['edit']['cancel']))
-				$form['edit']->addSubmit('cancel', 'Cancel');
-			if (!isset($form['edit'][$this->rowPrimaryKey]))
-				$form['edit']->addHidden($this->rowPrimaryKey);
-
-			$form['edit'][$this->rowPrimaryKey]
-				->setDefaultValue($this->editRowKey)
-				->setOption('rendered', TRUE);
-		}
-
 		if ($this->filterFormFactory) {
 			$form['filter'] = Callback::invoke($this->filterFormFactory);
 			if (!isset($form['filter']['filter'])) {
@@ -447,6 +427,26 @@ class Datagrid extends UI\Control
 				$this->filterDefaults[$name] = $control->getValue();
 			}
 			$this->filterDefaults = $this->filterFormFilter($this->filterDefaults);
+
+			if (!$this->filterDataSource) {
+				$this->filterDataSource = $this->filterDefaults;
+			}
+		}
+
+		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST['edit']))) {
+			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
+			$form['edit'] = Callback::invokeArgs($this->editFormFactory, array($data));
+
+			if (!isset($form['edit']['save']))
+				$form['edit']->addSubmit('save', 'Save');
+			if (!isset($form['edit']['cancel']))
+				$form['edit']->addSubmit('cancel', 'Cancel');
+			if (!isset($form['edit'][$this->rowPrimaryKey]))
+				$form['edit']->addHidden($this->rowPrimaryKey);
+
+			$form['edit'][$this->rowPrimaryKey]
+				->setDefaultValue($this->editRowKey)
+				->setOption('rendered', TRUE);
 		}
 
 		if ($this->translator) {
