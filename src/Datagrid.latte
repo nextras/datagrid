@@ -90,7 +90,7 @@
 	{var $row = $template->row}
 	{var $_form = $template->form}
 	{var $primary = $control->getter($row, $rowPrimaryKey)}
-	{var $editRow = $editRowKey == $primary && $primary !== NULL}
+	{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
 		{if $editRow && $column->name != $rowPrimaryKey && isset($_form['edit'][$column->name])}
