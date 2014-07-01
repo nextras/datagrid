@@ -163,9 +163,10 @@
 {/foreach}
 
 {form form class => 'ajax'}
+{? $_internal = isset($_b) ? $_b : $_l }
 {var $template->hasActionsColumn =
-	isset($_l->blocks['row-actions']) ||
-	isset($_l->blocks['global-actions']) ||
+	isset($_internal->blocks['row-actions']) ||
+	isset($_internal->blocks['global-actions']) ||
 	isset($_form['filter']) ||
 	(bool) $control->getEditFormFactory()
 }
@@ -178,15 +179,15 @@
 	</thead>
 	<tbody>
 		{var $template->form = $_form}
-		{var $_dynSnippets = new ArrayObject()}
+		{var $_l->dynSnippets = new ArrayObject()}
 		{foreach $data as $row}
 			{var $template->row = $row}
-			{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
+			{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_l->dynSnippets}
 		{/foreach}
 		{if isset($echoSnippets)}
-			{?unset($_dynSnippets)}
+			{?unset($_l->dynSnippets)}
 		{else}
-			{var $_dynSnippets = iterator_to_array($_dynSnippets)}
+			{var $_l->dynSnippets = iterator_to_array($_l->dynSnippets)}
 		{/if}
 	</tbody>
 	<tfoot>
