@@ -180,10 +180,14 @@
 	<tbody>
 		{var $template->form = $_form}
 		{var $_l->dynSnippets = new ArrayObject()}
-		{foreach $data as $row}
-			{var $template->row = $row}
-			{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_l->dynSnippets}
-		{/foreach}
+		{if count($data)}
+			{foreach $data as $row}
+				{var $template->row = $row}
+				{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_l->dynSnippets}
+			{/foreach}
+		{else}
+			{ifset #empty-result}{include #empty-result}{/ifset}
+		{/if}
 		{if isset($echoSnippets)}
 			{?unset($_l->dynSnippets)}
 		{else}
