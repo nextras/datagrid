@@ -39,10 +39,12 @@ $.nette.ext('datagrid', {
 		});
 	},
 	before: function(xhr, settings) {
-		this.grid = settings.nette.el.parents('.grid');
+		if( settings.nette && settings.nette.el )
+			this.grid = settings.nette.el.parents('.grid');
 	},
 	success: function() {
-		this.load(this.grid);
+		if(this.grid)
+			this.load(this.grid);
 	}
 }, {
 	activeGrid: null,
