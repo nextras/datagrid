@@ -39,7 +39,9 @@ $.nette.ext('datagrid', {
 		});
 	},
 	before: function(xhr, settings) {
-		this.grid = settings.nette.el.parents('.grid');
+        try{
+            this.grid = settings.nette.el.parents('.grid');
+        }catch(_){ this.grid = $([]); }		
 	},
 	success: function() {
 		this.load(this.grid);
