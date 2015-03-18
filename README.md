@@ -15,4 +15,4 @@ $ composer require nextras/datagrid
 
 ## Documentation
 
-See documentation on new addon portal: http://nette.merxes.cz/addons/www/nextras/datagrid.
+[See documentation on addon portal](http://addons.nette.org/nextras/datagrid).
