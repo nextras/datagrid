@@ -18,7 +18,9 @@ use Nette\Utils\Callback;
 use Nette\Localization\ITranslator;
 
 
-
+/**
+ * @metod onAttached
+ */
 class Datagrid extends UI\Control
 {
 	/** @var string */
@@ -84,7 +86,10 @@ class Datagrid extends UI\Control
 	/** @var array */
 	protected $cellsTemplates = array();
 
-
+	/**
+	 * 
+	 */
+	public $onAttached = array();
 
 	/**
 	 * Adds column
@@ -319,6 +324,7 @@ class Datagrid extends UI\Control
 	protected function attached($presenter)
 	{
 		parent::attached($presenter);
+		$thid->onAttached($this);
 		$this->filterDataSource = $this->filter;
 	}
 
