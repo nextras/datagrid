@@ -324,7 +324,7 @@ class Datagrid extends UI\Control
 	protected function attached($presenter)
 	{
 		parent::attached($presenter);
-		$thid->onAttached($this);
+		$this->onAttached($this);
 		$this->filterDataSource = $this->filter;
 	}
 
