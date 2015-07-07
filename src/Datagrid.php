@@ -27,6 +27,9 @@ class Datagrid extends UI\Control
 	/** @var string */
 	const ORDER_DESC = 'desc';
 
+	/** @var array of callbacks: function(Datagrid) */
+	public $onRender = array();
+
 	/** @persistent */
 	public $filter = array();
 
@@ -277,6 +280,8 @@ class Datagrid extends UI\Control
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
+
+		$this->onRender($this);
 		$this->template->render();
 	}
 
