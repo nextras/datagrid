@@ -27,6 +27,9 @@ class Datagrid extends UI\Control
 	/** @var string */
 	const ORDER_DESC = 'desc';
 
+	/** @var array of callbacks: function(Datagrid) */
+	public $onRender = array();
+
 	/** @persistent */
 	public $filter = array();
 
@@ -277,6 +280,8 @@ class Datagrid extends UI\Control
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
+
+		$this->onRender($this);
 		$this->template->render();
 	}
 
@@ -369,7 +374,7 @@ class Datagrid extends UI\Control
 	public function getter($row, $column, $need = TRUE)
 	{
 		if ($this->columnGetterCallback) {
-			return Callback::invokeArgs($this->columnGetterCallback, array($row, $column));
+			return naCallback::invokeArgs($this->columnGetterCallback, array($row, $column));
 		} else {
 			if (!isset($row->$column)) {
 				if ($need) {
