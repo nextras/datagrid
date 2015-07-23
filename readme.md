@@ -1,18 +1,17 @@
-## Nextras\Datagrid
+Nextras Datagrid
+================
 
 Easy to use datagrid with powerfull API.
 
-## Demo
-See demos: http://nextras.cz/datagrid
+### Installation
 
-## Installation
+Use composer:
 
-The best way to install is using [Composer](http://getcomposer.org/):
-
-```sh
+```bash
 $ composer require nextras/datagrid
 ```
 
-## Documentation
+### Docs & sources
 
-See documentation on new addon portal: http://nette.merxes.cz/addons/www/nextras/datagrid.
+- [Documentation](http://nextras.cz/datagrid/docs)
+- [Demo](http://nextras.org/datagrid)
