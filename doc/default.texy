@@ -4,15 +4,14 @@ Datagrid
 Philosophy
 ==========
 
-The main goal of Nextras\Datagrid is to provide usable API for creating powerful datagrid. Very common disadvantage of others datagrids is the fact you have to use prepared datasources, form filtering inputs, etc. Also  formatting cell contents is very often quite uncomfortable since you must wrap the content into some Nette\Html instances. With Nextras\Datagrid all goes really easy!
+The main goal of Nextras\Datagrid is to provide usable API for creating powerful datagrid. Very common disadvantage of others datagrids is the fact you have to use prepared datasources, form filtering inputs, etc. Also, formatting of cell contents is very often uncomfortable; you have to wrap the contents into Nette\Html instances. With Nextras\Datagrid all goes really easy!
 
-- full AJAX support! (compatible with "nette.ajax.js":https://github.com/vojtech-dobes/nette.ajax.js)
-- without paginator! Use filter, paginating is anti-pattern (how would you print it?)
+Datagrid supports full AJAX support! Use "nette.ajax.js":https://github.com/vojtech-dobes/nette.ajax.js.
 
 Columns
 =======
 
-It's really easy to configure, which columns should be shown. Example is self-explaining.
+It's really easy to configure which columns should be shown. Example is self-explaining.
 /--php
 $grid = new Nextras\Datagrid\Datagrid;
 $grid->addColumn('id');
