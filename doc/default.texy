@@ -1,0 +1,146 @@
+Datagrid
+########
+
+Philosophy
+==========
+
+The main goal of Nextras\Datagrid is to provide usable API for creating powerful datagrid. Very common disadvantage of others datagrids is the fact you have to use prepared datasources, form filtering inputs, etc. Also  formatting cell contents is very often quite uncomfortable since you must wrap the content into some Nette\Html instances. With Nextras\Datagrid all goes really easy!
+
+- full AJAX support! (compatible with "nette.ajax.js":https://github.com/vojtech-dobes/nette.ajax.js)
+- without paginator! Use filter, paginating is anti-pattern (how would you print it?)
+
+Columns
+=======
+
+It's really easy to configure, which columns should be shown. Example is self-explaining.
+/--php
+$grid = new Nextras\Datagrid\Datagrid;
+$grid->addColumn('id');
+$grid->addColumn('created_time', 'Account created');
+$grid->addColumn('nickname')->enableSort();
+\--
+
+The first defined column is considered as primary key column. Of course, you can change it.
+/--php
+$grid->setRowPrimaryKey('nickname');
+\--
+
+Datasource
+==========
+In Nextras\Datagrid there is no predefined class or something similar. All you need to do is set up a callback, which returns the data.
+/--php
+$grid->setDatasourceCallback(function($filter, $order) {
+    // get the data
+    return $data;
+});
+\--
+
+- `$filter` callback parameter is array which contains key - value filters entered by user. It's totally up to you how you filter the data.
+- `$order` callback parameter is NULL or array which consist of order column and order direction. Eg. `array('id', 'DESC')`.
+
+Possible **NAIVE** implementation for Nette\Database could look like this:
+/--php
+$grid->setDatasourceCallback(function($filter, $order) {
+    $filters = array();
+    foreach ($filter as $k => $v) {
+        if ($k == 'id' || is_array($v))
+            $filters[$k] = $v;
+        else
+            $filters[$k. ' LIKE ?'] = "%$v%";
+    }
+
+    $selection = $this->connection->table('user')->where($filters);
+    if ($order[0])
+        $selection->order(implode(' ', $order));
+
+    return $selection;
+});
+\--
+
+Cell rendering
+==============
+Would you like print clickable nickname? See how difficult is it in "another":http://addons.nette.org/cs/niftygrid#toc-formatovani-vysledku "datagrids":http://forum.nette.org/cs/5364-dibigrid-novy-datagrid-pro-dibi#p66812. In Nextras\Datagrid it's a piece of cake!
+
+/--php
+$grid->addCellsTemplate('./grid.columns.latte');
+\--
+
+File `grid.columns.latte`:
+/--html
+{define col-nickname}
+<td>
+    <a href="{plink Users: id => $row->id}">{$cell}</a>
+</td>
+{/define}
+\--
+
+Here is list of available blocks for redefinition:
+|--------------------------------------------------------------------
+| Block name               | Description
+|^                         | Variables
+|--------------------------------------------------------------------
+| `table-open-tag`         | html `<table>` tag
+|^                         | -
+| `table-close-tag`        | html `</table>` tag
+|^                         | -
+| `global-actions`         | the top right table cell for some global actions
+|^                         | -
+| `global-filter-actions`  | cell with the buttons for filtering
+|^                         | `$showCancel`
+| `row-edit-actions`       | cell for rendering save & cancel buttons while editing row
+|^                         | -
+| `row-actions`            | cell for rendering row's actions
+|^                         | `$primary`, `$row`
+| `col-filter-*`           | custom filter cell rendering
+|^                         | `$form` - filter `IFormContainer`, `$column` - column "object":https://github.com/nextras/datagrid/blob/master/Nextras/Datagrid/Column.php
+| `col-filter`             | global custom filter cell rendering; this block has lower priority than `col-filter-*`
+|^                         | same variables as for `col-filter-*`
+| `col-*`                  | custom cell rendering; **only this block must include ''<td>'' tags**;
+|^                         | `$row`, `$cell`
+
+
+Filtering
+=========
+
+Yes, you want filter created_time column in some date range. And your previous datagrid can't do it. Fortunately, there is awesome Nextras\Datagrid approach. All you need to do is create Nette\Forms\Container and set up inputs corresponding to columns, which you want to filter.
+/--php
+$grid->setFilterFormFactory(function() {
+    $form = new Nette\Forms\Container;
+    $form->addDateTimePicker('created_time');
+    $form->addSearchInput('nickname', ...);
+
+    // set your own fileds, inputs
+
+    // these buttons are not compulsory
+    $form->addSubmit('filter', 'Filter data')->getControlPrototype()->class = 'btn btn-primary';
+    $form->addSubmit('cancel', 'Cancel filter')->getControlPrototype()->class = 'btn';
+
+    return $form;
+});
+\--
+
+Inline editing
+==============
+
+Would you like edit your data inline? No problem. Again, define you form container personally. Nextras\Datagrid won't obstruct your efforts!
+
+/--php
+$grid->setEditFormFactory(function($row) {
+    $form = new Nette\Forms\Container;
+    $form->addDateTimePicker('created_time');
+    $form->addText('nickname')
+        ->setRequired();
+        // set your own conditions
+
+    // set your own fileds, inputs
+
+    // these buttons are not compulsory
+    $form->addSubmit('save', 'Save data')->getControlPrototype()->class = 'btn btn-primary';
+    $form->addSubmit('cancel', 'Cancel editing')->getControlPrototype()->class = 'btn';
+
+    if ($row) {
+        $form->setDefaults($row);
+    }
+    return $form;
+});
+\--
