@@ -97,6 +97,12 @@ Here is list of available blocks for redefinition:
 | `col-*`                  | custom cell rendering; **only this block must include ''<td>'' tags**;
 |^                         | `$row`, `$cell`
 
+To use redefine macro, you have to register latte macro:
+/--code
+latte:
+    macros:
+        - Nextras\Latte\Macros\RedefineMacro::install
+\--
 
 Filtering
 =========
