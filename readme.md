@@ -13,5 +13,5 @@ $ composer require nextras/datagrid
 
 ### Docs & sources
 
-- [Documentation](http://nextras.cz/datagrid/docs)
+- [Documentation](http://nextras.org/datagrid/docs)
 - [Demo](http://nextras.org/datagrid)
