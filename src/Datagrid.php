@@ -300,7 +300,7 @@ class Datagrid extends UI\Control
 			}
 
 			$this->filterDataSource[$this->rowPrimaryKey][] = $primaryValue;
-			parent::invalidateControl('rows');
+			parent::redrawControl('rows');
 			$this->invalidateControl('rows-' . $primaryValue);
 		}
 	}
@@ -309,7 +309,7 @@ class Datagrid extends UI\Control
 
 	public function invalidateControl($snippet = NULL)
 	{
-		parent::invalidateControl($snippet);
+		parent::redrawControl($snippet);
 		if ($snippet === NULL || $snippet === 'rows') {
 			$this->template->echoSnippets = TRUE;
 		}
