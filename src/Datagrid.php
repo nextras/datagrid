@@ -87,7 +87,22 @@ class Datagrid extends UI\Control
 	/** @var array */
 	protected $cellsTemplates = array();
 
+	/** @var bool */
+	protected $showCheckboxes = false;
 
+	/**
+	 * @return boolean
+	 */
+	public function isShowCheckboxes() {
+		return $this->showCheckboxes;
+	}
+
+	/**
+	 * @param boolean $showCheckboxes
+	 */
+	public function setShowCheckboxes($showCheckboxes = true) {
+		$this->showCheckboxes = $showCheckboxes;
+	}
 
 	/**
 	 * Adds column
@@ -267,6 +282,7 @@ class Datagrid extends UI\Control
 		$this->template->editRowKey = $this->editRowKey;
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
 		$this->template->paginator = $this->paginator;
+		$this->template->showCheckboxes = $this->showCheckboxes;
 
 		foreach ($this->cellsTemplates as &$cellsTemplate) {
 			if ($cellsTemplate instanceof IFileTemplate) {
