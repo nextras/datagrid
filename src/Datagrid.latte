@@ -24,6 +24,7 @@
 
 {define row-head-colums}
 	<tr class="grid-columns">
+		<th n:if="$showCheckboxes" class="col-checkbox"><input type="checkbox" id="grid-cb" /></th>
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
 				{if $column->canSort()}
@@ -52,6 +53,7 @@
 
 {define row-head-filter}
 	<tr class="grid-filters">
+		<th n:if="$showCheckboxes" class="col-checkbox">&nbsp;</th>
 		{formContainer filter}
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
@@ -89,6 +91,7 @@
 {define row-inner}
 	{var $primary = $control->getter($row, $rowPrimaryKey)}
 	{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
+	<td n:if="$showCheckboxes" class="col-checkbox"><input type="checkbox" data-primary="{$primary}" /></td>
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
 		{if $editRow && $column->name != $rowPrimaryKey && isset($form['edit'][$column->name])}

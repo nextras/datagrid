@@ -25,6 +25,9 @@ $.nette.ext('datagrid', {
 			$(this).parents('tr').find('[name=filter\\[filter\\]]').trigger(datagrid.createClickEvent($(this)));
 			e.preventDefault();
 		});
+		$('.grid #grid-cb').off('click').on('click', function () { // cb checkbox patch
+			$('.grid tbody tr td:first-child input[type=checkbox]').prop("checked", $(this).prop('checked'));
+		});
 		$('.grid tbody td:not(.grid-col-actions)').off('click.datagrid').on('click.datagrid', function(e) {
 			if (e.ctrlKey) {
 				$(this).parents('tr').find('a[data-datagrid-edit]').trigger(datagrid.createClickEvent($(this)));
