@@ -475,7 +475,7 @@ class Datagrid extends UI\Control
 		}
 
 		$form->onSuccess[] = function() {}; // fix for Nette Framework 2.0.x
-		$form->onSubmit[] = $this->processForm;
+		$form->onSubmit[] = array($this, 'processForm');
 		return $form;
 	}
 
