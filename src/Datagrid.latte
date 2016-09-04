@@ -57,15 +57,15 @@
 			<th class="grid-col-{$column->name}">
 				{if isset($form['filter'][$column->name])}
 					{ifset #col-filter-{$column->name}}
-						{include #"col-filter-{$column->name}" form => $form, column => $column}
+						{include #"col-filter-{$column->name}" column => $column}
 					{else}
-						{include #col-filter form => $form, column => $column}
+						{include #col-filter column => $column}
 					{/ifset}
 				{/if}
 			</th>
 		{/foreach}
 		<th class="grid-col-actions">
-			{include #global-filter-actions showCancel => $showFilterCancel, form => $form}
+			{include #global-filter-actions showCancel => $showFilterCancel}
 		</th>
 		{/formContainer}
 	</tr>
@@ -95,8 +95,8 @@
 			<td class="grid-col-{$column->name}">
 				{formContainer edit}
 					{input $column->name}
-					{if $form[$column->name]->hasErrors()}
-						<p class="error" n:foreach="$form[$column->name]->getErrors() as $error">{$error}</p>
+					{if $form[edit][$column->name]->hasErrors()}
+						<p class="error" n:foreach="$form[edit][$column->name]->getErrors() as $error">{$error}</p>
 					{/if}
 				{/formContainer}
 			</td>
@@ -119,7 +119,7 @@
 		{if $editRow}
 			{formContainer edit}
 				{input $rowPrimaryKey class => 'grid-primary-value'}
-				{include #row-actions-edit form => $form}
+				{include #row-actions-edit}
 			{/formContainer}
 		{else}
 			{ifset #row-actions}

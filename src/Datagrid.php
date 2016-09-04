@@ -240,6 +240,7 @@ class Datagrid extends UI\Control
 			$this['form']['filter']->setDefaults($this->filter);
 		}
 
+		$this->template->form = $this['form'];
 		$this->template->data = $this->getData();
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
