@@ -1,19 +1,19 @@
 {redefine pagination}
-<?php
-	$page = $paginator->getPage();
-	if ($paginator->pageCount < 2) {
-		$steps = array($page);
-	} else {
-		$arr = range(max($paginator->firstPage, $page - 3), min($paginator->lastPage, $page + 3));
-		$count = 4;
-		$quotient = ($paginator->pageCount - 1) / $count;
-		for ($i = 0; $i <= $count; $i++) {
-			$arr[] = round($quotient * $i) + $paginator->firstPage;
-		}
-		sort($arr);
-		$steps = array_values(array_unique($arr));
-	}
-?>
+{*******************************}
+{php $page = $paginator->getPage()}
+{if $paginator->pageCount < 2}
+	{php $steps = [$page]}
+{else}
+	{php $arr = range(max($paginator->firstPage, $page - 3), min($paginator->lastPage, $page + 3))}
+	{php $count = 4}
+	{php $quotient = ($paginator->pageCount - 1) / $count}
+	{for $i = 0; $i <= $count; $i++}
+		{php $arr[] = round($quotient * $i) + $paginator->firstPage}
+	{/for}
+	{php sort($arr)}
+	{php $steps = array_values(array_unique($arr))}
+{/if}
+{*******************************}
 <ul class="pagination">
 {if $paginator->isFirst()}
 	<li class="disabled"><a>« {$control->translate(Previous)}</a></li>
