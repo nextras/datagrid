@@ -5,7 +5,6 @@
  *
  * @license    MIT
  * @link       https://github.com/nextras
- * @author     Jan Skrasek
  */
 
 namespace Nextras\Datagrid;
@@ -18,7 +17,6 @@ use Nette\Utils\Callback;
 use Nette\Localization\ITranslator;
 
 
-
 class Datagrid extends UI\Control
 {
 	/** @var string */
@@ -28,10 +26,10 @@ class Datagrid extends UI\Control
 	const ORDER_DESC = 'desc';
 
 	/** @var array of callbacks: function(Datagrid) */
-	public $onRender = array();
+	public $onRender = [];
 
 	/** @persistent */
-	public $filter = array();
+	public $filter = [];
 
 	/** @persistent */
 	public $orderColumn;
@@ -43,10 +41,10 @@ class Datagrid extends UI\Control
 	public $page = 1;
 
 	/** @var array */
-	protected $filterDataSource = array();
+	protected $filterDataSource = [];
 
 	/** @var array */
-	protected $columns = array();
+	protected $columns = [];
 
 	/** @var callback */
 	protected $columnGetterCallback;
@@ -85,8 +83,7 @@ class Datagrid extends UI\Control
 	protected $data;
 
 	/** @var array */
-	protected $cellsTemplates = array();
-
+	protected $cellsTemplates = [];
 
 
 	/**
@@ -95,7 +92,7 @@ class Datagrid extends UI\Control
 	 * @param  string
 	 * @return Column
 	 */
-	public function addColumn($name, $label = NULL)
+	public function addColumn($name, $label = null)
 	{
 		if (!$this->rowPrimaryKey) {
 			$this->rowPrimaryKey = $name;
@@ -106,19 +103,16 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function setRowPrimaryKey($columnName)
 	{
 		$this->rowPrimaryKey = (string) $columnName;
 	}
 
 
-
 	public function getRowPrimaryKey()
 	{
 		return $this->rowPrimaryKey;
 	}
-
 
 
 	public function setColumnGetterCallback($getterCallback)
@@ -128,12 +122,10 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function getColumnGetterCallback()
 	{
 		return $this->columnGetterCallback;
 	}
-
 
 
 	public function setDataSourceCallback($dataSourceCallback)
@@ -143,12 +135,10 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function getDataSourceCallback()
 	{
 		return $this->dataSourceCallback;
 	}
-
 
 
 	public function setEditFormFactory($editFormFactory)
@@ -157,12 +147,10 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function getEditFormFactory()
 	{
 		return $this->editFormFactory;
 	}
-
 
 
 	public function setEditFormCallback($editFormCallback)
@@ -170,7 +158,6 @@ class Datagrid extends UI\Control
 		Callback::check($editFormCallback);
 		$this->editFormCallback = $editFormCallback;
 	}
-
 
 
 	public function getEditFormCallback()
@@ -187,21 +174,19 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function getFilterFormFactory()
 	{
 		return $this->filterFormFactory;
 	}
 
 
-
-	public function setPagination($itemsPerPage, $itemsCountCallback = NULL)
+	public function setPagination($itemsPerPage, $itemsCountCallback = null)
 	{
-		if ($itemsPerPage === FALSE) {
-			$this->paginator = NULL;
-			$this->paginatorItemsCountCallback = NULL;
+		if ($itemsPerPage === false) {
+			$this->paginator = null;
+			$this->paginatorItemsCountCallback = null;
 		} else {
-			if ($itemsCountCallback === NULL) {
+			if ($itemsCountCallback === null) {
 				throw new \InvalidArgumentException('Items count callback must be set.');
 			}
 
@@ -213,12 +198,10 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function addCellsTemplate($path)
 	{
 		$this->cellsTemplates[] = $path;
 	}
-
 
 
 	public function getCellsTemplate()
@@ -227,12 +210,10 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function setTranslator(ITranslator $translator)
 	{
 		$this->translator = $translator;
 	}
-
 
 
 	public function getTranslator()
@@ -241,19 +222,16 @@ class Datagrid extends UI\Control
 	}
 
 
-
-	public function translate($s, $count = NULL)
+	public function translate($s, $count = null)
 	{
 		$translator = $this->getTranslator();
-		return $translator === NULL || $s == NULL || $s instanceof Html // intentionally ==
+		return $translator === null || $s == null || $s instanceof Html // intentionally ==
 			? $s
 			: $translator->translate((string) $s, $count);
 	}
 
 
-
 	/*******************************************************************************/
-
 
 
 	public function render()
@@ -286,17 +264,16 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function invalidateRow($primaryValue)
 	{
 		if ($this->presenter->isAjax()) {
 			if (isset($this->filterDataSource[$this->rowPrimaryKey])) {
-				$this->filterDataSource = array($this->rowPrimaryKey => $this->filterDataSource[$this->rowPrimaryKey]);
+				$this->filterDataSource = [$this->rowPrimaryKey => $this->filterDataSource[$this->rowPrimaryKey]];
 				if (is_string($this->filterDataSource[$this->rowPrimaryKey])) {
-					$this->filterDataSource[$this->rowPrimaryKey] = array($this->filterDataSource[$this->rowPrimaryKey]);
+					$this->filterDataSource[$this->rowPrimaryKey] = [$this->filterDataSource[$this->rowPrimaryKey]];
 				}
 			} else {
-				$this->filterDataSource = array();
+				$this->filterDataSource = [];
 			}
 
 			$this->filterDataSource[$this->rowPrimaryKey][] = $primaryValue;
@@ -306,19 +283,16 @@ class Datagrid extends UI\Control
 	}
 
 
-
-	public function invalidateControl($snippet = NULL)
+	public function invalidateControl($snippet = null)
 	{
 		parent::redrawControl($snippet);
-		if ($snippet === NULL || $snippet === 'rows') {
-			$this->template->echoSnippets = TRUE;
+		if ($snippet === null || $snippet === 'rows') {
+			$this->template->echoSnippets = true;
 		}
 	}
 
 
-
 	/*******************************************************************************/
-
 
 
 	protected function attached($presenter)
@@ -328,16 +302,15 @@ class Datagrid extends UI\Control
 	}
 
 
-
-	protected function getData($key = NULL)
+	protected function getData($key = null)
 	{
 		if (!$this->data) {
-			$onlyRow = $key !== NULL && $this->presenter->isAjax();
+			$onlyRow = $key !== null && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
-				$itemsCount = Callback::invokeArgs($this->paginatorItemsCountCallback, array(
+				$itemsCount = Callback::invokeArgs($this->paginatorItemsCountCallback, [
 					$this->filterDataSource,
-					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
-				));
+					$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null,
+				]);
 
 				$this->paginator->setItemCount($itemsCount);
 				if ($this->paginator->page !== $this->page) {
@@ -345,14 +318,14 @@ class Datagrid extends UI\Control
 				}
 			}
 
-			$this->data = Callback::invokeArgs($this->dataSourceCallback, array(
+			$this->data = Callback::invokeArgs($this->dataSourceCallback, [
 				$this->filterDataSource,
-				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
-				$onlyRow ? NULL : $this->paginator,
-			));
+				$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null,
+				$onlyRow ? null : $this->paginator,
+			]);
 		}
 
-		if ($key === NULL) {
+		if ($key === null) {
 			return $this->data;
 		}
 
@@ -366,21 +339,20 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	/**
 	 * @internal
 	 * @ignore
 	 */
-	public function getter($row, $column, $need = TRUE)
+	public function getter($row, $column, $need = true)
 	{
 		if ($this->columnGetterCallback) {
-			return Callback::invokeArgs($this->columnGetterCallback, array($row, $column));
+			return Callback::invokeArgs($this->columnGetterCallback, [$row, $column]);
 		} else {
 			if (!isset($row->$column)) {
 				if ($need) {
 					throw new \InvalidArgumentException("Result row does not have '{$column}' column.");
 				} else {
-					return NULL;
+					return null;
 				}
 			}
 
@@ -389,8 +361,7 @@ class Datagrid extends UI\Control
 	}
 
 
-
-	public function handleEdit($primaryValue, $cancelEditPrimaryValue = NULL)
+	public function handleEdit($primaryValue, $cancelEditPrimaryValue = null)
 	{
 		$this->editRowKey = $primaryValue;
 		$this->invalidateRow($primaryValue);
@@ -402,7 +373,6 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function handleSort()
 	{
 		if ($this->presenter->isAjax()) {
@@ -411,7 +381,6 @@ class Datagrid extends UI\Control
 			$this->redirect('this');
 		}
 	}
-
 
 
 	public function createComponentForm()
@@ -427,7 +396,7 @@ class Datagrid extends UI\Control
 				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
 			}
 
-			$this->filterDefaults = array();
+			$this->filterDefaults = [];
 			foreach ($form['filter']->controls as $name => $control) {
 				$this->filterDefaults[$name] = $control->getValue();
 			}
@@ -438,9 +407,9 @@ class Datagrid extends UI\Control
 			}
 		}
 
-		if ($this->editFormFactory && ($this->editRowKey !== NULL || !empty($_POST['edit']))) {
-			$data = $this->editRowKey !== NULL && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
-			$form['edit'] = Callback::invokeArgs($this->editFormFactory, array($data));
+		if ($this->editFormFactory && ($this->editRowKey !== null || !empty($_POST['edit']))) {
+			$data = $this->editRowKey !== null && empty($_POST) ? $this->getData($this->editRowKey) : null;
+			$form['edit'] = Callback::invokeArgs($this->editFormFactory, [$data]);
 
 			if (!isset($form['edit']['save']))
 				$form['edit']->addSubmit('save', 'Save');
@@ -451,7 +420,7 @@ class Datagrid extends UI\Control
 
 			$form['edit'][$this->rowPrimaryKey]
 				->setDefaultValue($this->editRowKey)
-				->setOption('rendered', TRUE);
+				->setOption('rendered', true);
 		}
 
 		if ($this->translator) {
@@ -464,19 +433,18 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function processForm(UI\Form $form)
 	{
-		$allowRedirect = TRUE;
+		$allowRedirect = true;
 		if (isset($form['edit'])) {
 			if ($form['edit']['save']->isSubmittedBy()) {
 				if ($form['edit']->isValid()) {
-					Callback::invokeArgs($this->editFormCallback, array(
+					Callback::invokeArgs($this->editFormCallback, [
 						$form['edit']
-					));
+					]);
 				} else {
 					$this->editRowKey = $form['edit'][$this->rowPrimaryKey]->getValue();
-					$allowRedirect = FALSE;
+					$allowRedirect = false;
 				}
 			}
 			if ($form['edit']['cancel']->isSubmittedBy() || ($form['edit']['save']->isSubmittedBy() && $form['edit']->isValid())) {
@@ -484,14 +452,14 @@ class Datagrid extends UI\Control
 				$this->invalidateRow($editRowKey);
 				$this->getData($editRowKey);
 			}
-			if ($this->editRowKey !== NULL) {
+			if ($this->editRowKey !== null) {
 				$this->invalidateRow($this->editRowKey);
 			}
 		}
 
 		if (isset($form['filter'])) {
 			if ($form['filter']['filter']->isSubmittedBy()) {
-				$values = $form['filter']->getValues(TRUE);
+				$values = $form['filter']->getValues(true);
 				unset($values['filter']);
 				$values = $this->filterFormFilter($values);
 				if ($this->paginator) {
@@ -504,7 +472,7 @@ class Datagrid extends UI\Control
 					$this->page = $this->paginator->page = 1;
 				}
 				$this->filter = $this->filterDataSource = $this->filterDefaults;
-				$form['filter']->setValues($this->filter, TRUE);
+				$form['filter']->setValues($this->filter, true);
 				$this->invalidateControl('rows');
 			}
 		}
@@ -513,7 +481,6 @@ class Datagrid extends UI\Control
 			$this->redirect('this');
 		}
 	}
-
 
 
 	public function loadState(array $params)
@@ -525,8 +492,7 @@ class Datagrid extends UI\Control
 	}
 
 
-
-	protected function createTemplate($class = NULL)
+	protected function createTemplate($class = null)
 	{
 		$template = parent::createTemplate($class);
 		if ($translator = $this->getTranslator()) {
@@ -534,7 +500,6 @@ class Datagrid extends UI\Control
 		}
 		return $template;
 	}
-
 
 
 	public function handlePaginate()
@@ -559,5 +524,4 @@ class Datagrid extends UI\Control
 			return $val !== null;
 		});
 	}
-
 }

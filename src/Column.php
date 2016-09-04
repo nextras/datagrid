@@ -5,7 +5,6 @@
  *
  * @license    MIT
  * @link       https://github.com/nextras
- * @author     Jan Skrasek
  */
 
 namespace Nextras\Datagrid;
@@ -13,10 +12,8 @@ namespace Nextras\Datagrid;
 use Nette;
 
 
-
 class Column extends Nette\Object
 {
-
 	/** @var string */
 	public $name;
 
@@ -30,14 +27,12 @@ class Column extends Nette\Object
 	protected $grid;
 
 
-
 	public function __construct($name, $label, Datagrid $grid)
 	{
 		$this->name = $name;
 		$this->label = $label;
 		$this->grid = $grid;
 	}
-
 
 
 	public function enableSort($default = NULL)
@@ -55,12 +50,10 @@ class Column extends Nette\Object
 	}
 
 
-
 	public function canSort()
 	{
 		return $this->sort;
 	}
-
 
 
 	public function getNewState()
@@ -75,17 +68,14 @@ class Column extends Nette\Object
 	}
 
 
-
 	public function isAsc()
 	{
 		return $this->grid->orderColumn === $this->name && $this->grid->orderType === Datagrid::ORDER_ASC;
 	}
 
 
-
 	public function isDesc()
 	{
 		return $this->grid->orderColumn === $this->name && $this->grid->orderType === Datagrid::ORDER_DESC;
 	}
-
 }
