@@ -6,21 +6,20 @@
 	"license": ["MIT"],
 	"authors": [
 		{
-			"name": "Jan Skrasek",
-			"email": "hrach.cz@gmail.com",
-			"homepage": "http://jan.skrasek.com"
+			"name": "Nextras Community",
+			"homepage": "https://github.com/nextras/forms/graphs/contributors"
 		}
 	],
 	"require": {
-		"php": ">=5.3",
-		"nette/application":      "~2.2",
-		"nette/component-model":  "~2.2",
-		"nette/utils":            "~2.2",
-		"nextras/latte-macros":   "~1.1.0"
+		"php": ">=5.6",
+		"nette/application": "~2.4",
+		"nette/component-model": "~2.3",
+		"nette/utils": "~2.4",
+		"nextras/latte-macros": "~1.1|~2.0"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.1-dev"
+			"dev-master": "3.0-dev"
 		}
 	},
 	"autoload": {
