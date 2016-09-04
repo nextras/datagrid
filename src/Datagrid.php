@@ -10,7 +10,7 @@
 namespace Nextras\Datagrid;
 
 use Nette\Application\UI;
-use Nette\Templating\IFileTemplate;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use Nette\Utils\Callback;
@@ -169,7 +169,6 @@ class Datagrid extends UI\Control
 	}
 
 
-
 	public function setFilterFormFactory($filterFormFactory)
 	{
 		Callback::check($filterFormFactory);
@@ -201,8 +200,17 @@ class Datagrid extends UI\Control
 	}
 
 
+	/**
+	 * @param string|Template $path
+	 */
 	public function addCellsTemplate($path)
 	{
+		if ($path instanceof Template) {
+			$path = $path->getFile();
+		}
+		if (!file_exists($path)) {
+			throw new \InvalidArgumentException("Template '{$path}' does not exist.");
+		}
 		$this->cellsTemplates[] = $path;
 	}
 
@@ -249,16 +257,6 @@ class Datagrid extends UI\Control
 		$this->template->editRowKey = $this->editRowKey;
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
 		$this->template->paginator = $this->paginator;
-
-		foreach ($this->cellsTemplates as &$cellsTemplate) {
-			if ($cellsTemplate instanceof IFileTemplate) {
-				$cellsTemplate = $cellsTemplate->getFile();
-			}
-			if (!file_exists($cellsTemplate)) {
-				throw new \RuntimeException("Cells template '{$cellsTemplate}' does not exist.");
-			}
-		}
-
 		$this->template->sendOnlyRowParentSnippet = $this->sendOnlyRowParentSnippet;
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
