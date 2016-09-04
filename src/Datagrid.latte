@@ -76,14 +76,11 @@
 	{input cancel}
 {/define}
 
-{define row}
-	<tr n:snippet="rows-$primary">
-		{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn}
-	</tr>
-{/define}
-
 {define row-actions-edit-link}
 	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
+{/define}
+
+{define row-class}
 {/define}
 
 {define row-inner}
@@ -175,18 +172,24 @@
 		{/ifset}
 	</thead>
 	<tbody>
-		{var $_dynSnippets = new ArrayObject()}
 		{if count($data)}
-			{foreach $data as $row}
-				{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
-			{/foreach}
+			{if $sendOnlyRowParentSnippet}
+				{foreach $data as $row}
+					{var $primary = $control->getter($row, $rowPrimaryKey)}
+					<tr id="{$this->global->snippetDriver->getHtmlId("rows-$primary")}" class="{include row-class}">
+						{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn}
+					</tr>
+				{/foreach}
+			{else}
+				{foreach $data as $row}
+					{var $primary = $control->getter($row, $rowPrimaryKey)}
+					<tr n:snippet="rows-$primary" class="{include row-class}">
+						{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn}
+					</tr>
+				{/foreach}
+			{/if}
 		{else}
 			{ifset #empty-result}{include #empty-result}{/ifset}
-		{/if}
-		{if isset($echoSnippets)}
-			{php unset($_dynSnippets)}
-		{else}
-			{var $_dynSnippets = iterator_to_array($_dynSnippets)}
 		{/if}
 	</tbody>
 	<tfoot>

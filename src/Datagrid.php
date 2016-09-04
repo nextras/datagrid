@@ -82,6 +82,9 @@ class Datagrid extends UI\Control
 	/** @var mixed */
 	protected $data;
 
+	/** @var bool */
+	protected $sendOnlyRowParentSnippet = false;
+
 	/** @var array */
 	protected $cellsTemplates = [];
 
@@ -256,6 +259,7 @@ class Datagrid extends UI\Control
 			}
 		}
 
+		$this->template->sendOnlyRowParentSnippet = $this->sendOnlyRowParentSnippet;
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
@@ -288,7 +292,7 @@ class Datagrid extends UI\Control
 	{
 		parent::redrawControl($snippet);
 		if ($snippet === null || $snippet === 'rows') {
-			$this->template->echoSnippets = true;
+			$this->sendOnlyRowParentSnippet = true;
 		}
 	}
 
