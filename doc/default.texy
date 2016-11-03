@@ -86,7 +86,7 @@ Here is list of available blocks for redefinition:
 |^                         | -
 | `global-filter-actions`  | cell with the buttons for filtering
 |^                         | `$showCancel`
-| `row-edit-actions`       | cell for rendering save & cancel buttons while editing row
+| `row-actions-edit`       | cell for rendering save & cancel buttons while editing row
 |^                         | -
 | `row-actions`            | cell for rendering row's actions
 |^                         | `$primary`, `$row`
