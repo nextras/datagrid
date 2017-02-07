@@ -27,7 +27,7 @@
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
 				{if $column->canSort()}
-					<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
+					<a href="{link sort! orderColumn => $column->name, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
 					{if $column->isAsc()}
 						<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
 					{elseif $column->isDesc()}
