@@ -101,7 +101,20 @@ class Datagrid extends UI\Control
 		}
 
 		$label = $label ? $this->translate($label) : ucfirst($name);
-		return $this->columns[] = new Column($name, $label, $this);
+		return $this->columns[$name] = new Column($name, $label, $this);
+	}
+
+
+	/**
+	 * @param  string $name
+	 * @return Column
+	 */
+	public function getColumn($name)
+	{
+		if (!isset($this->columns[$name])) {
+			throw new \InvalidArgumentException("Unknown column $name.");
+		}
+		return $this->columns[$name];
 	}
 
 
