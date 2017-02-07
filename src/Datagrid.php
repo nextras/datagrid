@@ -178,7 +178,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setFilterFormFactory(callable $filterFormFactory)
+	public function setFilterFormFactory(callable $filterFormFactory = null)
 	{
 		$this->filterFormFactory = $filterFormFactory;
 	}
