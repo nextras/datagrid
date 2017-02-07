@@ -68,7 +68,7 @@ class Column extends Nette\Object
 		if ($this->isAsc()) {
 			return Datagrid::ORDER_DESC;
 		} elseif ($this->isDesc()) {
-			return NULL;
+			return '';
 		} else {
 			return Datagrid::ORDER_ASC;
 		}
