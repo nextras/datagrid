@@ -1,6 +1,9 @@
 Nextras Datagrid
 ================
 
+[![Downloads this Month](https://img.shields.io/packagist/dm/nextras/datagrid.svg?style=flat)](https://packagist.org/packages/nextras/datagrid)
+[![Stable Version](https://poser.pugx.org/nextras/datagrid/v/stable)](https://packagist.org/packages/nextras/datagrid)
+
 Easy to use datagrid with powerfull API.
 
 ### Installation
