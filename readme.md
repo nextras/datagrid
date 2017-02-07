@@ -13,5 +13,5 @@ $ composer require nextras/datagrid
 
 ### Docs & sources
 
-- [Documentation](http://nextras.org/datagrid/docs)
-- [Demo](http://nextras.org/datagrid)
+- [Documentation](https://nextras.org/datagrid/docs)
+- [Demo App](https://github.com/nextras/datagrid-demo)
