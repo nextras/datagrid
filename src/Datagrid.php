@@ -384,10 +384,12 @@ class Datagrid extends UI\Control
 	public function handleEdit($primaryValue, $cancelEditPrimaryValue = null)
 	{
 		$this->editRowKey = $primaryValue;
-		$this->redrawRow($primaryValue);
-		if ($cancelEditPrimaryValue) {
-			foreach (explode(',', $cancelEditPrimaryValue) as $pv) {
-				$this->redrawRow($pv);
+		if ($this->presenter->isAjax()) {
+			$this->redrawRow($primaryValue);
+			if ($cancelEditPrimaryValue) {
+				foreach (explode(',', $cancelEditPrimaryValue) as $pv) {
+					$this->redrawRow($pv);
+				}
 			}
 		}
 	}
@@ -397,8 +399,6 @@ class Datagrid extends UI\Control
 	{
 		if ($this->presenter->isAjax()) {
 			$this->redrawControl('rows');
-		} else {
-			$this->redirect('this');
 		}
 	}
 
@@ -524,8 +524,6 @@ class Datagrid extends UI\Control
 	{
 		if ($this->presenter->isAjax()) {
 			$this->redrawControl('rows');
-		} else {
-			$this->redirect('this');
 		}
 	}
 
