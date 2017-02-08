@@ -158,12 +158,9 @@
 {/foreach}
 
 {form form class => 'ajax'}
-	{var $hasActionsColumn =
-	isset($this->blocks['row-actions']) ||
-	isset($this->blocks['global-actions']) ||
-	isset($form['filter']) ||
-	(bool) $control->getEditFormFactory()
-}
+{var $hasActionsColumn = (bool) $control->getEditFormFactory()}{* we may render only one row so the form[filter] may not be created *}
+{ifset row-actions}{var $hasActionsColumn = true}{/ifset}
+{ifset global-actions}{var $hasActionsColumn = true}{/ifset}
 {include #table-open-tag}
 	<thead>
 		{include #row-head-colums}
