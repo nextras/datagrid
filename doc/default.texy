@@ -94,6 +94,8 @@ Here is list of suitable blocks for redefinition:
 | `col-filter-*`           | custom filter cell rendering | `$form` - filter's `Nette\Form\IContainer`, `$column` - Column instance
 | `col-filter`             | global custom filter cell rendering; this block has lower priority than `col-filter-*` | same variables as for `col-filter-*`
 | `col-*`                  | custom cell rendering; **only this block must include ''<td>'' tags**; | `$row`, `$cell`
+| `pagination`             | custom pagination | `$control`, `$paginator` - Nette\Utils\Paginator instance
+| `empty-result`           | custom implementation of table row when no results were found
 
 
 Filtering
