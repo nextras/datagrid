@@ -18,7 +18,7 @@
 {ifset global-actions}{var $hasActionsColumn = true}{/ifset}
 {include #table-open-tag}
 	<thead>
-		{include #row-head-colums hasActionsColumn => $hasActionsColumn}
+		{include #row-head-columns hasActionsColumn => $hasActionsColumn}
 		{ifset $form['filter']}
 			{include #row-head-filter}
 		{/ifset}
