@@ -366,7 +366,7 @@ class Datagrid extends UI\Control
 	public function getter($row, $column, $need = true)
 	{
 		if ($this->columnGetterCallback) {
-			return call_user_func($this->columnGetterCallback, $row, $column);
+			return call_user_func($this->columnGetterCallback, $row, $column, $need);
 		} else {
 			if (!isset($row->$column)) {
 				if ($need) {
