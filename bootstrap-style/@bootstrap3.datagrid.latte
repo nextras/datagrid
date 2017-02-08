@@ -1,28 +1,28 @@
-{redefine table-open-tag}
+{define table-open-tag}
 	<table class="table table-bordered table-condensed table-striped">
-{/redefine}
+{/define}
 
-{redefine global-filter-actions}
+{define global-filter-actions}
 	{input filter class => "btn btn-primary btn-sm"}
 	{if $showCancel}
 		{input cancel class => "btn btn-default btn-sm"}
 	{/if}
-{/redefine}
+{/define}
 
-{redefine col-filter}
+{define col-filter}
 	{input $column->name class => "input-sm form-control"}
-{/redefine}
+{/define}
 
-{redefine row-actions-edit}
+{define row-actions-edit}
 	{input save class => "btn btn-primary btn-xs"}
 	{input cancel class => "btn btn-default btn-xs"}
-{/redefine}
+{/define}
 
-{redefine row-actions-edit-link}
+{define row-actions-edit-link}
 	<a href="{link edit! $primary}" data-datagrid-edit class="ajax btn btn-primary btn-xs">{$control->translate(Edit)}</a>
-{/redefine}
+{/define}
 
-{redefine pagination}
+{define pagination}
 <ul class="pagination">
 {if $paginator->isFirst()}
 	<li class="disabled"><a>« {$control->translate(First)}</a></li>
@@ -44,4 +44,4 @@
 	<li><a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{$control->translate(Last)} »</a></li>
 {/if}
 </ul>
-{/redefine}
+{/define}
