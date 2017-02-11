@@ -7,53 +7,57 @@
 <div class="grid" data-grid-name="{$control->getUniqueId()}">
 {snippet rows}
 
+{var $_templates = []}
 {foreach $cellsTemplates as $cellsTemplate}
-	{import $cellsTemplate}
+	{php
+		$_template = $this->createTemplate($cellsTemplate, $this->params, "import");
+		$_template->render();
+		$_templates[] = $_template;
+	}
 {/foreach}
-{import Datagrid.blocks.latte}
 
 {form form class => 'ajax'}
-{var $hasActionsColumn = (bool) $control->getEditFormFactory()}{* we may render only one row so the form[filter] may not be created *}
-{ifset row-actions}{var $hasActionsColumn = true}{/ifset}
-{ifset global-actions}{var $hasActionsColumn = true}{/ifset}
+
+{php
+	$hasActionsColumn =
+		(bool) $control->getEditFormFactory() /* we may render only one row so the form[filter] may not be created */
+		|| isset($this->blockQueue["row-actions"])
+		|| isset($this->blockQueue["global-actions"]);
+
+	foreach ($_templates as $_template):
+		$_template->params['hasActionsColumn'] = $hasActionsColumn;
+	endforeach;
+	$this->params['hasActionsColumn'] = $hasActionsColumn;
+}
+
 {include #table-open-tag}
 	<thead>
-		{include #row-head-columns hasActionsColumn => $hasActionsColumn}
+		{include #row-head-columns}
 		{ifset $form['filter']}
 			{include #row-head-filter}
 		{/ifset}
 	</thead>
 	<tbody>
 		{if count($data)}
-			{if $sendOnlyRowParentSnippet}
-				{foreach $data as $row}
-					{var $primary = $control->getter($row, $rowPrimaryKey)}
-					<tr id="{$this->global->snippetDriver->getHtmlId("rows-$primary")}" class="{include row-class}">
-						{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn}
-					</tr>
-				{/foreach}
-			{else}
-				{foreach $data as $row}
-					{var $primary = $control->getter($row, $rowPrimaryKey)}
-					<tr n:snippet="rows-$primary" class="{include row-class}">
-						{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn}
-					</tr>
-				{/foreach}
-			{/if}
+			{foreach $data as $row}
+				{var $primary = $control->getter($row, $rowPrimaryKey)}
+				{var $rowId = $this->global->snippetDriver->getHtmlId("rows-$primary")}
+				{include #row row => $row, rowId => $rowId}
+			{/foreach}
 		{else}
 			{ifset #empty-result}{include #empty-result}{/ifset}
 		{/if}
 	</tbody>
-	<tfoot>
-		{if isset($paginator)}
+	<tfoot n:ifset="$paginator">
 		<tr>
 			<th colspan="{=count($columns) + $hasActionsColumn}">
 				{include #pagination}
 			</th>
 		</tr>
-		{/if}
 	</tfoot>
 {include #table-close-tag}
+
 {/form}
+
 {/snippet}
 </div>

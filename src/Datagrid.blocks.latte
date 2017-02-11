@@ -78,11 +78,16 @@
 	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
 {/define}
 
-{define row-class}
+{define row}
+	<tr id={$rowId}>
+		{include #row-inner row => $row}
+	</tr>
 {/define}
 
 {define row-inner}
 	{var $primary = $control->getter($row, $rowPrimaryKey)}
+	{php if (!$sendOnlyRowParentSnippet): $this->global->snippetDriver->enter("rows-$primary", "dynamic"); endif;}
+
 	{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
@@ -125,6 +130,7 @@
 		{/if}
 	</td>
 	{/if}
+	{php if (!$sendOnlyRowParentSnippet): $this->global->snippetDriver->leave(); endif;}
 {/define}
 
 {define pagination}

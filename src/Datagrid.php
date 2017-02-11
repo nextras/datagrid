@@ -222,9 +222,11 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function getCellsTemplate()
+	public function getCellsTemplates()
 	{
-		return $this->cellsTemplates;
+		$templates = $this->cellsTemplates;
+		$templates[] = __DIR__ . '/Datagrid.blocks.latte';
+		return $templates;
 	}
 
 
@@ -265,7 +267,7 @@ class Datagrid extends UI\Control
 		$this->template->rowPrimaryKey = $this->rowPrimaryKey;
 		$this->template->paginator = $this->paginator;
 		$this->template->sendOnlyRowParentSnippet = $this->sendOnlyRowParentSnippet;
-		$this->template->cellsTemplates = $this->cellsTemplates;
+		$this->template->cellsTemplates = $this->getCellsTemplates();
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 
