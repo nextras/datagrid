@@ -11,6 +11,8 @@ namespace Nextras\Datagrid;
 
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use Nette\Localization\ITranslator;
@@ -418,12 +420,7 @@ class Datagrid extends UI\Control
 				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
 			}
 
-			$this->filterDefaults = [];
-			foreach ($form['filter']->controls as $name => $control) {
-				$this->filterDefaults[$name] = $control->getValue();
-			}
-			$this->filterDefaults = $this->filterFormFilter($this->filterDefaults);
-
+			$this->prepareFilterDefaults($form['filter']);
 			if (!$this->filterDataSource) {
 				$this->filterDataSource = $this->filterDefaults;
 			}
@@ -530,16 +527,35 @@ class Datagrid extends UI\Control
 	}
 
 
-	private function filterFormFilter($values)
+	private function prepareFilterDefaults(Container $container)
 	{
-		return array_filter($values, function($val) {
-			if (is_array($val)) {
-				return !empty($val);
+		$this->filterDefaults = [];
+		foreach ($container->controls as $name => $control) {
+			if ($control instanceof Button) {
+				continue;
 			}
-			if (is_string($val)) {
-				return strlen($val) > 0;
+
+			$value = $control->getValue();
+			$isNonEmptyValue =
+				(is_array($value) && !empty($value))
+				|| (is_string($value) && strlen($value) > 0)
+				|| (!is_array($value) && !is_string($value) && $value !== null);
+			if ($isNonEmptyValue) {
+				$this->filterDefaults[$name] = $value;
 			}
-			return $val !== null;
-		});
+		}
+	}
+
+
+	private function filterFormFilter(array $values)
+	{
+		$filtered = [];
+		foreach ($values as $key => $val) {
+			$default = isset($this->filterDefaults[$key]) ? $this->filterDefaults[$key] : null;
+			if ($default !== $val) {
+				$filtered[$key] = $val;
+			}
+		}
+		return $filtered;
 	}
 }
