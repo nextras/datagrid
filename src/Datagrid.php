@@ -13,6 +13,7 @@ use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
+use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use Nette\Localization\ITranslator;
@@ -64,6 +65,9 @@ class Datagrid extends UI\Control
 
 	/** @var array */
 	protected $filterDefaults;
+
+	/** @var array */
+	protected $globalActions = [];
 
 	/** @var Paginator */
 	protected $paginator;
@@ -189,6 +193,12 @@ class Datagrid extends UI\Control
 	public function getFilterFormFactory()
 	{
 		return $this->filterFormFactory;
+	}
+
+
+	public function addGlobalAction($name, $label, callable $action)
+	{
+		$this->globalActions[$name] = [$label, $action];
 	}
 
 
@@ -442,6 +452,20 @@ class Datagrid extends UI\Control
 				->setOption('rendered', true);
 		}
 
+		if ($this->globalActions) {
+			$actions = array_map(function($row) { return $row[0]; }, $this->globalActions);
+			$form['actions'] = new Container();
+			$form['actions']->addSelect('action', 'Action', $actions)
+				->setPrompt('- select action -');
+
+			$rows = [];
+			foreach ($this->getData() as $row) {
+				$rows[$this->getter($row, $this->rowPrimaryKey)] = null;
+			}
+			$form['actions']->addCheckboxList('items', '', $rows);
+			$form['actions']->addSubmit('process', 'Do');
+		}
+
 		if ($this->translator) {
 			$form->setTranslator($this->translator);
 		}
@@ -491,6 +515,19 @@ class Datagrid extends UI\Control
 				$this->filter = $this->filterDataSource = $this->filterDefaults;
 				$form['filter']->setValues($this->filter, true);
 				$this->redrawControl('rows');
+			}
+		}
+
+		if (isset($form['actions'])) {
+			if ($form['actions']['process']->isSubmittedBy()) {
+				$action = $form['actions']['action']->getValue();
+				if ($action) {
+					$ids = $form['actions']['items']->getValue();
+					$callback = $this->globalActions[$action][1];
+					$callback($ids, $this);
+					$this->data = null;
+					$form['actions']->setValues(['action' => null, 'items' => []]);
+				}
 			}
 		}
 

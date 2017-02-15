@@ -2,6 +2,17 @@
 	<table class="table table-bordered table-condensed table-striped">
 {/define}
 
+{define global-actions}
+	<div class="grid-global-actions pull-left">
+		<div class="input-group">
+			{input $form[actions][action] class => 'form-control'}
+			<span class="input-group-btn">
+			{input $form[actions][process] class => 'btn btn-primary'}
+			</span>
+		</div>
+	</div>
+{/define}
+
 {define global-filter-actions}
 	{input filter class => "btn btn-primary btn-sm"}
 	{if $showCancel}

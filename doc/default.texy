@@ -144,3 +144,14 @@ $grid->setEditFormFactory(function($row) {
     return $form;
 });
 \--
+
+
+Global Actions
+==============
+
+/--php
+$grid->addGlobalAction('delete', 'Move to trash', function (array $ids, Datagrid $grid) {
+	// delete $ids
+	$grid->redrawControl('rows');
+});
+\--

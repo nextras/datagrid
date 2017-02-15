@@ -22,6 +22,9 @@
 
 {define row-head-columns}
 	<tr class="grid-columns">
+		{ifset $form[actions]}
+			<th class="grid-col-global-actions"></th>
+		{/ifset}
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
 				{if $column->canSort()}
@@ -39,7 +42,7 @@
 			</th>
 		{/foreach}
 		{if $hasActionsColumn}
-			<th class="grid-col-actions">{ifset #global-actions}{include #global-actions}{/ifset}</th>
+			<th class="grid-col-actions"></th>
 		{/if}
 	</tr>
 {/define}
@@ -48,7 +51,17 @@
 	{input $column->name}
 {/define}
 
+{define global-actions}
+	<div class="grid-global-actions">
+		{input $form[actions][action]}
+		{input $form[actions][process]}
+	</div>
+{/define}
+
 {define row-head-filter}
+	{ifset $form[actions]}
+	<th class="grid-col-global-actions"></th>
+	{/ifset}
 	<tr class="grid-filters">
 		{formContainer filter}
 		{foreach $columns as $column}
@@ -89,6 +102,13 @@
 	{php if (!$sendOnlyRowParentSnippet): $this->global->snippetDriver->enter("rows-$primary", "dynamic"); endif;}
 
 	{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
+	{ifset $form[actions]}
+		<td class="grid-col-global-actions">
+			{formContainer actions}
+			{input items:$primary}
+			{/formContainer}
+		</td>
+	{/ifset}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
 		{if $editRow && $column->name != $rowPrimaryKey && isset($form['edit'][$column->name])}

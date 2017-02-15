@@ -28,6 +28,12 @@
 .grid tfoot th {
   text-align: center;
 }
-.grid tfoot .pagination {
+.grid tfoot .pagination, .grid tfoot .grid-global-actions {
   margin: 5px;
+}
+.grid tfoot .grid-global-actions {
+  margin-right: -100%;
+}
+.grid .grid-col-global-actions {
+  width: 16px;
 }
