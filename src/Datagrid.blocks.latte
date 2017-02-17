@@ -111,14 +111,18 @@
 	{/ifset}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
-		{if $editRow && $column->name != $rowPrimaryKey && isset($form['edit'][$column->name])}
+		{if $editRow && $column->name != $rowPrimaryKey && (isset($form['edit'][$column->name]) || isset($this->blockQueue["cell-edit-{$column->name}"]))}
 			<td class="grid-col-{$column->name}">
-				{formContainer edit}
-					{input $column->name}
-					{if $form[edit][$column->name]->hasErrors()}
-						<p class="error" n:foreach="$form[edit][$column->name]->getErrors() as $error">{$error}</p>
-					{/if}
-				{/formContainer}
+				{ifset #cell-edit-$column->name}
+					{include #"cell-edit-{$column->name}" form => $form, column => $column, row => $row}
+				{else}
+					{formContainer edit}
+						{input $column->name}
+						{if $form[edit][$column->name]->hasErrors()}
+							<p class="error" n:foreach="$form[edit][$column->name]->getErrors() as $error">{$error}</p>
+						{/if}
+					{/formContainer}
+				{/ifset}
 			</td>
 		{else}
 			{ifset #col-$column->name}
