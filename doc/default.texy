@@ -87,7 +87,7 @@ Here is list of suitable blocks for redefinition:
 |--------------------------------------------------------------------
 | `table-open-tag`         | html `<table>` tag
 | `table-close-tag`        | html `</table>` tag
-| `global-actions`         | the top right table cell for some global actions
+| `global-actions`         | the bottom left block for global actions select
 | `global-filter-actions`  | cell with the buttons for filtering | `$showCancel`
 | `row-actions-edit`       | cell for rendering save & cancel buttons while editing row
 | `row-actions`            | cell for rendering row's actions | `$primary`, `$row`
@@ -155,3 +155,5 @@ $grid->addGlobalAction('delete', 'Move to trash', function (array $ids, Datagrid
 	$grid->redrawControl('rows');
 });
 \--
+
+You may rewrite `global-actions` block to style select & button differently.
