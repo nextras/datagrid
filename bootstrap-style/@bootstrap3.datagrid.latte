@@ -3,7 +3,7 @@
 {/define}
 
 {define global-actions}
-	<div class="grid-global-actions pull-left">
+	<div class="grid-global-actions pull-left" n:ifset="$form[actions]">
 		<div class="input-group">
 			{input $form[actions][action] class => 'form-control'}
 			<span class="input-group-btn">
