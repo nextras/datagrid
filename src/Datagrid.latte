@@ -53,7 +53,9 @@
 	<tfoot n:ifset="$paginator">
 		<tr>
 			<th colspan="{=count($columns) + $hasGlobalActionsColumn + $hasActionsColumn}">
-				{include #global-actions}
+				{if $hasGlobalActionsColumn}
+					{include #global-actions}
+				{/if}
 				{include #pagination}
 			</th>
 		</tr>
