@@ -50,13 +50,15 @@
 			{ifset #empty-result}{include #empty-result}{/ifset}
 		{/if}
 	</tbody>
-	<tfoot n:ifset="$paginator">
+	<tfoot n:if="isset($paginator) || $hasGlobalActionsColumn">
 		<tr>
 			<th colspan="{=count($columns) + $hasGlobalActionsColumn + $hasActionsColumn}">
 				{if $hasGlobalActionsColumn}
 					{include #global-actions}
 				{/if}
-				{include #pagination}
+				{ifset $paginator}
+					{include #pagination}
+				{/ifset}
 			</th>
 		</tr>
 	</tfoot>
