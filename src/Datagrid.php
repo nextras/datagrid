@@ -573,11 +573,7 @@ class Datagrid extends UI\Control
 			}
 
 			$value = $control->getValue();
-			$isNonEmptyValue =
-				(is_array($value) && !empty($value))
-				|| (is_string($value) && strlen($value) > 0)
-				|| (!is_array($value) && !is_string($value) && $value !== null);
-			if ($isNonEmptyValue) {
+			if (!self::isEmptyValue($value)) {
 				$this->filterDefaults[$name] = $value;
 			}
 		}
@@ -587,12 +583,18 @@ class Datagrid extends UI\Control
 	private function filterFormFilter(array $values)
 	{
 		$filtered = [];
-		foreach ($values as $key => $val) {
-			$default = isset($this->filterDefaults[$key]) ? $this->filterDefaults[$key] : null;
-			if ($default !== $val) {
-				$filtered[$key] = $val;
+		foreach ($values as $key => $value) {
+			$isDefaultDifferent = isset($this->filterDefaults[$key]) && $this->filterDefaults[$key] !== $value;
+			if ($isDefaultDifferent || !self::isEmptyValue($value)) {
+				$filtered[$key] = $value;
 			}
 		}
 		return $filtered;
+	}
+
+
+	private static function isEmptyValue($value)
+	{
+		return $value === NULL || $value === '' || $value === [];
 	}
 }
