@@ -59,10 +59,10 @@
 {/define}
 
 {define row-head-filter}
-	{ifset $form[actions]}
-	<th class="grid-col-global-actions"></th>
-	{/ifset}
 	<tr class="grid-filters">
+		{ifset $form[actions]}
+			<th class="grid-col-global-actions"></th>
+		{/ifset}	
 		{formContainer filter}
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
