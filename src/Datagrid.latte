@@ -21,7 +21,8 @@
 {php
 	$hasActionsColumn =
 		(bool) $control->getEditFormFactory() /* we may render only one row so the form[filter] may not be created */
-		|| isset($this->blockQueue["row-actions"]);
+		|| isset($this->blockQueue["row-actions"])
+		|| isset($form['filter']);
 	$hasGlobalActionsColumn = isset($form['actions']);
 
 	foreach ($_templates as $_template):
