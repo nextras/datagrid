@@ -337,11 +337,22 @@ class Datagrid extends UI\Control
 	protected function getData($key = null)
 	{
 		if (!$this->data) {
+			$validFilterData = [];
+			if ($this->filterFormFactory) {
+				$this['form']->isValid(); // triggers validation
+				foreach ($this['form']['filter']->controls as $name => $control) {
+					if ($control->getErrors() === []) {
+						$validFilterData[$name] = $control->getValue();
+					}
+				}
+				$validFilterData = $this->filterFormFilter($validFilterData);
+			}
+
 			$onlyRow = $key !== null && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = call_user_func(
 					$this->paginatorItemsCountCallback,
-					$this->filterDataSource,
+					$validFilterData,
 					$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null
 				);
 
@@ -353,7 +364,7 @@ class Datagrid extends UI\Control
 
 			$this->data = call_user_func(
 				$this->dataSourceCallback,
-				$this->filterDataSource,
+				$validFilterData,
 				$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null,
 				$onlyRow ? null : $this->paginator
 			);
