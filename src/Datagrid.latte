@@ -10,7 +10,7 @@
 {var $_templates = []}
 {foreach $cellsTemplates as $cellsTemplate}
 	{php
-		$_template = $this->createTemplate($cellsTemplate, $this->params, "import");
+		$_template = $this->createTemplate($cellsTemplate, $this->params, "include");
 		$_template->render();
 		$_templates[] = $_template;
 	}
