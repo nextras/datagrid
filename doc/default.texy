@@ -129,7 +129,7 @@ Would you like edit your data inline? No problem. Define you edit form container
 
 /--php
 $grid->setEditFormFactory(function($row) {
-    $form = new Nette\Forms\Containe()r;
+    $form = new Nette\Forms\Container();
     $form->addDateTimePicker('created_time');
     $form->addText('nickname')->setRequired();
     // set your own conditions
