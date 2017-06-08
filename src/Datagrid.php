@@ -351,6 +351,10 @@ class Datagrid extends UI\Control
 				}
 			}
 
+			if ( $this->orderColumn !== NULL && !isset( $this->columns[ $this->orderColumn ] ) ) {
+				$this->orderColumn = NULL;
+			}
+			
 			$this->data = call_user_func(
 				$this->dataSourceCallback,
 				$this->filterDataSource,
