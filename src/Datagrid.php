@@ -355,7 +355,7 @@ class Datagrid extends UI\Control
 					$this->paginator->page = $this->page = 1;
 				}
 			}
-			
+
 			$this->data = call_user_func(
 				$this->dataSourceCallback,
 				$this->filterDataSource,
