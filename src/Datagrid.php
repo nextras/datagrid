@@ -94,6 +94,13 @@ class Datagrid extends UI\Control
 	protected $cellsTemplates = [];
 
 
+	public function __construct()
+	{
+		parent::__construct();
+		$this->translator = new DefaultTranslator();
+	}
+
+
 	/**
 	 * Adds column
 	 * @param  string
@@ -256,10 +263,9 @@ class Datagrid extends UI\Control
 
 	public function translate($s, $count = null)
 	{
-		$translator = $this->getTranslator();
-		return $translator === null || $s == null || $s instanceof Html // intentionally ==
+		return $s == null || $s instanceof Html // intentionally ==
 			? $s
-			: $translator->translate((string) $s, $count);
+			: $this->getTranslator()->translate((string) $s, $count);
 	}
 
 
@@ -338,11 +344,11 @@ class Datagrid extends UI\Control
 	{
 		if (!$this->data) {
 			$onlyRow = $key !== null && $this->presenter->isAjax();
-			
+
 			if ($this->orderColumn !== NULL && !isset($this->columns[$this->orderColumn])) {
 				$this->orderColumn = NULL;
 			}
-			
+
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = call_user_func(
 					$this->paginatorItemsCountCallback,
@@ -429,10 +435,10 @@ class Datagrid extends UI\Control
 		if ($this->filterFormFactory) {
 			$form['filter'] = call_user_func($this->filterFormFactory);
 			if (!isset($form['filter']['filter'])) {
-				$form['filter']->addSubmit('filter', $this->translate('Filter'));
+				$form['filter']->addSubmit('filter', 'nextras.datagrid.filter.submit');
 			}
 			if (!isset($form['filter']['cancel'])) {
-				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
+				$form['filter']->addSubmit('cancel', 'nextras.datagrid.filter.cancel');
 			}
 
 			$this->prepareFilterDefaults($form['filter']);
@@ -446,9 +452,9 @@ class Datagrid extends UI\Control
 			$form['edit'] = call_user_func($this->editFormFactory, $data);
 
 			if (!isset($form['edit']['save']))
-				$form['edit']->addSubmit('save', 'Save');
+				$form['edit']->addSubmit('save', 'nextras.datagrid.edit.save');
 			if (!isset($form['edit']['cancel']))
-				$form['edit']->addSubmit('cancel', 'Cancel');
+				$form['edit']->addSubmit('cancel', 'nextras.datagrid.edit.cancel');
 			if (!isset($form['edit'][$this->rowPrimaryKey]))
 				$form['edit']->addHidden($this->rowPrimaryKey);
 
@@ -460,20 +466,18 @@ class Datagrid extends UI\Control
 		if ($this->globalActions) {
 			$actions = array_map(function($row) { return $row[0]; }, $this->globalActions);
 			$form['actions'] = new Container();
-			$form['actions']->addSelect('action', 'Action', $actions)
-				->setPrompt('- select action -');
+			$form['actions']->addSelect('action', 'nextras.datagrid.action.label', $actions)
+				->setPrompt('nextras.datagrid.action.prompt');
 
 			$rows = [];
 			foreach ($this->getData() as $row) {
 				$rows[$this->getter($row, $this->rowPrimaryKey)] = null;
 			}
 			$form['actions']->addCheckboxList('items', '', $rows);
-			$form['actions']->addSubmit('process', 'Do');
+			$form['actions']->addSubmit('process', 'nextras.datagrid.action.process');
 		}
 
-		if ($this->translator) {
-			$form->setTranslator($this->translator);
-		}
+		$form->setTranslator($this->translator);
 
 		$form->onSuccess[] = function() {}; // fix for Nette Framework 2.0.x
 		$form->onSubmit[] = [$this, 'processForm'];
