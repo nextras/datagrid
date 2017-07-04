@@ -96,7 +96,7 @@ class Datagrid extends UI\Control
 	public function __construct()
 	{
 		parent::__construct();
-		$this->translator = new DefaultTranslator();
+		$this->translator = new DefaultTranslator(DefaultTranslator::LANG_EN);
 	}
 
 
