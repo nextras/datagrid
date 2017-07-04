@@ -13,3 +13,8 @@ namespace Nextras\Datagrid;
 class InvalidArgumentException extends \InvalidArgumentException
 {
 }
+
+
+class LogicException extends \LogicException
+{
+}

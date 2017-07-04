@@ -273,6 +273,10 @@ class Datagrid extends UI\Control
 
 	public function render()
 	{
+		if (!$this->template instanceof Template) {
+			throw new LogicException('Template must be instance of ' . Template::class);
+		}
+
 		if ($this->filterFormFactory) {
 			$this['form']['filter']->setDefaults($this->filter);
 		}
@@ -287,6 +291,8 @@ class Datagrid extends UI\Control
 		$this->template->cellsTemplates = $this->getCellsTemplates();
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
+
+		$this->template->setTranslator($this->translator);
 
 		$this->onRender($this);
 		$this->template->render();
