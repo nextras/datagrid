@@ -93,13 +93,6 @@ class Datagrid extends UI\Control
 	protected $cellsTemplates = [];
 
 
-	public function __construct()
-	{
-		parent::__construct();
-		$this->translator = new DefaultTranslator(DefaultTranslator::LANG_EN);
-	}
-
-
 	/**
 	 * Adds column
 	 * @param  string
@@ -256,6 +249,9 @@ class Datagrid extends UI\Control
 
 	public function getTranslator()
 	{
+		if (!$this->translator) {
+			$this->translator = new DefaultTranslator(DefaultTranslator::LANG_EN);
+		}
 		return $this->translator;
 	}
 
@@ -280,6 +276,8 @@ class Datagrid extends UI\Control
 		if ($this->filterFormFactory) {
 			$this['form']['filter']->setDefaults($this->filter);
 		}
+
+		$this['form']->setTranslator($this->getTranslator());
 
 		$this->template->form = $this['form'];
 		$this->template->data = $this->getData();
@@ -479,8 +477,6 @@ class Datagrid extends UI\Control
 			$form['actions']->addCheckboxList('items', '', $rows);
 			$form['actions']->addSubmit('process', 'nextras.datagrid.action.process');
 		}
-
-		$form->setTranslator($this->translator);
 
 		$form->onSuccess[] = function() {}; // fix for Nette Framework 2.0.x
 		$form->onSubmit[] = [$this, 'processForm'];
