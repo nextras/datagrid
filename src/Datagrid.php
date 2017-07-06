@@ -292,8 +292,6 @@ class Datagrid extends UI\Control
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 
-		$this->template->setTranslator($this->translator);
-
 		$this->onRender($this);
 		$this->template->render();
 	}
@@ -563,9 +561,7 @@ class Datagrid extends UI\Control
 	protected function createTemplate($class = null)
 	{
 		$template = parent::createTemplate($class);
-		if ($translator = $this->getTranslator()) {
-			$template->setTranslator($translator);
-		}
+		$template->setTranslator($this->getTranslator());
 		return $template;
 	}
 
