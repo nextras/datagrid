@@ -88,7 +88,7 @@
 {/define}
 
 {define row-actions-edit-link}
-	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
+	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{_}nextras.datagrid.edit.label{/_}</a>
 {/define}
 
 {define row}
@@ -160,11 +160,11 @@
 {define pagination}
 	<div class="grid-paginator">
 		{if $paginator->isFirst()}
-			<span>« {$control->translate(First)}</span>
-			<span>« {$control->translate(Previous)}</span>
+			<span>« {_}nextras.datagrid.pagination.first{/_}</span>
+			<span>« {_}nextras.datagrid.pagination.previous{/_}</span>
 		{else}
-			<a href="{link paginate!, 'page' => 1}" class="ajax">« {$control->translate(First)}</a>
-			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« {$control->translate(Previous)}</a>
+			<a href="{link paginate!, 'page' => 1}" class="ajax">« {_}nextras.datagrid.pagination.first{/_}</a>
+			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« {_}nextras.datagrid.pagination.previous{/_}</a>
 		{/if}
 
 		<span>
@@ -172,11 +172,11 @@
 		</span>
 
 		{if $paginator->isLast()}
-			<span>{$control->translate(Next)} »</span>
-			<span>{$control->translate(Last)} »</span>
+			<span>{_}nextras.datagrid.pagination.next{/_} »</span>
+			<span>{_}nextras.datagrid.pagination.last{/_} »</span>
 		{else}
-			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">{$control->translate(Next)} »</a>
-			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{$control->translate(Last)} »</a>
+			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">{_}nextras.datagrid.pagination.next{/_} »</a>
+			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{_}nextras.datagrid.pagination.last{/_} »</a>
 		{/if}
 	</div>
 {/define}
