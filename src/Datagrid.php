@@ -338,11 +338,11 @@ class Datagrid extends UI\Control
 	{
 		if (!$this->data) {
 			$onlyRow = $key !== null && $this->presenter->isAjax();
-			
+
 			if ($this->orderColumn !== NULL && !isset($this->columns[$this->orderColumn])) {
 				$this->orderColumn = NULL;
 			}
-			
+
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = call_user_func(
 					$this->paginatorItemsCountCallback,
@@ -462,12 +462,7 @@ class Datagrid extends UI\Control
 			$form['actions'] = new Container();
 			$form['actions']->addSelect('action', 'Action', $actions)
 				->setPrompt('- select action -');
-
-			$rows = [];
-			foreach ($this->getData() as $row) {
-				$rows[$this->getter($row, $this->rowPrimaryKey)] = null;
-			}
-			$form['actions']->addCheckboxList('items', '', $rows);
+			$form['actions']->addCheckboxList('items', '', []);
 			$form['actions']->addSubmit('process', 'Do');
 		}
 
@@ -527,7 +522,11 @@ class Datagrid extends UI\Control
 			if ($form['actions']['process']->isSubmittedBy()) {
 				$action = $form['actions']['action']->getValue();
 				if ($action) {
-					$ids = $form['actions']['items']->getValue();
+					$rows = [];
+					foreach($this->getData() as $row) {
+						$rows[] = $this->getter($row, $this->rowPrimaryKey);
+					}
+					$ids = array_intersect($rows, $form->getHttpData($form::DATA_TEXT, 'actions[items][]'));
 					$callback = $this->globalActions[$action][1];
 					$callback($ids, $this);
 					$this->data = null;
