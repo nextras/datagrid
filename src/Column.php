@@ -20,8 +20,11 @@ class Column extends Nette\Object
 	/** @var string */
 	public $label;
 
-	/** @var string */
+	/** @var bool */
 	protected $sort = FALSE;
+
+	/** @var bool */
+	protected $required = FALSE;
 
 	/** @var Datagrid */
 	protected $grid;
@@ -35,16 +38,16 @@ class Column extends Nette\Object
 	}
 
 
-	public function enableSort($default = NULL)
+	public function enableSort($default = NULL, $required = FALSE)
 	{
 		$this->sort = TRUE;
+		$this->required = ($required && $default && $default !== Datagrid::ORDER_NONE);
 		if ($default !== NULL) {
-			if ($default !== Datagrid::ORDER_ASC && $default !== Datagrid::ORDER_DESC) {
+			if ($default !== Datagrid::ORDER_ASC && $default !== Datagrid::ORDER_DESC && $default !== Datagrid::ORDER_NONE) {
 				throw new \InvalidArgumentException('Unknown order type.');
 			}
 
-			$this->grid->orderColumn = $this->name;
-			$this->grid->orderType = $default;
+			$this->grid->order[$this->name] = $default;
 		}
 		return $this;
 	}
@@ -58,24 +61,27 @@ class Column extends Nette\Object
 
 	public function getNewState()
 	{
-		if ($this->isAsc()) {
-			return Datagrid::ORDER_DESC;
+		$state = $this->grid->order;
+		if($this->isAsc()) {
+			$state[$this->name] = Datagrid::ORDER_DESC;
 		} elseif ($this->isDesc()) {
-			return '';
+			$state[$this->name] = ($this->force ? Datagrid::ORDER_ASC : Datagrid::ORDER_NONE);
 		} else {
-			return Datagrid::ORDER_ASC;
+			$state[$this->name] = Datagrid::ORDER_ASC;
 		}
+
+		return $state;
 	}
 
 
 	public function isAsc()
 	{
-		return $this->grid->orderColumn === $this->name && $this->grid->orderType === Datagrid::ORDER_ASC;
+		return isset($this->grid->order[$this->name]) && $this->grid->order[$this->name] === Datagrid::ORDER_ASC;
 	}
 
 
 	public function isDesc()
 	{
-		return $this->grid->orderColumn === $this->name && $this->grid->orderType === Datagrid::ORDER_DESC;
+		return isset($this->grid->order[$this->name]) && $this->grid->order[$this->name] === Datagrid::ORDER_DESC;
 	}
 }
