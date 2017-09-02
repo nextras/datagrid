@@ -388,6 +388,10 @@ class Datagrid extends UI\Control
 			return call_user_func($this->columnGetterCallback, $row, $column, $need);
 		} else {
 			if (!isset($row->$column)) {
+				if ((is_array($row) || $row instanceof \ArrayAccess) && isset($row[$column])) {
+					return $row[$column];
+				}
+
 				if ($need) {
 					throw new \InvalidArgumentException("Result row does not have '{$column}' column.");
 				} else {
