@@ -384,6 +384,10 @@ class Datagrid extends UI\Control
 			return call_user_func($this->columnGetterCallback, $row, $column, $need);
 		} else {
 			if (!isset($row->$column)) {
+				if ((is_array($row) || $row instanceof \ArrayAccess) && isset($row[$column])) {
+					return $row[$column];
+				}
+
 				if ($need) {
 					throw new \InvalidArgumentException("Result row does not have '{$column}' column.");
 				} else {
@@ -458,12 +462,7 @@ class Datagrid extends UI\Control
 			$form['actions'] = new Container();
 			$form['actions']->addSelect('action', 'Action', $actions)
 				->setPrompt('- select action -');
-
-			$rows = [];
-			foreach ($this->getData() as $row) {
-				$rows[$this->getter($row, $this->rowPrimaryKey)] = null;
-			}
-			$form['actions']->addCheckboxList('items', '', $rows);
+			$form['actions']->addCheckboxList('items', '', []);
 			$form['actions']->addSubmit('process', 'Do');
 		}
 
@@ -523,7 +522,11 @@ class Datagrid extends UI\Control
 			if ($form['actions']['process']->isSubmittedBy()) {
 				$action = $form['actions']['action']->getValue();
 				if ($action) {
-					$ids = $form['actions']['items']->getValue();
+					$rows = [];
+					foreach($this->getData() as $row) {
+						$rows[] = $this->getter($row, $this->rowPrimaryKey);
+					}
+					$ids = array_intersect($rows, $form->getHttpData($form::DATA_TEXT, 'actions[items][]'));
 					$callback = $this->globalActions[$action][1];
 					$callback($ids, $this);
 					$this->data = null;
