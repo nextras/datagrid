@@ -603,6 +603,6 @@ class Datagrid extends UI\Control
 
 	private static function isEmptyValue($value)
 	{
-		return $value === NULL || $value === '' || $value === [];
+		return $value === NULL || $value === '' || $value === [] || $value === false;
 	}
 }
