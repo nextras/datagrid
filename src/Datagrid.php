@@ -93,6 +93,9 @@ class Datagrid extends UI\Control
 	/** @var array */
 	protected $cellsTemplates = [];
 
+	/** @var bool */
+	private $preRendered = false;
+
 
 	/**
 	 * Adds column
@@ -266,7 +269,7 @@ class Datagrid extends UI\Control
 	/*******************************************************************************/
 
 
-	public function render()
+	public function preRender()
 	{
 		if ($this->filterFormFactory) {
 			$this['form']['filter']->setDefaults($this->filter);
@@ -282,6 +285,15 @@ class Datagrid extends UI\Control
 		$this->template->cellsTemplates = $this->getCellsTemplates();
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
+
+		$this->preRendered = true;
+	}
+
+	public function render()
+	{
+		if (!$this->preRendered) {
+			$this->preRender();
+		}
 
 		$this->onRender($this);
 		$this->template->render();
