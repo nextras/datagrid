@@ -307,9 +307,9 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function redrawControl($snippet = null)
+	public function redrawControl($snippet = null, $redraw = true)
 	{
-		parent::redrawControl($snippet);
+		parent::redrawControl($snippet, $redraw);
 		if ($snippet === null || $snippet === 'rows') {
 			$this->sendOnlyRowParentSnippet = true;
 		}
