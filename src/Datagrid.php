@@ -41,6 +41,9 @@ class Datagrid extends UI\Control
 	/** @persistent */
 	public $page = 1;
 
+	/** @var string|null */
+	protected $anchor;
+
 	/** @var array */
 	protected $filterDataSource = [];
 
@@ -135,6 +138,20 @@ class Datagrid extends UI\Control
 	public function getRowPrimaryKey()
 	{
 		return $this->rowPrimaryKey;
+	}
+
+
+	public function setAnchor($anchor = '')
+	{
+		$this->anchor = $anchor === ''
+			? $this->getUniqueId()
+			: $anchor;
+	}
+
+
+	public function getAnchor()
+	{
+		return $this->anchor;
 	}
 
 
@@ -453,6 +470,12 @@ class Datagrid extends UI\Control
 		if (!$form instanceof UI\Form) {
 			$type = is_object($form) ? get_class($form) : gettype($form);
 			throw new \Exception('Form factory callback has to return ' . UI\Form::class . ", but $type returned.");
+		}
+
+		if ($this->anchor !== null) {
+			$form->onAnchor[] = function (UI\Form $form) {
+				$form->setAction($form->getAction() . '#' . $this->getAnchor());
+			};
 		}
 
 		if ($this->filterFormFactory) {
