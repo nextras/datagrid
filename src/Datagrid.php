@@ -336,6 +336,10 @@ class Datagrid extends UI\Control
 	protected function getData($key = null)
 	{
 		if (!$this->data) {
+			if ($this->dataSourceCallback === null) {
+				throw new \Exception('Data source callback is not set. Set it by ' . __CLASS__ . '::setDataSourceCallback().');
+			}
+
 			$onlyRow = $key !== null && $this->presenter->isAjax();
 
 			if ($this->orderColumn !== NULL && !isset($this->columns[$this->orderColumn])) {
