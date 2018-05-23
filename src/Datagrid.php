@@ -71,7 +71,7 @@ class Datagrid extends UI\Control
 	/** @var Paginator */
 	protected $paginator;
 
-	/** @var ITranslator */
+	/** @var ITranslator|null */
 	protected $translator;
 
 	/** @var callable|null */
@@ -241,7 +241,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setTranslator(ITranslator $translator)
+	public function setTranslator(ITranslator $translator = null)
 	{
 		$this->translator = $translator;
 	}
