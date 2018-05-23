@@ -252,8 +252,9 @@ class Datagrid extends UI\Control
 
 	/**
 	 * @param string|Template $path
+	 * @param bool $append
 	 */
-	public function addCellsTemplate($path)
+	public function addCellsTemplate($path, $append = true)
 	{
 		if ($path instanceof Template) {
 			$path = $path->getFile();
@@ -261,7 +262,12 @@ class Datagrid extends UI\Control
 		if (!file_exists($path)) {
 			throw new \InvalidArgumentException("Template '{$path}' does not exist.");
 		}
-		$this->cellsTemplates[] = $path;
+
+		if ($append) {
+			$this->cellsTemplates[] = $path;
+		} else {
+			array_unshift($this->cellsTemplates, $path);
+		}
 	}
 
 
