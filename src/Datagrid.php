@@ -54,6 +54,9 @@ class Datagrid extends UI\Control
 	protected $dataSourceCallback;
 
 	/** @var callable|null */
+	protected $formFactory;
+
+	/** @var callable|null */
 	protected $editFormFactory;
 
 	/** @var callable|null */
@@ -156,6 +159,18 @@ class Datagrid extends UI\Control
 	public function getDataSourceCallback()
 	{
 		return $this->dataSourceCallback;
+	}
+
+
+	public function setFormFactory(callable $formFactory)
+	{
+		$this->formFactory = $formFactory;
+	}
+
+
+	public function getFormFactory()
+	{
+		return $this->formFactory;
 	}
 
 
@@ -431,7 +446,14 @@ class Datagrid extends UI\Control
 
 	public function createComponentForm()
 	{
-		$form = new UI\Form;
+		$form = $this->formFactory === null
+			? new UI\Form
+			: call_user_func($this->formFactory, $this);
+
+		if (!$form instanceof UI\Form) {
+			$type = is_object($form) ? get_class($form) : gettype($form);
+			throw new \Exception('Form factory callback has to return ' . UI\Form::class . ", but $type returned.");
+		}
 
 		if ($this->filterFormFactory) {
 			$form['filter'] = call_user_func($this->filterFormFactory);
