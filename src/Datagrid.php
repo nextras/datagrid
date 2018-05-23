@@ -13,7 +13,6 @@ use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
-use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use Nette\Localization\ITranslator;
