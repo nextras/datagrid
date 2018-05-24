@@ -91,6 +91,13 @@
 	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
 {/define}
 
+{define row-edit-control}
+	{input $column->name}
+	{if $form[edit][$column->name]->hasErrors()}
+		<p class="error" n:foreach="$form[edit][$column->name]->getErrors() as $error">{$error}</p>
+	{/if}
+{/define}
+
 {define row}
 	<tr id={$rowId}>
 		{include #row-inner row => $row}
@@ -117,10 +124,7 @@
 					{include #"cell-edit-{$column->name}" form => $form, column => $column, row => $row}
 				{else}
 					{formContainer edit}
-						{input $column->name}
-						{if $form[edit][$column->name]->hasErrors()}
-							<p class="error" n:foreach="$form[edit][$column->name]->getErrors() as $error">{$error}</p>
-						{/if}
+						{include #row-edit-control form => $form, formContainer => $formContainer, column => $column, row => $row}
 					{/formContainer}
 				{/ifset}
 			</td>
