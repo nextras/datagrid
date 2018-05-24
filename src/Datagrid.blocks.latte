@@ -93,9 +93,7 @@
 
 {define row-edit-control}
 	{input $column->name}
-	{if $form[edit][$column->name]->hasErrors()}
-		<p class="error" n:foreach="$form[edit][$column->name]->getErrors() as $error">{$error}</p>
-	{/if}
+	<p class="error" n:foreach="$formContainer[$column->name]->getErrors() as $error">{$error}</p>
 {/define}
 
 {define row}
