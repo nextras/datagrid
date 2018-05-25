@@ -100,6 +100,31 @@
 	<p class="error" n:foreach="$formContainer[$column->name]->getErrors() as $error">{$error}</p>
 {/define}
 
+{define row-insert-control}
+	{input $formContainer[$column->name]}
+{/define}
+
+{define row-insert-empty}
+{/define}
+
+{define row-insert-button}
+	{input button}
+{/define}
+
+{define row-insert}
+	{formContainer insert-data}
+		{foreach $columns as $column}
+			{ifset $formContainer[$column->name]}
+				<td class="grid-col-{$column->name}">{include #row-insert-control form => $form, formContainer => $formContainer, column => $column}</td>
+			{else}
+				<td class="grid-col-{$column->name}">{include #row-insert-empty form => $form, formContainer => $formContainer, column => $column}</td>
+			{/}
+		{/foreach}
+	{/formContainer}
+	<td class="grid-col-actions" n:formContainer="insert">{include #row-insert-button form => $form}</td>
+{/define}
+
+
 {define row}
 	<tr id={$rowId}>
 		{include #row-inner row => $row}

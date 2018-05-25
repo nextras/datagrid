@@ -22,6 +22,7 @@
 	$hasActionsColumn =
 		(bool) $control->getEditFormFactory() /* we may render only one row so the form[filter] may not be created */
 		|| isset($this->blockQueue["row-actions"])
+		|| isset($form["insert"])
 		|| isset($form["filter"]);
 	$hasGlobalActionsColumn = isset($form['actions']);
 
@@ -51,6 +52,11 @@
 			{ifset #empty-result}{include #empty-result}{/ifset}
 		{/if}
 	</tbody>
+	<tfoot n:ifset="$form[insert]">
+		<tr class="grid-inserts">
+			{include #row-insert}
+		</tr>
+	</tfoot>
 	<tfoot n:if="isset($paginator) || $hasGlobalActionsColumn">
 		<tr>
 			<th colspan="{=count($columns) + $hasGlobalActionsColumn + $hasActionsColumn}">

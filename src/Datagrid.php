@@ -60,6 +60,12 @@ class Datagrid extends UI\Control
 	protected $formFactory;
 
 	/** @var callable|null */
+	protected $insertFormFactory;
+
+	/** @var callable|null */
+	protected $insertFormCallback;
+
+	/** @var callable|null */
 	protected $editFormFactory;
 
 	/** @var callable|null */
@@ -212,6 +218,30 @@ class Datagrid extends UI\Control
 	public function getEditFormCallback()
 	{
 		return $this->editFormCallback;
+	}
+
+
+	public function setInsertFormFactory(callable $insertFormFactory = null)
+	{
+		$this->insertFormFactory = $insertFormFactory;
+	}
+
+
+	public function getInsertFormFactory()
+	{
+		return $this->insertFormFactory;
+	}
+
+
+	public function setInsertFormCallback(callable $insertFormCallback = null)
+	{
+		$this->insertFormCallback = $insertFormCallback;
+	}
+
+
+	public function getInsertFormCallback()
+	{
+		return $this->insertFormCallback;
 	}
 
 
@@ -499,6 +529,12 @@ class Datagrid extends UI\Control
 			}
 		}
 
+		if ($this->insertFormFactory) {
+			$form['insert'] = new Container;
+			$form['insert']['data'] = call_user_func($this->insertFormFactory);
+			$form['insert']->addSubmit('button', 'Insert')->setValidationScope($form['insert']['data']->getControls());
+		}
+
 		if ($this->editFormFactory && ($this->editRowKey !== null || !empty($_POST['edit']))) {
 			$data = $this->editRowKey !== null && empty($_POST) ? $this->getData($this->editRowKey) : null;
 			$form['edit'] = call_user_func($this->editFormFactory, $data);
@@ -540,6 +576,15 @@ class Datagrid extends UI\Control
 	public function processForm(UI\Form $form)
 	{
 		$allowRedirect = true;
+		if (isset($form['insert']) && $form['insert']['button']->isSubmittedBy()) {
+			if ($form['insert']['data']->isValid()) {
+				call_user_func($this->insertFormCallback, $form['insert']['data']);
+				$this->redrawControl('rows');
+			} else {
+				$allowRedirect = false;
+			}
+		}
+
 		if (isset($form['edit'])) {
 			if ($form['edit']['save']->isSubmittedBy()) {
 				if ($form['edit']->isValid()) {
