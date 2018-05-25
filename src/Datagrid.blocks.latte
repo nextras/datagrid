@@ -111,6 +111,10 @@
 	{input button}
 {/define}
 
+{define row-actions-delete-link}
+	<a href="{link delete! $primary}" class="ajax" data-datagrid-delete>{$control->translate(Delete)}</a>
+{/define}
+
 {define row-insert}
 	{formContainer insert-data}
 		{foreach $columns as $column}
@@ -179,8 +183,13 @@
 		{else}
 			{ifset #row-actions}
 				{include #row-actions row => $row, primary => $primary}
-			{elseif $control->getEditFormFactory()}
-				{include #row-actions-edit-link row => $row, primary => $primary}
+			{else}
+				{if $control->getEditFormFactory()}
+					{include #row-actions-edit-link row => $row, primary => $primary}
+				{/if}
+				{if $control->getDeleteCallback()}
+					{include #row-actions-delete-link row => $row, primary => $primary}
+				{/if}
 			{/ifset}
 		{/if}
 	</td>

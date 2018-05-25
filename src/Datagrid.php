@@ -72,6 +72,9 @@ class Datagrid extends UI\Control
 	protected $editFormCallback;
 
 	/** @var callable|null */
+	protected $deleteCallback;
+
+	/** @var callable|null */
 	protected $filterFormFactory;
 
 	/** @var array */
@@ -254,6 +257,18 @@ class Datagrid extends UI\Control
 	public function getFilterFormFactory()
 	{
 		return $this->filterFormFactory;
+	}
+
+
+	public function setDeleteCallback(callable $callback = null)
+	{
+		$this->deleteCallback = $callback;
+	}
+
+
+	public function getDeleteCallback()
+	{
+		return $this->deleteCallback;
 	}
 
 
@@ -485,6 +500,15 @@ class Datagrid extends UI\Control
 					$this->redrawRow($pv);
 				}
 			}
+		}
+	}
+
+
+	public function handleDelete($primaryValue)
+	{
+		call_user_func($this->deleteCallback, $primaryValue);
+		if ($this->presenter->isAjax()) {
+			$this->redrawControl('rows');
 		}
 	}
 

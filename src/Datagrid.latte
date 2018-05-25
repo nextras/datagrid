@@ -23,7 +23,8 @@
 		(bool) $control->getEditFormFactory() /* we may render only one row so the form[filter] may not be created */
 		|| isset($this->blockQueue["row-actions"])
 		|| isset($form["insert"])
-		|| isset($form["filter"]);
+		|| isset($form["filter"])
+		|| $control->getDeleteCallback();
 	$hasGlobalActionsColumn = isset($form['actions']);
 
 	foreach ($_templates as $_template):
