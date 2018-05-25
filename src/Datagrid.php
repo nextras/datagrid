@@ -487,10 +487,10 @@ class Datagrid extends UI\Control
 		if ($this->filterFormFactory) {
 			$form['filter'] = call_user_func($this->filterFormFactory);
 			if (!isset($form['filter']['filter'])) {
-				$form['filter']->addSubmit('filter', $this->translate('Filter'));
+				$form['filter']->addSubmit('filter', $this->translate('Filter'))->setValidationScope($form['filter']->getControls());
 			}
 			if (!isset($form['filter']['cancel'])) {
-				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
+				$form['filter']->addSubmit('cancel', $this->translate('Cancel'))->setValidationScope(false);
 			}
 
 			$this->prepareFilterDefaults($form['filter']);
@@ -503,12 +503,15 @@ class Datagrid extends UI\Control
 			$data = $this->editRowKey !== null && empty($_POST) ? $this->getData($this->editRowKey) : null;
 			$form['edit'] = call_user_func($this->editFormFactory, $data);
 
-			if (!isset($form['edit']['save']))
-				$form['edit']->addSubmit('save', 'Save');
-			if (!isset($form['edit']['cancel']))
-				$form['edit']->addSubmit('cancel', 'Cancel');
-			if (!isset($form['edit'][$this->rowPrimaryKey]))
+			if (!isset($form['edit']['save'])) {
+				$form['edit']->addSubmit('save', 'Save')->setValidationScope($form['edit']->getControls());
+			}
+			if (!isset($form['edit']['cancel'])) {
+				$form['edit']->addSubmit('cancel', 'Cancel')->setValidationScope(false);
+			}
+			if (!isset($form['edit'][$this->rowPrimaryKey])) {
 				$form['edit']->addHidden($this->rowPrimaryKey);
+			}
 
 			$form['edit'][$this->rowPrimaryKey]
 				->setDefaultValue($this->editRowKey)
@@ -521,7 +524,7 @@ class Datagrid extends UI\Control
 			$form['actions']->addSelect('action', 'Action', $actions)
 				->setPrompt('- select action -');
 			$form['actions']->addCheckboxList('items', '', []);
-			$form['actions']->addSubmit('process', 'Do');
+			$form['actions']->addSubmit('process', 'Do')->setValidationScope(false);
 		}
 
 		if ($this->translator) {
