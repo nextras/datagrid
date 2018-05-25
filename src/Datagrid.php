@@ -429,10 +429,21 @@ class Datagrid extends UI\Control
 				$this->orderColumn = NULL;
 			}
 
+			$validFilterData = [];
+			if ($this->filterFormFactory) {
+				$this['form']->isValid(); // triggers validation
+				foreach ($this['form']['filters']->getControls() as $name => $control) {
+					if ($control->getErrors() === []) {
+						$validFilterData[$name] = $control->getValue();
+					}
+				}
+				$validFilterData = $this->filterFormFilter($validFilterData);
+			}
+
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = call_user_func(
 					$this->paginatorItemsCountCallback,
-					$this->filterDataSource,
+					$validFilterData,
 					$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null
 				);
 
@@ -444,7 +455,7 @@ class Datagrid extends UI\Control
 
 			$this->data = call_user_func(
 				$this->dataSourceCallback,
-				$this->filterDataSource,
+				$validFilterData,
 				$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null,
 				$onlyRow ? null : $this->paginator
 			);
