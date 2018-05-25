@@ -487,10 +487,10 @@ class Datagrid extends UI\Control
 		if ($this->filterFormFactory) {
 			$form['filter'] = call_user_func($this->filterFormFactory);
 			if (!isset($form['filter']['filter'])) {
-				$form['filter']->addSubmit('filter', $this->translate('Filter'))->setValidationScope($form['filter']->getControls());
+				$form['filter']->addSubmit('filter', 'Filter')->setValidationScope($form['filter']->getControls());
 			}
 			if (!isset($form['filter']['cancel'])) {
-				$form['filter']->addSubmit('cancel', $this->translate('Cancel'))->setValidationScope(false);
+				$form['filter']->addSubmit('cancel', 'Cancel')->setValidationScope(false);
 			}
 
 			$this->prepareFilterDefaults($form['filter']);
