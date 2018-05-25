@@ -580,11 +580,18 @@ class Datagrid extends UI\Control
 
 		if ($this->globalActions) {
 			$actions = array_map(function($row) { return $row[0]; }, $this->globalActions);
-			$form['actions'] = new Container();
-			$form['actions']->addSelect('action', 'Action', $actions)
-				->setPrompt('- select action -');
+			$form['actions'] = new Container;
 			$form['actions']->addCheckboxList('items', '', []);
-			$form['actions']->addSubmit('process', 'Do')->setValidationScope(false);
+
+			if (count($actions) === 1) {
+				$form['actions']->addHidden('action', key($actions));
+				$form['actions']->addSubmit('process', current($actions))->setValidationScope(false);
+
+			} else {
+				$form['actions']->addSelect('action', 'Action', $actions)
+					->setPrompt('- select action -');
+				$form['actions']->addSubmit('process', 'Do')->setValidationScope(false);
+			}
 		}
 
 		if ($this->translator) {
