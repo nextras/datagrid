@@ -28,7 +28,7 @@
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
 				{if $column->canSort()}
-					<a href="{link sort! orderColumn => $column->name, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
+					<a href="{link sort! orderColumn => $column->name, orderType => $column->getNewState()}" n:class="$useAjax ? 'ajax'">{$column->label}</a>
 					{if $column->isAsc()}
 						<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
 					{elseif $column->isDesc()}
@@ -88,7 +88,7 @@
 {/define}
 
 {define row-actions-edit-link}
-	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
+	<a href="{link edit! $primary}" n:class="$useAjax ? 'ajax'" data-datagrid-edit>{$control->translate(Edit)}</a>
 {/define}
 
 {define row}
@@ -163,8 +163,8 @@
 			<span>« {$control->translate(First)}</span>
 			<span>« {$control->translate(Previous)}</span>
 		{else}
-			<a href="{link paginate!, 'page' => 1}" class="ajax">« {$control->translate(First)}</a>
-			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« {$control->translate(Previous)}</a>
+			<a href="{link paginate!, 'page' => 1}" n:class="$useAjax ? 'ajax'">« {$control->translate(First)}</a>
+			<a href="{link paginate!, 'page' => $paginator->page - 1}" n:class="$useAjax ? 'ajax'">« {$control->translate(Previous)}</a>
 		{/if}
 
 		<span>
@@ -175,8 +175,8 @@
 			<span>{$control->translate(Next)} »</span>
 			<span>{$control->translate(Last)} »</span>
 		{else}
-			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">{$control->translate(Next)} »</a>
-			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{$control->translate(Last)} »</a>
+			<a href="{link paginate!, 'page' => $paginator->page + 1}" n:class="$useAjax ? 'ajax'">{$control->translate(Next)} »</a>
+			<a href="{link paginate!, 'page' => $paginator->pageCount}" n:class="$useAjax ? 'ajax'">{$control->translate(Last)} »</a>
 		{/if}
 	</div>
 {/define}

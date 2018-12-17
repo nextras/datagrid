@@ -16,7 +16,7 @@
 	}
 {/foreach}
 
-{form form class => 'ajax'}
+{form form class => $useAjax ? 'ajax' : ''}
 
 {php
 	$hasActionsColumn =
