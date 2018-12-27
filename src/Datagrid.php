@@ -251,6 +251,14 @@ class Datagrid extends UI\Control
 		$this->useAjax = (bool) $use;
 	}
 
+	/**
+	 * @param string $filterFormHttpMethod
+	 */
+	public function setFilterFormHttpMethod($filterFormHttpMethod)
+	{
+		$this->filterFormHttpMethod = $filterFormHttpMethod;
+	}
+
 	public function setTranslator(ITranslator $translator)
 	{
 		$this->translator = $translator;
