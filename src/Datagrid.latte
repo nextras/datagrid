@@ -44,7 +44,7 @@
 			{foreach $data as $row}
 				{var $primary = $control->getter($row, $rowPrimaryKey)}
 				{var $rowId = $this->global->snippetDriver->getHtmlId("rows-$primary")}
-				{include #row row => $row, rowId => $rowId}
+				{include #row row => $row, rowId => $rowId, iterator => $iterator}
 			{/foreach}
 		{else}
 			{ifset #empty-result}{include #empty-result}{/ifset}
