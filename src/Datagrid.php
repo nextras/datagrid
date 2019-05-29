@@ -11,6 +11,7 @@ namespace Nextras\Datagrid;
 
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\Checkbox;
@@ -307,7 +308,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function redrawControl($snippet = null, $redraw = true)
+	public function redrawControl(string $snippet = null, $redraw = true): void
 	{
 		parent::redrawControl($snippet, $redraw);
 		if ($snippet === null || $snippet === 'rows') {
@@ -327,7 +328,7 @@ class Datagrid extends UI\Control
 	/*******************************************************************************/
 
 
-	protected function attached($presenter)
+	protected function attached(IComponent $presenter): void
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
@@ -545,7 +546,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function loadState(array $params)
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 		if ($this->paginator) {
@@ -554,9 +555,9 @@ class Datagrid extends UI\Control
 	}
 
 
-	protected function createTemplate($class = null)
+	protected function createTemplate(): UI\ITemplate
 	{
-		$template = parent::createTemplate($class);
+		$template = parent::createTemplate();
 		if ($translator = $this->getTranslator()) {
 			$template->setTranslator($translator);
 		}
