@@ -11,7 +11,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.2",
+		"php": ">=7.1",
 		"nette/application": "~3.0",
 		"nette/component-model": "~3.0",
 		"nette/forms": "~3.0",
