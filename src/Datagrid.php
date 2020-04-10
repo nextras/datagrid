@@ -17,7 +17,7 @@ use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use Nette\Localization\ITranslator;
-
+use Nette\Utils\Strings;
 
 class Datagrid extends UI\Control
 {
@@ -92,6 +92,9 @@ class Datagrid extends UI\Control
 
 	/** @var array */
 	protected $cellsTemplates = [];
+
+	/** @var string */
+	protected $filterFormHttpMethod = 'post';
 
 
 	/**
@@ -216,6 +219,14 @@ class Datagrid extends UI\Control
 			$this->paginator->itemsPerPage = $itemsPerPage;
 			$this->paginatorItemsCountCallback = $itemsCountCallback;
 		}
+	}
+
+	/**
+	 * @param string $filterFormHttpMethod
+	 */
+	public function setFilterFormHttpMethod($filterFormHttpMethod)
+	{
+		$this->filterFormHttpMethod = Strings::lower($filterFormHttpMethod);
 	}
 
 
@@ -428,6 +439,7 @@ class Datagrid extends UI\Control
 	public function createComponentForm()
 	{
 		$form = new UI\Form;
+		$form->setMethod($this->filterFormHttpMethod);
 
 		if ($this->filterFormFactory) {
 			$form['filter'] = call_user_func($this->filterFormFactory);
@@ -445,7 +457,8 @@ class Datagrid extends UI\Control
 		}
 
 		if ($this->editFormFactory && ($this->editRowKey !== null || !empty($_POST['edit']))) {
-			$data = $this->editRowKey !== null && empty($_POST) ? $this->getData($this->editRowKey) : null;
+			$httpData = $this->filterFormHttpMethod === 'get' ? $_GET : $_POST;
+			$data = $this->editRowKey !== null && empty($httpData) ? $this->getData($this->editRowKey) : null;
 			$form['edit'] = call_user_func($this->editFormFactory, $data);
 
 			if (!isset($form['edit']['save']))
