@@ -9,12 +9,11 @@
 
 namespace Nextras\Datagrid;
 
+use Nette;
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
-use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use Nette\Localization\ITranslator;
@@ -326,14 +325,13 @@ class Datagrid extends UI\Control
 
 
 	/*******************************************************************************/
-
-
-	protected function attached(IComponent $presenter): void
+	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
-		parent::attached($presenter);
-		$this->filterDataSource = $this->filter;
+		parent::validateParent($parent);
+		$this->monitor(UI\Presenter::class, function () {
+			$this->filterDataSource = $this->filter;
+		});
 	}
-
 
 	protected function getData($key = null)
 	{
