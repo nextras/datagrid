@@ -42,6 +42,9 @@ class Datagrid extends UI\Control
 	/** @persistent */
 	public $page = 1;
 
+	/** @var string|null */
+	protected $anchor;
+
 	/** @var array */
 	protected $filterDataSource = [];
 
@@ -55,10 +58,22 @@ class Datagrid extends UI\Control
 	protected $dataSourceCallback;
 
 	/** @var callable|null */
+	protected $formFactory;
+
+	/** @var callable|null */
+	protected $insertFormFactory;
+
+	/** @var callable|null */
+	protected $insertFormCallback;
+
+	/** @var callable|null */
 	protected $editFormFactory;
 
 	/** @var callable|null */
 	protected $editFormCallback;
+
+	/** @var callable|null */
+	protected $deleteCallback;
 
 	/** @var callable|null */
 	protected $filterFormFactory;
@@ -72,7 +87,7 @@ class Datagrid extends UI\Control
 	/** @var Paginator */
 	protected $paginator;
 
-	/** @var ITranslator */
+	/** @var ITranslator|null */
 	protected $translator;
 
 	/** @var callable|null */
@@ -136,6 +151,20 @@ class Datagrid extends UI\Control
 	}
 
 
+	public function setAnchor($anchor = '')
+	{
+		$this->anchor = $anchor === ''
+			? $this->getUniqueId()
+			: $anchor;
+	}
+
+
+	public function getAnchor()
+	{
+		return $this->anchor;
+	}
+
+
 	public function setColumnGetterCallback(callable $getterCallback = null)
 	{
 		$this->columnGetterCallback = $getterCallback;
@@ -157,6 +186,18 @@ class Datagrid extends UI\Control
 	public function getDataSourceCallback()
 	{
 		return $this->dataSourceCallback;
+	}
+
+
+	public function setFormFactory(callable $formFactory)
+	{
+		$this->formFactory = $formFactory;
+	}
+
+
+	public function getFormFactory()
+	{
+		return $this->formFactory;
 	}
 
 
@@ -184,6 +225,30 @@ class Datagrid extends UI\Control
 	}
 
 
+	public function setInsertFormFactory(callable $insertFormFactory = null)
+	{
+		$this->insertFormFactory = $insertFormFactory;
+	}
+
+
+	public function getInsertFormFactory()
+	{
+		return $this->insertFormFactory;
+	}
+
+
+	public function setInsertFormCallback(callable $insertFormCallback = null)
+	{
+		$this->insertFormCallback = $insertFormCallback;
+	}
+
+
+	public function getInsertFormCallback()
+	{
+		return $this->insertFormCallback;
+	}
+
+
 	public function setFilterFormFactory(callable $filterFormFactory = null)
 	{
 		$this->filterFormFactory = $filterFormFactory;
@@ -193,6 +258,18 @@ class Datagrid extends UI\Control
 	public function getFilterFormFactory()
 	{
 		return $this->filterFormFactory;
+	}
+
+
+	public function setDeleteCallback(callable $callback = null)
+	{
+		$this->deleteCallback = $callback;
+	}
+
+
+	public function getDeleteCallback()
+	{
+		return $this->deleteCallback;
 	}
 
 
@@ -221,8 +298,9 @@ class Datagrid extends UI\Control
 
 	/**
 	 * @param string|Template $path
+	 * @param bool $append
 	 */
-	public function addCellsTemplate($path)
+	public function addCellsTemplate($path, $append = true)
 	{
 		if ($path instanceof Template) {
 			$path = $path->getFile();
@@ -230,7 +308,12 @@ class Datagrid extends UI\Control
 		if (!file_exists($path)) {
 			throw new \InvalidArgumentException("Template '{$path}' does not exist.");
 		}
-		$this->cellsTemplates[] = $path;
+
+		if ($append) {
+			$this->cellsTemplates[] = $path;
+		} else {
+			array_unshift($this->cellsTemplates, $path);
+		}
 	}
 
 
@@ -242,7 +325,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setTranslator(ITranslator $translator)
+	public function setTranslator(ITranslator $translator = null)
 	{
 		$this->translator = $translator;
 	}
@@ -336,16 +419,31 @@ class Datagrid extends UI\Control
 	protected function getData($key = null)
 	{
 		if (!$this->data) {
+			if ($this->dataSourceCallback === null) {
+				throw new \Exception('Data source callback is not set. Set it by ' . __CLASS__ . '::setDataSourceCallback().');
+			}
+
 			$onlyRow = $key !== null && $this->presenter->isAjax();
 
 			if ($this->orderColumn !== NULL && !isset($this->columns[$this->orderColumn])) {
 				$this->orderColumn = NULL;
 			}
 
+			$validFilterData = [];
+			if ($this->filterFormFactory) {
+				$this['form']->isValid(); // triggers validation
+				foreach ($this['form']['filters']->getControls() as $name => $control) {
+					if ($control->getErrors() === []) {
+						$validFilterData[$name] = $control->getValue();
+					}
+				}
+				$validFilterData = $this->filterFormFilter($validFilterData);
+			}
+
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = call_user_func(
 					$this->paginatorItemsCountCallback,
-					$this->filterDataSource,
+					$validFilterData,
 					$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null
 				);
 
@@ -357,7 +455,7 @@ class Datagrid extends UI\Control
 
 			$this->data = call_user_func(
 				$this->dataSourceCallback,
-				$this->filterDataSource,
+				$validFilterData,
 				$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null,
 				$onlyRow ? null : $this->paginator
 			);
@@ -417,6 +515,15 @@ class Datagrid extends UI\Control
 	}
 
 
+	public function handleDelete($primaryValue)
+	{
+		call_user_func($this->deleteCallback, $primaryValue);
+		if ($this->presenter->isAjax()) {
+			$this->redrawControl('rows');
+		}
+	}
+
+
 	public function handleSort()
 	{
 		if ($this->presenter->isAjax()) {
@@ -427,15 +534,28 @@ class Datagrid extends UI\Control
 
 	public function createComponentForm()
 	{
-		$form = new UI\Form;
+		$form = $this->formFactory === null
+			? new UI\Form
+			: call_user_func($this->formFactory, $this);
+
+		if (!$form instanceof UI\Form) {
+			$type = is_object($form) ? get_class($form) : gettype($form);
+			throw new \Exception('Form factory callback has to return ' . UI\Form::class . ", but $type returned.");
+		}
+
+		if ($this->anchor !== null) {
+			$form->onAnchor[] = function (UI\Form $form) {
+				$form->setAction($form->getAction() . '#' . $this->getAnchor());
+			};
+		}
 
 		if ($this->filterFormFactory) {
 			$form['filter'] = call_user_func($this->filterFormFactory);
 			if (!isset($form['filter']['filter'])) {
-				$form['filter']->addSubmit('filter', $this->translate('Filter'));
+				$form['filter']->addSubmit('filter', 'Filter')->setValidationScope($form['filter']->getControls());
 			}
 			if (!isset($form['filter']['cancel'])) {
-				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
+				$form['filter']->addSubmit('cancel', 'Cancel')->setValidationScope(false);
 			}
 
 			$this->prepareFilterDefaults($form['filter']);
@@ -444,16 +564,25 @@ class Datagrid extends UI\Control
 			}
 		}
 
+		if ($this->insertFormFactory) {
+			$form['insert'] = new Container;
+			$form['insert']['data'] = call_user_func($this->insertFormFactory);
+			$form['insert']->addSubmit('button', 'Insert')->setValidationScope($form['insert']['data']->getControls());
+		}
+
 		if ($this->editFormFactory && ($this->editRowKey !== null || !empty($_POST['edit']))) {
 			$data = $this->editRowKey !== null && empty($_POST) ? $this->getData($this->editRowKey) : null;
 			$form['edit'] = call_user_func($this->editFormFactory, $data);
 
-			if (!isset($form['edit']['save']))
-				$form['edit']->addSubmit('save', 'Save');
-			if (!isset($form['edit']['cancel']))
-				$form['edit']->addSubmit('cancel', 'Cancel');
-			if (!isset($form['edit'][$this->rowPrimaryKey]))
+			if (!isset($form['edit']['save'])) {
+				$form['edit']->addSubmit('save', 'Save')->setValidationScope($form['edit']->getControls());
+			}
+			if (!isset($form['edit']['cancel'])) {
+				$form['edit']->addSubmit('cancel', 'Cancel')->setValidationScope(false);
+			}
+			if (!isset($form['edit'][$this->rowPrimaryKey])) {
 				$form['edit']->addHidden($this->rowPrimaryKey);
+			}
 
 			$form['edit'][$this->rowPrimaryKey]
 				->setDefaultValue($this->editRowKey)
@@ -462,11 +591,18 @@ class Datagrid extends UI\Control
 
 		if ($this->globalActions) {
 			$actions = array_map(function($row) { return $row[0]; }, $this->globalActions);
-			$form['actions'] = new Container();
-			$form['actions']->addSelect('action', 'Action', $actions)
-				->setPrompt('- select action -');
+			$form['actions'] = new Container;
 			$form['actions']->addCheckboxList('items', '', []);
-			$form['actions']->addSubmit('process', 'Do');
+
+			if (count($actions) === 1) {
+				$form['actions']->addHidden('action', key($actions));
+				$form['actions']->addSubmit('process', current($actions))->setValidationScope(false);
+
+			} else {
+				$form['actions']->addSelect('action', 'Action', $actions)
+					->setPrompt('- select action -');
+				$form['actions']->addSubmit('process', 'Do')->setValidationScope(false);
+			}
 		}
 
 		if ($this->translator) {
@@ -482,6 +618,15 @@ class Datagrid extends UI\Control
 	public function processForm(UI\Form $form)
 	{
 		$allowRedirect = true;
+		if (isset($form['insert']) && $form['insert']['button']->isSubmittedBy()) {
+			if ($form['insert']['data']->isValid()) {
+				call_user_func($this->insertFormCallback, $form['insert']['data']);
+				$this->redrawControl('rows');
+			} else {
+				$allowRedirect = false;
+			}
+		}
+
 		if (isset($form['edit'])) {
 			if ($form['edit']['save']->isSubmittedBy()) {
 				if ($form['edit']->isValid()) {

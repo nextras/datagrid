@@ -28,12 +28,48 @@ class Column
 	/** @var Datagrid */
 	protected $grid;
 
+	/** @var array */
+	protected $attributes = [];
+
 
 	public function __construct($name, $label, Datagrid $grid)
 	{
 		$this->name = $name;
 		$this->label = $label;
 		$this->grid = $grid;
+	}
+
+
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return self
+	 */
+	public function setAttribute($name, $value = true)
+	{
+		$this->attributes[$name] = $value;
+		return $this;
+	}
+
+
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function hasAttribute($name)
+	{
+		return isset($this->attributes[$name]);
+	}
+
+
+	/**
+	 * @param string $name
+	 * @param mixed $default
+	 * @return self
+	 */
+	public function getAttribute($name, $default = null)
+	{
+		return $this->attributes[$name] ?? $default;
 	}
 
 

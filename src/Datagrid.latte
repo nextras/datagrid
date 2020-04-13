@@ -4,7 +4,7 @@
  * @license    MIT
  * @link       https://github.com/nextras
  *}
-<div class="grid" data-grid-name="{$control->getUniqueId()}">
+<div class="grid" data-grid-name="{$control->getUniqueId()}" id="{$control->getUniqueId()}">
 {snippet rows}
 
 {var $_templates = []}
@@ -21,7 +21,10 @@
 {php
 	$hasActionsColumn =
 		(bool) $control->getEditFormFactory() /* we may render only one row so the form[filter] may not be created */
-		|| isset($this->blockQueue["row-actions"]);
+		|| isset($this->blockQueue["row-actions"])
+		|| isset($form["insert"])
+		|| isset($form["filter"])
+		|| $control->getDeleteCallback();
 	$hasGlobalActionsColumn = isset($form['actions']);
 
 	foreach ($_templates as $_template):
@@ -50,6 +53,11 @@
 			{ifset #empty-result}{include #empty-result}{/ifset}
 		{/if}
 	</tbody>
+	<tfoot n:ifset="$form[insert]">
+		<tr class="grid-inserts">
+			{include #row-insert}
+		</tr>
+	</tfoot>
 	<tfoot n:if="isset($paginator) || $hasGlobalActionsColumn">
 		<tr>
 			<th colspan="{=count($columns) + $hasGlobalActionsColumn + $hasActionsColumn}">

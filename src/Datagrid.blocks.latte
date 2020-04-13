@@ -20,6 +20,10 @@
 	{/if}
 {/define}
 
+{define row-head-cell}
+	{$column->label}
+{/define}
+
 {define row-head-columns}
 	<tr class="grid-columns">
 		{ifset $form[actions]}
@@ -28,7 +32,7 @@
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
 				{if $column->canSort()}
-					<a href="{link sort! orderColumn => $column->name, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
+					<a href="{link sort! orderColumn => $column->name, orderType => $column->getNewState()}" class="ajax">{include #row-head-cell column => $column}</a>
 					{if $column->isAsc()}
 						<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
 					{elseif $column->isDesc()}
@@ -37,7 +41,7 @@
 						<span class="grid-sort-symbol grid-sort-symbol-no"></span>
 					{/if}
 				{else}
-					{$column->label}
+					{include #row-head-cell column => $column}
 				{/if}
 			</th>
 		{/foreach}
@@ -91,6 +95,40 @@
 	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
 {/define}
 
+{define row-edit-control}
+	{input $column->name}
+	<p class="error" n:foreach="$formContainer[$column->name]->getErrors() as $error">{$error}</p>
+{/define}
+
+{define row-insert-control}
+	{input $formContainer[$column->name]}
+{/define}
+
+{define row-insert-empty}
+{/define}
+
+{define row-insert-button}
+	{input button}
+{/define}
+
+{define row-actions-delete-link}
+	<a href="{link delete! $primary}" class="ajax" data-datagrid-delete>{$control->translate(Delete)}</a>
+{/define}
+
+{define row-insert}
+	{formContainer insert-data}
+		{foreach $columns as $column}
+			{ifset $formContainer[$column->name]}
+				<td class="grid-col-{$column->name}">{include #row-insert-control form => $form, formContainer => $formContainer, column => $column}</td>
+			{else}
+				<td class="grid-col-{$column->name}">{include #row-insert-empty form => $form, formContainer => $formContainer, column => $column}</td>
+			{/}
+		{/foreach}
+	{/formContainer}
+	<td class="grid-col-actions" n:formContainer="insert">{include #row-insert-button form => $form}</td>
+{/define}
+
+
 {define row}
 	<tr id={$rowId}>
 		{include #row-inner row => $row}
@@ -117,10 +155,7 @@
 					{include #"cell-edit-{$column->name}" form => $form, column => $column, row => $row}
 				{else}
 					{formContainer edit}
-						{input $column->name}
-						{if $form[edit][$column->name]->hasErrors()}
-							<p class="error" n:foreach="$form[edit][$column->name]->getErrors() as $error">{$error}</p>
-						{/if}
+						{include #row-edit-control form => $form, formContainer => $formContainer, column => $column, row => $row}
 					{/formContainer}
 				{/ifset}
 			</td>
@@ -148,8 +183,13 @@
 		{else}
 			{ifset #row-actions}
 				{include #row-actions row => $row, primary => $primary}
-			{elseif $control->getEditFormFactory()}
-				{include #row-actions-edit-link row => $row, primary => $primary}
+			{else}
+				{if $control->getEditFormFactory()}
+					{include #row-actions-edit-link row => $row, primary => $primary}
+				{/if}
+				{if $control->getDeleteCallback()}
+					{include #row-actions-delete-link row => $row, primary => $primary}
+				{/if}
 			{/ifset}
 		{/if}
 	</td>
