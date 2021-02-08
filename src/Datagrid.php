@@ -27,6 +27,9 @@ class Datagrid extends UI\Control
 	/** @var string */
 	const ORDER_DESC = 'desc';
 
+	/** @var string */
+	const ORDER_NONE = 'none';
+
 	/** @var array of callbacks: function(Datagrid) */
 	public $onRender = [];
 
@@ -34,10 +37,7 @@ class Datagrid extends UI\Control
 	public $filter = [];
 
 	/** @persistent */
-	public $orderColumn;
-
-	/** @persistent */
-	public $orderType = self::ORDER_ASC;
+	public $order = [];
 
 	/** @persistent */
 	public $page = 1;
@@ -338,15 +338,11 @@ class Datagrid extends UI\Control
 		if (!$this->data) {
 			$onlyRow = $key !== null && $this->presenter->isAjax();
 
-			if ($this->orderColumn !== NULL && !isset($this->columns[$this->orderColumn])) {
-				$this->orderColumn = NULL;
-			}
-
 			if (!$onlyRow && $this->paginator) {
 				$itemsCount = call_user_func(
 					$this->paginatorItemsCountCallback,
 					$this->filterDataSource,
-					$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null
+					$this->getOrder()
 				);
 
 				$this->paginator->setItemCount($itemsCount);
@@ -358,7 +354,7 @@ class Datagrid extends UI\Control
 			$this->data = call_user_func(
 				$this->dataSourceCallback,
 				$this->filterDataSource,
-				$this->orderColumn ? [$this->orderColumn, strtoupper($this->orderType)] : null,
+				$this->getOrder(),
 				$onlyRow ? null : $this->paginator
 			);
 		}
@@ -597,6 +593,23 @@ class Datagrid extends UI\Control
 			}
 		}
 		return $filtered;
+	}
+
+
+	private function getOrder()
+	{
+		$order = [];
+		foreach($this->order as $column => $type){
+			if(!$column)
+				continue;
+			if($type !== self::ORDER_ASC && $type !== self::ORDER_DESC && $type) {
+				if($type !== self::ORDER_NONE)
+					unset($this->order[$column]);
+				continue;
+			}
+			$order[$column] = strtoupper($type);
+		}
+		return $order ?: null;
 	}
 
 
