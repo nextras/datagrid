@@ -33,13 +33,13 @@
 }
 
 {include #table-open-tag}
-	<thead>
+	{include #table-thead-open-tag}
 		{include #row-head-columns}
 		{ifset $form['filter']}
 			{include #row-head-filter}
 		{/ifset}
-	</thead>
-	<tbody>
+	{include #table-thead-close-tag}
+	{include #table-tbody-open-tag}
 		{if count($data)}
 			{foreach $data as $row}
 				{var $primary = $control->getter($row, $rowPrimaryKey)}
@@ -49,7 +49,7 @@
 		{else}
 			{ifset #empty-result}{include #empty-result}{/ifset}
 		{/if}
-	</tbody>
+	{include #table-tbody-close-tag}
 	<tfoot n:if="isset($paginator) || $hasGlobalActionsColumn">
 		<tr>
 			<th colspan="{=count($columns) + $hasGlobalActionsColumn + $hasActionsColumn}">
