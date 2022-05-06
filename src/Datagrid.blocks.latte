@@ -129,7 +129,7 @@
 		{var $cell = $control->getter($row, $column->name, FALSE)}
 		{if $editRow && $column->name != $rowPrimaryKey && (isset($form['edit'][$column->name]) || isset($this->blockQueue["cell-edit-{$column->name}"]))}
 			<td class="grid-col-{$column->name}">
-				{ifset #cell-edit-$column->name}
+				{ifset #cell-edit-{$column->name}}
 					{include #"cell-edit-{$column->name}" form => $form, column => $column, row => $row}
 				{else}
 					{formContainer edit}
@@ -141,11 +141,11 @@
 				{/ifset}
 			</td>
 		{else}
-			{ifset #col-$column->name}
+			{ifset #col-{$column->name}}
 				{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
 			{else}
 				<td class="grid-col-{$column->name}">
-					{ifset #cell-$column->name}
+					{ifset #cell-{$column->name}}
 						{include #"cell-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
 					{else}
 						{$cell}
