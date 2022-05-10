@@ -492,9 +492,7 @@ class Datagrid extends UI\Control
 				}
 			}
 			if ($form['edit']['cancel']->isSubmittedBy() || ($form['edit']['save']->isSubmittedBy() && $form['edit']->isValid())) {
-				$editRowKey = $form['edit'][$this->rowPrimaryKey]->getValue();
-				$this->redrawRow($editRowKey);
-				$this->getData($editRowKey);
+				$this->redrawControl('rows');
 			}
 			if ($this->editRowKey !== null) {
 				$this->redrawRow($this->editRowKey);
