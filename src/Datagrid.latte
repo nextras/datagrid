@@ -9,28 +9,23 @@
 
 {var $_templates = []}
 {foreach $cellsTemplates as $cellsTemplate}
-	{php
-		$_template = $this->createTemplate($cellsTemplate, $this->params, "includeblock");
-		$_template->render();
-		$_templates[] = $_template;
-	}
+	{php $_template = $this->createTemplate($cellsTemplate, $this->params, "includeblock")}
+	{php $_template->render()}
+	{php $_templates[] = $_template}
 {/foreach}
 
 {form form class => 'ajax'}
 
-{php
-	$hasActionsColumn =
-		(bool) $control->getEditFormFactory() /* we may render only one row so the form[filter] may not be created */
-		|| $this->hasBlock("row-actions");
-	$hasGlobalActionsColumn = isset($form['actions']);
 
-	foreach ($_templates as $_template):
-		$_template->params['hasActionsColumn'] = $hasActionsColumn;
-		$_template->params['hasGlobalActionsColumn'] = $hasGlobalActionsColumn;
-	endforeach;
-	$this->params['hasActionsColumn'] = $hasActionsColumn;
-	$this->params['hasGlobalActionsColumn'] = $hasGlobalActionsColumn;
-}
+{* we may render only one row so the form[filter] may not be created *}
+{php $hasActionsColumn = (bool) $control->getEditFormFactory() || $this->hasBlock("row-actions")}
+{php $hasGlobalActionsColumn = isset($form['actions'])}
+{foreach $_templates as $_template}
+	{php $_template->params['hasActionsColumn'] = $hasActionsColumn}
+	{php $_template->params['hasGlobalActionsColumn'] = $hasGlobalActionsColumn}
+{/foreach}
+{php $this->params['hasActionsColumn'] = $hasActionsColumn}
+{php $this->params['hasGlobalActionsColumn'] = $hasGlobalActionsColumn}
 
 {include #table-open-tag}
 	{include #table-thead-open-tag}

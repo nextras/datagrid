@@ -115,7 +115,7 @@
 
 {define row-inner}
 	{var $primary = $control->getter($row, $rowPrimaryKey)}
-	{php if (!$sendOnlyRowParentSnippet): $this->global->snippetDriver->enter("rows-$primary", "dynamic"); endif;}
+	{if !$sendOnlyRowParentSnippet}{php $this->global->snippetDriver->enter("rows-$primary", "dynamic")}{/if}
 
 	{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
 	{ifset $form[actions]}
@@ -170,7 +170,7 @@
 		{/if}
 	</td>
 	{/if}
-	{php if (!$sendOnlyRowParentSnippet): $this->global->snippetDriver->leave(); endif;}
+	{if !$sendOnlyRowParentSnippet}{php $this->global->snippetDriver->leave()}{/if}
 {/define}
 
 {define pagination}

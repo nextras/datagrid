@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * This file is part of the Nextras community extensions of Nette Framework
@@ -9,37 +9,36 @@
 
 namespace Nextras\Datagrid;
 
-use Nette;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
+use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Button;
+use Nette\Forms\Form;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use Nette\Utils\Paginator;
-use Nette\Localization\ITranslator;
 
 
 class Datagrid extends UI\Control
 {
-	/** @var string */
 	const ORDER_ASC = 'asc';
-
-	/** @var string */
 	const ORDER_DESC = 'desc';
 
 	/** @var array of callbacks: function(Datagrid) */
-	public $onRender = [];
+	public array $onRender = [];
 
-	/** @persistent */
-	public $filter = [];
+	#[Persistent]
+	public array $filter = [];
 
-	/** @persistent */
+	#[Persistent]
 	public $orderColumn;
 
-	/** @persistent */
+	#[Persistent]
 	public $orderType = self::ORDER_ASC;
 
-	/** @persistent */
+	#[Persistent]
 	public $page = 1;
 
 	/** @var array */
@@ -72,8 +71,7 @@ class Datagrid extends UI\Control
 	/** @var Paginator */
 	protected $paginator;
 
-	/** @var ITranslator */
-	protected $translator;
+	protected ?Translator $translator = null;
 
 	/** @var callable|null */
 	protected $paginatorItemsCountCallback;
@@ -242,13 +240,13 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setTranslator(ITranslator $translator)
+	public function setTranslator(?Translator $translator): void
 	{
 		$this->translator = $translator;
 	}
 
 
-	public function getTranslator()
+	public function getTranslator(): ?Translator
 	{
 		return $this->translator;
 	}
@@ -316,16 +314,8 @@ class Datagrid extends UI\Control
 	}
 
 
-	/** @deprecated */
-	function invalidateRow($primaryValue)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use $this->redrawRow($primaryValue) instead.', E_USER_DEPRECATED);
-		$this->redrawRow($primaryValue);
-	}
-
-
 	/*******************************************************************************/
-	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
+	protected function validateParent(IContainer $parent): void
 	{
 		parent::validateParent($parent);
 		$this->monitor(UI\Presenter::class, function () {
@@ -403,7 +393,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function handleEdit($primaryValue, $cancelEditPrimaryValue = null)
+	public function handleEdit($primaryValue, $cancelEditPrimaryValue = null): void
 	{
 		$this->editRowKey = $primaryValue;
 		if ($this->presenter->isAjax()) {
@@ -417,7 +407,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function handleSort()
+	public function handleSort(): void
 	{
 		if ($this->presenter->isAjax()) {
 			$this->redrawControl('rows');
@@ -425,7 +415,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function createComponentForm()
+	public function createComponentForm(): UI\Form
 	{
 		$form = new UI\Form;
 
@@ -503,7 +493,7 @@ class Datagrid extends UI\Control
 
 		if (isset($form['filter'])) {
 			if ($form['filter']['filter']->isSubmittedBy()) {
-				$values = $form['filter']->getValues(true);
+				$values = $form['filter']->getValues(Form::Array);
 				unset($values['filter']);
 				$values = $this->filterFormFilter($values);
 				if ($this->paginator) {
@@ -516,7 +506,7 @@ class Datagrid extends UI\Control
 					$this->page = $this->paginator->page = 1;
 				}
 				$this->filter = $this->filterDataSource = $this->filterDefaults;
-				$form['filter']->setValues($this->filter, true);
+				$form['filter']->setValues($this->filter, erase: true);
 				$this->redrawControl('rows');
 			}
 		}
@@ -529,7 +519,7 @@ class Datagrid extends UI\Control
 					foreach($this->getData() as $row) {
 						$rows[] = $this->getter($row, $this->rowPrimaryKey);
 					}
-					$ids = array_intersect($rows, $form->getHttpData($form::DATA_TEXT, 'actions[items][]'));
+					$ids = array_intersect($rows, $form->getHttpData($form::DataText, 'actions[items][]'));
 					$callback = $this->globalActions[$action][1];
 					$callback($ids, $this);
 					$this->data = null;
@@ -553,9 +543,9 @@ class Datagrid extends UI\Control
 	}
 
 
-	protected function createTemplate(): UI\ITemplate
+	protected function createTemplate(?string $class = null): UI\Template
 	{
-		$template = parent::createTemplate();
+		$template = parent::createTemplate($class);
 		if ($translator = $this->getTranslator()) {
 			$template->setTranslator($translator);
 		}
@@ -563,7 +553,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function handlePaginate()
+	public function handlePaginate(): void
 	{
 		if ($this->presenter->isAjax()) {
 			$this->redrawControl('rows');
@@ -587,7 +577,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	private function filterFormFilter(array $values)
+	private function filterFormFilter(array $values): array
 	{
 		$filtered = [];
 		foreach ($values as $key => $value) {
@@ -600,7 +590,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	private static function isEmptyValue($value)
+	private static function isEmptyValue($value): bool
 	{
 		return $value === NULL || $value === '' || $value === [] || $value === false;
 	}

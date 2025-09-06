@@ -11,16 +11,16 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1",
-		"nette/application": "~3.0",
+		"php": "~8.4",
+		"nette/application": "~3.2",
 		"nette/component-model": "~3.0",
 		"nette/forms": "~3.0",
 		"nette/utils": "~3.0 || ~4.0",
-		"latte/latte": "~2.9"
+		"latte/latte": "~3.0"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "3.0-dev"
+			"dev-master": "4.0-dev"
 		}
 	},
 	"autoload": {
